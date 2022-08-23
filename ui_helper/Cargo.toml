@@ -1,0 +1,43 @@
+[package]
+name = "araiseal_ui"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.8.5"
+num-traits = "0.2.15"
+
+[dependencies.araiseal_styles]
+path = "../styles"
+
+[dependencies.iced_aw]
+#git = "https://github.com/genusistimelord/iced_aw.git"
+#branch = "beta"
+version = "0.2.0"
+default-features = false
+features = [
+    "pure",
+    "number_input",
+    "color_picker",
+    "colors",
+]
+
+[dependencies.iced_style]
+#git = "https://github.com/genusistimelord/iced_aw.git"
+#branch = "beta"
+version = "0.4.0"
+
+[dependencies.iced]
+#git = "https://github.com/genusistimelord/iced_aw.git"
+#branch = "beta"
+version = "0.4.2"
+features = [
+    "pure",
+    "canvas",
+    "tokio",
+    "image",
+    "debug",
+    "wgpu",
+]

@@ -1,0 +1,12 @@
+target/
+*.lock
+*.dll
+*.pdb
+*.lib
+out/
+data/
+*.txt
+*.exe
+*.7z
+*.png
+*.png~

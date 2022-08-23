@@ -1,0 +1,10 @@
+[workspace]
+resolver="2"
+members = [
+    "types",
+    "styles",
+    "ui_helper",
+    "logging",
+    "itemeditor",
+    "npceditor",
+]

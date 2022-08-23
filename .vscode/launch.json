@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'item_editor'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=item_editor",
+                    "--package=item_editor"
+                ],
+                "filter": {
+                    "name": "item_editor",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'npceditor'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=npceditor",
+                    "--package=npceditor"
+                ],
+                "filter": {
+                    "name": "npceditor",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
