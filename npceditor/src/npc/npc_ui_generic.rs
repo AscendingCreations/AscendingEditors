@@ -3,7 +3,7 @@ use araiseal_styles::{self, TEXT_WHITE};
 use araiseal_types::*;
 use araiseal_ui::*;
 use iced::pure::{
-    widget::{Column, PickList, Row, Rule, Text, TextInput},
+    widget::{Column, Container, PickList, Row, Rule, Text, TextInput},
     Element,
 };
 use iced::{
@@ -292,6 +292,7 @@ impl NpcUIGenerics {
 
         let mut row = Row::new().spacing(6).align_items(Alignment::Start);
         let mut i = 0;
+        let mut cur = 0;
 
         for (id, control) in self.item_drops.iter().enumerate() {
             if i == 5 {
@@ -300,24 +301,33 @@ impl NpcUIGenerics {
                 row = Row::new().spacing(6).align_items(Alignment::Start);
             }
             row = row.push(
+                //Container::new(
                 Column::new()
                     .spacing(10)
                     .push(Text::new(&format!("Item ID {}", id + 1)).color(TEXT_WHITE))
-                    .push(control.item_id.view(id, 0, u32::MAX, 0, Message::ItemInput))
+                    .push(
+                        control
+                            .item_id
+                            .view(cur, 0, u32::MAX, 1, Message::ItemInput),
+                    )
                     .push(Text::new(&format!("Drop Chance {}", id + 1)).color(TEXT_WHITE))
                     .push(
                         control
                             .chance
-                            .view(id, 0, u32::MAX, 0, Message::ItemChanceInput),
+                            .view(cur, 0, u32::MAX, 1, Message::ItemChanceInput),
                     )
                     .push(Text::new(&format!("Drop Amount {}", id + 1)).color(TEXT_WHITE))
                     .push(
                         control
                             .amount
-                            .view(id, 0, u32::MAX, 0, Message::ItemAmountInput),
+                            .view(cur, 0, u32::MAX, 1, Message::ItemAmountInput),
                     ),
+                // )
+                //.style(araiseal_styles::MainContainer),
             );
+
             i += 1;
+            cur += 1;
         }
 
         column.push(row).into()
