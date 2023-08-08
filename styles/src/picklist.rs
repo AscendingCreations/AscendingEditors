@@ -1,5 +1,4 @@
 use iced::{theme, widget::pick_list, Background, Color, Theme, Vector};
-use iced_style::menu;
 
 const BACKGROUND: Color = Color {
     r: 48.0 / 255.0,
