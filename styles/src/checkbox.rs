@@ -5,7 +5,7 @@ pub struct CheckBoxStyle;
 impl checkbox::StyleSheet for CheckBoxStyle {
     type Style = Theme;
 
-    fn active(&self, style: &Self::Style, _is_checked: bool) -> checkbox::Appearance {
+    fn active(&self, _style: &Self::Style, _is_checked: bool) -> checkbox::Appearance {
         checkbox::Appearance {
             background: Background::Color(Color::from_rgb(0.95, 0.95, 0.95)),
             icon_color: Color::from_rgb(0.3, 0.3, 0.3),

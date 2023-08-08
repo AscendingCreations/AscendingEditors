@@ -1,5 +1,6 @@
 use num_enum::TryFromPrimitive;
 use serde_repr::*;
+use std::string::ToString;
 use strum_macros::Display;
 
 #[derive(
@@ -62,7 +63,6 @@ impl AIBehavior {
     }
 }
 
-
 #[derive(
     Copy,
     Clone,
@@ -74,6 +74,7 @@ impl AIBehavior {
     Deserialize_repr,
     Default,
     Display,
+    Hash,
 )]
 #[repr(u8)]
 pub enum ItemTypes {

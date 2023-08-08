@@ -1,5 +1,5 @@
-use iced::pure::Element;
-use iced_aw::pure::NumberInput;
+use iced::{theme, Element};
+use iced_aw::{NumberInput, NumberInputStyles};
 use num_traits::{Num, NumAssignOps};
 use std::fmt::Display;
 use std::marker::PhantomData;
@@ -61,8 +61,7 @@ where
             NumberInput::new(self.value, max, NumInputMessage::Change)
                 .step(step)
                 .min(min)
-                .style(araiseal_styles::CustomNumInput)
-                .input_style(araiseal_styles::CustomTextInput),
+                .style(NumberInputStyles::custom(araiseal_styles::CustomNumInput)),
         )
         .map(move |i| on_change((id, i)))
     }

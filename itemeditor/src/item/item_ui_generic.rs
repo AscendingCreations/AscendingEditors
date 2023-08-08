@@ -2,15 +2,14 @@ use crate::item::*;
 use araiseal_styles::{self, CheckBoxStyle, TEXT_WHITE};
 use araiseal_types::*;
 use araiseal_ui::*;
-use iced::pure::{
-    widget::{Checkbox, Column, Container, Image, PickList, Row, Rule, Text, TextInput},
-    Element,
-};
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
-    Color, Length,
+    theme,
+    widget::{Checkbox, Column, Container, Image, PickList, Row, Rule, Text, TextInput},
+    Color, Element, Length,
 };
-use iced_aw::pure::ColorPicker;
+use iced_aw::{style::color_picker::ColorPickerStyles, ColorPicker};
+use std::string::ToString;
 
 #[allow(dead_code)]
 #[derive(Educe)]
@@ -48,8 +47,7 @@ impl ItemUiGeneric {
                 Text::new("Generic")
                     .width(Length::Fill)
                     .vertical_alignment(Vertical::Bottom)
-                    .horizontal_alignment(Horizontal::Center)
-                    .color(TEXT_WHITE),
+                    .horizontal_alignment(Horizontal::Center),
             )
             .push(Rule::horizontal(0));
 
@@ -58,34 +56,27 @@ impl ItemUiGeneric {
             .align_items(Alignment::Center)
             .push(
                 Column::new().push(
-                    TextInput::new("Name", &self.txt_value[..], Message::NameInput)
-                        .width(Length::Units(256))
-                        .style(araiseal_styles::CustomTextInput)
+                    TextInput::new("Name", &self.txt_value)
+                        .on_submit(Message::NameInput)
+                        .width(Length::Fixed(256.0))
                         .padding(3),
                 ),
             )
             .push(
-                Row::new()
-                    .spacing(6)
-                    .push(
-                        Text::new("Item Type")
-                            .horizontal_alignment(Horizontal::Center)
-                            .color(TEXT_WHITE),
-                    )
-                    .push(
-                        PickList::new(&self.type_list[..], self.type_selected, Message::TypeSelect)
-                            .style(araiseal_styles::CustomPickList),
-                    ),
+                Row::new().spacing(6).push(
+                    Text::new("Item Type")
+                        .horizontal_alignment(Horizontal::Center),
+                ), /*.push(PickList::new(
+                       &self.type_list[..],
+                       self.type_selected,
+                       Message::TypeSelect,
+                   )),*/
             )
             .push(
-                Row::new()
-                    .spacing(6)
-                    .push(
-                        Text::new("Item Type 2")
-                            .horizontal_alignment(Horizontal::Center)
-                            .color(TEXT_WHITE),
-                    )
-                    .push(self.type2.view(5, 0, 100, 1, Message::GenericInput)),
+                Row::new().spacing(6).push(
+                    Text::new("Item Type 2")
+                        .horizontal_alignment(Horizontal::Center),
+                ), /* .push(self.type2.view(5, 0, 100, 1, Message::GenericInput)),*/
             );
 
         let sprite_value = self.sprite_input.value;
@@ -93,7 +84,7 @@ impl ItemUiGeneric {
         let row1 = Row::new().spacing(6).push(
             Column::new()
                 .spacing(5)
-                .push(Text::new("Item Sprite".to_string()).color(TEXT_WHITE))
+                .push(Text::new("Item Sprite".to_string()).style(theme::Text::Color(TEXT_WHITE)))
                 .push(
                     Row::new()
                         .align_items(Alignment::Center)
@@ -102,14 +93,13 @@ impl ItemUiGeneric {
                         .push(
                             Container::new(
                                 Image::new(format!("./resources/items/{}.png", sprite_value))
-                                    .width(Length::Units(32))
-                                    .height(Length::Units(32)),
+                                    .width(Length::Fixed(32.0))
+                                    .height(Length::Fixed(32.0)),
                             )
                             .center_x()
                             .center_y()
-                            //.style(styles::ImageContainer)
-                            .width(Length::Units(32))
-                            .height(Length::Units(32)),
+                            .width(Length::Fixed(32.0))
+                            .height(Length::Fixed(32.0)),
                         ),
                 ),
         );
@@ -119,19 +109,21 @@ impl ItemUiGeneric {
             .push(
                 Column::new()
                     .spacing(5)
-                    .push(Text::new("Level Req".to_string()).color(TEXT_WHITE))
+                    .push(Text::new("Level Req".to_string()).style(theme::Text::Color(TEXT_WHITE)))
                     .push(self.level_input.view(1, 0, 200, 1, Message::GenericInput)),
             )
             .push(
                 Column::new()
                     .spacing(5)
-                    .push(Text::new("Sound ID".to_string()).color(TEXT_WHITE))
+                    .push(Text::new("Sound ID".to_string()).style(theme::Text::Color(TEXT_WHITE)))
                     .push(self.sound_input.view(2, 0, 100, 1, Message::GenericInput)),
             )
             .push(
                 Column::new()
                     .spacing(5)
-                    .push(Text::new("Stack Limit".to_string()).color(TEXT_WHITE))
+                    .push(
+                        Text::new("Stack Limit".to_string()).style(theme::Text::Color(TEXT_WHITE)),
+                    )
                     .push(
                         self.stack_limit_input
                             .view(3, 1, 1000, 1, Message::GenericInput),
@@ -140,7 +132,10 @@ impl ItemUiGeneric {
             .push(
                 Column::new()
                     .spacing(5)
-                    .push(Text::new("Base Store Price".to_string()).color(TEXT_WHITE))
+                    .push(
+                        Text::new("Base Store Price".to_string())
+                            .style(theme::Text::Color(TEXT_WHITE)),
+                    )
                     .push(
                         self.base_price_input
                             .view(0, 0, 999999999, 1, Message::BasePriceInput),
@@ -149,43 +144,38 @@ impl ItemUiGeneric {
 
         let row4 = Row::new()
             .spacing(6)
-            .push(
-                Checkbox::new(
-                    self.breakable,
-                    String::from("Breakable"),
-                    Message::Breakable,
-                )
-                .style(CheckBoxStyle),
-            )
-            .push(
-                Checkbox::new(
-                    self.repairable,
-                    String::from("Repairable"),
-                    Message::Repairable,
-                )
-                .style(CheckBoxStyle),
-            )
-            .push(
-                Checkbox::new(
-                    self.stackable,
-                    String::from("Stackable"),
-                    Message::Stackable,
-                )
-                .style(CheckBoxStyle),
-            );
+            .push(Checkbox::new(
+                "Breakable".to_owned(),
+                self.breakable,
+                Message::Breakable,
+            ))
+            .push(Checkbox::new(
+                "Repairable".to_owned(),
+                self.repairable,
+                Message::Repairable,
+            ))
+            .push(Checkbox::new(
+                "Stackable".to_owned(),
+                self.stackable,
+                Message::Stackable,
+            ));
 
         let colorpicker = ColorPicker::new(
             self.show_color,
             self.color,
             button("Set Color")
-                .style(araiseal_styles::Button::Secondary)
+                .style(theme::Button::Custom(Box::new(
+                    araiseal_styles::Button::Secondary,
+                )))
                 .on_press(Message::ChooseColor),
             Message::CancelColor,
             Message::SubmitColor,
         )
-        .style(araiseal_styles::CustomColorPicker);
+        .style(ColorPickerStyles::custom(
+            araiseal_styles::CustomColorPicker,
+        ));
 
-        let style = araiseal_styles::ColorContainer { color: self.color };
+        let style = Box::new(araiseal_styles::ColorContainer { color: self.color });
 
         let row5 = Row::new()
             .spacing(10)
@@ -199,21 +189,15 @@ impl ItemUiGeneric {
                     self.color.b * 255.0,
                     self.color.a * 255.0
                 ))
-                .color(TEXT_WHITE),
+                .style(theme::Text::Color(TEXT_WHITE)),
             )
             .push(
                 Container::new(Row::new())
-                    .height(Length::Units(32))
-                    .width(Length::Units(32))
-                    .style(style),
+                    .height(Length::Fixed(32.0))
+                    .width(Length::Fixed(32.0))
+                    .style(theme::Container::Custom(style)),
             );
 
-        column
-            .push(row)
-            .push(row1)
-            .push(row2)
-            .push(row4)
-            .push(row5)
-            .into()
+        column.push(row1).push(row2).push(row4).push(row5).into()
     }
 }

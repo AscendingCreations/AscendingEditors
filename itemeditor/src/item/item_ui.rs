@@ -3,11 +3,11 @@ use araiseal_types::*;
 use araiseal_ui::*;
 use std::convert::TryFrom;
 
-use iced::pure::{
+use iced::{
+    theme,
     widget::{Column, Container, Row, Scrollable},
-    Element,
+    Color, Element, Length,
 };
-use iced::{Color, Length};
 
 #[allow(dead_code)]
 #[derive(Educe)]
@@ -217,7 +217,6 @@ impl ItemUI {
                                     Container::new(self.generic.layout(
                                         self.generic.type_selected.unwrap_or(ItemTypes::None),
                                     ))
-                                    .style(araiseal_styles::UiContainer)
                                     .padding(5)
                                     .width(Length::Fill)
                                     .center_x()
@@ -225,7 +224,6 @@ impl ItemUI {
                                 )
                                 .push(
                                     Container::new(self.data_ui.layout(item_type))
-                                        .style(araiseal_styles::UiContainer)
                                         .padding(5)
                                         .width(Length::Fill)
                                         .center_x()

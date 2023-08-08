@@ -8,11 +8,11 @@ mod item;
 
 use araiseal_logger::*;
 use araiseal_ui::*;
-use iced::pure::{
+use iced::{
+    theme,
     widget::{Column, Container},
-    Element, Sandbox,
+    Element, Length, Sandbox, Settings,
 };
-use iced::{Length, Settings};
 use item::*;
 use std::fs;
 
@@ -79,7 +79,9 @@ impl Sandbox for Pages {
 
         Container::new(content)
             .height(Length::Fill)
-            .style(araiseal_styles::MainContainer)
+            .style(theme::Container::Custom(Box::new(
+                araiseal_styles::MainContainer,
+            )))
             .into()
     }
 }

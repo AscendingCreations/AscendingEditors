@@ -27,7 +27,7 @@ pub struct CustomColorPicker;
 impl StyleSheet for CustomColorPicker {
     type Style = Theme;
 
-    fn active(&self, style: &Self::Style) -> Appearance {
+    fn active(&self, _style: &Self::Style) -> Appearance {
         Appearance {
             background: BACKGROUND.into(),
             border_radius: 15.0,

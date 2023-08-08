@@ -8,7 +8,7 @@ pub struct MyDate(pub chrono::NaiveDate);
 #[allow(dead_code)]
 impl MyDate {
     pub fn now() -> MyDate {
-        MyDate(Utc::today().naive_utc())
+        MyDate(Utc::now().date_naive())
     }
 
     pub fn add_days(&mut self, days: i64) {

@@ -1,11 +1,11 @@
 [workspace]
 resolver="2"
 members = [
-    #"types",
+    "types",
     "styles",
-    #"ui_helper",
-    #"logging",
-    #"itemeditor",
+    "ui_helper",
+    "logging",
+    "itemeditor",
     #"npceditor",
 ]
 
@@ -13,9 +13,28 @@ members = [
 [workspace.dependencies]
 rand = "0.8.5"
 num-traits = "0.2.16"
+serde = { version = "1.0.183", features = ["derive"] }
+educe = "0.4.22"
+serde_repr = "0.1.16"
+chrono = { version = "0.4.26", features = ["serde"] }
+strum_macros = "0.25.2"
+num_enum = "0.6.1"
+serde_json = "1.0.82"
+serde-big-array = "0.4.1"
+arr_macro = "0.1.3"
+backtrace = "0.3.66"
+
+[workspace.dependencies.araiseal_logger]
+path = "./logging"
+
+[workspace.dependencies.araiseal_ui]
+path = "./ui_helper"
+
+[workspace.dependencies.araiseal_types]
+path = "./types"
 
 [workspace.dependencies.araiseal_styles]
-path = "./"
+path = "./styles"
 
 [workspace.dependencies.iced_aw]
 git = "https://github.com/iced-rs/iced_aw.git"

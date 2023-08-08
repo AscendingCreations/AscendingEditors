@@ -1,11 +1,11 @@
 use crate::item::*;
 use araiseal_types::*;
 use araiseal_ui::*;
-use iced::pure::{
+use iced::{
+    theme,
     widget::{PickList, Row},
-    Element,
+    Element, Length,
 };
-use iced::Length;
 
 #[derive(Educe)]
 #[educe(Default)]
@@ -26,24 +26,11 @@ impl ItemUiMenu {
                     self.list_selected.clone(),
                     Message::ListSelect,
                 )
-                .style(araiseal_styles::CustomPickList)
                 .width(Length::Fill),
             )
-            .push(
-                button("Revert")
-                    .on_press(Message::RevertButtonPress)
-                    .style(araiseal_styles::Button::Primary),
-            )
-            .push(
-                button("Save")
-                    .on_press(Message::SaveButtonPress)
-                    .style(araiseal_styles::Button::Primary),
-            )
-            .push(
-                button("Save All")
-                    .on_press(Message::SaveAllButtonPress)
-                    .style(araiseal_styles::Button::Primary),
-            )
+            .push(button("Revert").on_press(Message::RevertButtonPress))
+            .push(button("Save").on_press(Message::SaveButtonPress))
+            .push(button("Save All").on_press(Message::SaveAllButtonPress))
             .into()
     }
 }

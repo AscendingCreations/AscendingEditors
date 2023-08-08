@@ -1,4 +1,4 @@
-use iced::{theme, widget::pick_list, Background, Color, Theme, Vector};
+use iced::{widget::pick_list, Background, Color, Theme};
 
 const BACKGROUND: Color = Color {
     r: 48.0 / 255.0,
@@ -25,12 +25,15 @@ pub struct CustomPickList;
 impl pick_list::StyleSheet for CustomPickList {
     type Style = Theme;
 
-    fn active(&self, style: &Self::Style) -> pick_list::Appearance {
+    fn active(&self, _style: &Self::Style) -> pick_list::Appearance {
         pick_list::Appearance {
             text_color: Color::WHITE,
             background: Background::Color(BACKGROUND),
             border_color: PRIMARY,
-            ..Default::default()
+            border_radius: 2.0.into(),
+            border_width: 1.0,
+            placeholder_color: PRIMARY,
+            handle_color: PRIMARY,
         }
     }
 

@@ -1,4 +1,4 @@
-use iced::{theme, widget::text_input, Background, Color, Theme, Vector};
+use iced::{theme, widget::text_input, Background, Color, Theme};
 use iced_aw::number_input;
 
 const BACKGROUND: Color = Color {
@@ -25,7 +25,7 @@ pub struct CustomNumInput;
 impl number_input::StyleSheet for CustomNumInput {
     type Style = Theme;
 
-    fn active(&self, style: &Self::Style) -> number_input::Appearance {
+    fn active(&self, _style: &Self::Style) -> number_input::Appearance {
         number_input::Appearance {
             icon_color: PRIMARY,
             ..number_input::Appearance::default()
@@ -39,7 +39,7 @@ impl number_input::StyleSheet for CustomNumInput {
     /// The appearance when the [`NumberInput`](crate::native::number_input::NumberInput) is disabled.
     fn disabled(&self, style: &Self::Style) -> number_input::Appearance {
         let active = self.active(style);
-        Appearance {
+        number_input::Appearance {
             button_background: active.button_background.map(|bg| match bg {
                 Background::Color(color) => Background::Color(Color {
                     a: color.a * 0.5,
@@ -59,12 +59,22 @@ pub struct CustomTextInput;
 impl text_input::StyleSheet for CustomTextInput {
     type Style = Theme;
 
-    fn active(&self, style: &Self::Style) -> text_input::Appearance {
+    fn active(&self, _style: &Self::Style) -> text_input::Appearance {
         text_input::Appearance {
             background: BACKGROUND.into(),
             border_color: PRIMARY,
             border_width: 1.0,
             border_radius: 5.5.into(),
+            icon_color: theme::Palette::DARK.text,
+        }
+    }
+
+    fn hovered(&self, _style: &Self::Style) -> text_input::Appearance {
+        text_input::Appearance {
+            background: BACKGROUND.into(),
+            border_radius: 5.5.into(),
+            border_width: 1.0,
+            border_color: HOVERED,
             icon_color: theme::Palette::DARK.text,
         }
     }
@@ -78,15 +88,29 @@ impl text_input::StyleSheet for CustomTextInput {
         }
     }
 
-    fn placeholder_color(&self, style: &Self::Style) -> Color {
+    fn placeholder_color(&self, _style: &Self::Style) -> Color {
         HOVERED
     }
 
-    fn selection_color(&self, style: &Self::Style) -> Color {
+    fn selection_color(&self, _style: &Self::Style) -> Color {
         HOVERED
     }
 
-    fn value_color(&self, style: &Self::Style) -> Color {
+    fn value_color(&self, _style: &Self::Style) -> Color {
         Color::WHITE
+    }
+
+    fn disabled(&self, _style: &Self::Style) -> text_input::Appearance {
+        text_input::Appearance {
+            background: PRIMARY.into(),
+            border_radius: 5.5.into(),
+            border_width: 1.0,
+            border_color: theme::Palette::DARK.text,
+            icon_color: theme::Palette::DARK.text,
+        }
+    }
+
+    fn disabled_color(&self, style: &Self::Style) -> Color {
+        self.placeholder_color(style)
     }
 }

@@ -3,13 +3,11 @@ use araiseal_styles::TEXT_WHITE;
 use araiseal_types::*;
 use araiseal_ui::*;
 use arr_macro::arr;
-use iced::pure::{
-    widget::{Column, Row, Rule, Text},
-    Element,
-};
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
-    Length,
+    theme,
+    widget::{Column, Row, Rule, Text},
+    Element, Length,
 };
 
 #[derive(Educe)]
@@ -24,13 +22,12 @@ impl ItemUiData {
         let mut i = 0;
         let mut column = Column::new()
             .spacing(6)
-            .align_items(Alignment::Fill)
+            .align_items(Alignment::Center)
             .push(
                 Text::new("Data Inputs")
                     .width(Length::Fill)
                     .vertical_alignment(Vertical::Bottom)
-                    .horizontal_alignment(Horizontal::Center)
-                    .color(TEXT_WHITE),
+                    .horizontal_alignment(Horizontal::Center),
             )
             .push(Rule::horizontal(0));
         let mut row = Row::new().spacing(12).align_items(Alignment::Start);
@@ -45,7 +42,9 @@ impl ItemUiData {
             row = row.push(
                 Column::new()
                     .spacing(5)
-                    .push(Text::new(data_labels(id, item_type)).color(TEXT_WHITE))
+                    .push(
+                        Text::new(data_labels(id, item_type)),
+                    )
                     .push(control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput)),
             );
             i += 1;
