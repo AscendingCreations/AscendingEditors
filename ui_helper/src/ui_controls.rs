@@ -1,4 +1,4 @@
-use iced::pure::Element;
+use iced::Element;
 
 pub trait UiRenderer {
     type Message;

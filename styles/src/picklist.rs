@@ -1,4 +1,4 @@
-use iced::{pick_list, Background, Color};
+use iced::{theme, widget::pick_list, Background, Color, Theme, Vector};
 use iced_style::menu;
 
 const BACKGROUND: Color = Color {
@@ -24,8 +24,10 @@ const HOVERED: Color = Color {
 
 pub struct CustomPickList;
 impl pick_list::StyleSheet for CustomPickList {
-    fn menu(&self) -> menu::Style {
-        menu::Style {
+    type Style = Theme;
+
+    fn active(&self, style: &Self::Style) -> pick_list::Appearance {
+        pick_list::Appearance {
             text_color: Color::WHITE,
             background: Background::Color(BACKGROUND),
             border_color: PRIMARY,
@@ -33,19 +35,10 @@ impl pick_list::StyleSheet for CustomPickList {
         }
     }
 
-    fn active(&self) -> pick_list::Style {
-        pick_list::Style {
-            text_color: Color::WHITE,
-            background: Background::Color(BACKGROUND),
-            border_color: PRIMARY,
-            ..Default::default()
-        }
-    }
-
-    fn hovered(&self) -> pick_list::Style {
-        pick_list::Style {
+    fn hovered(&self, style: &Self::Style) -> pick_list::Appearance {
+        pick_list::Appearance {
             border_color: HOVERED,
-            ..self.active()
+            ..self.active(style)
         }
     }
 }

@@ -1,5 +1,5 @@
-use iced::Color;
-use iced_aw::style::color_picker;
+use iced::{Color, Theme};
+use iced_aw::style::color_picker::{Appearance, StyleSheet};
 
 const BACKGROUND: Color = Color {
     r: 48.0 / 255.0,
@@ -24,9 +24,11 @@ const HOVERED: Color = Color {
 
 pub struct CustomColorPicker;
 
-impl color_picker::StyleSheet for CustomColorPicker {
-    fn active(&self) -> color_picker::Style {
-        color_picker::Style {
+impl StyleSheet for CustomColorPicker {
+    type Style = Theme;
+
+    fn active(&self, style: &Self::Style) -> Appearance {
+        Appearance {
             background: BACKGROUND.into(),
             border_radius: 15.0,
             border_width: 1.0,
@@ -37,19 +39,23 @@ impl color_picker::StyleSheet for CustomColorPicker {
         }
     }
 
-    fn selected(&self) -> color_picker::Style {
-        color_picker::Style { ..self.active() }
+    fn selected(&self, style: &Self::Style) -> Appearance {
+        Appearance {
+            ..self.active(style)
+        }
     }
 
-    fn hovered(&self) -> color_picker::Style {
-        color_picker::Style { ..self.active() }
+    fn hovered(&self, style: &Self::Style) -> Appearance {
+        Appearance {
+            ..self.active(style)
+        }
     }
 
-    fn focused(&self) -> color_picker::Style {
-        color_picker::Style {
+    fn focused(&self, style: &Self::Style) -> Appearance {
+        Appearance {
             border_color: HOVERED,
             bar_border_color: HOVERED,
-            ..self.active()
+            ..self.active(style)
         }
     }
 }

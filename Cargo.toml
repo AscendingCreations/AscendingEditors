@@ -1,10 +1,40 @@
 [workspace]
 resolver="2"
 members = [
-    "types",
+    #"types",
     "styles",
-    "ui_helper",
-    "logging",
-    "itemeditor",
-    "npceditor",
+    #"ui_helper",
+    #"logging",
+    #"itemeditor",
+    #"npceditor",
+]
+
+
+[workspace.dependencies]
+rand = "0.8.5"
+num-traits = "0.2.16"
+
+[workspace.dependencies.araiseal_styles]
+path = "./"
+
+[workspace.dependencies.iced_aw]
+git = "https://github.com/iced-rs/iced_aw.git"
+version = "0.6.0"
+default-features = false
+features = [
+    "number_input",
+    "color_picker",
+]
+
+[workspace.dependencies.iced_style]
+version = "0.9.0"
+
+[workspace.dependencies.iced]
+version = "0.10.0"
+features = [
+    "canvas",
+    "tokio",
+    "image",
+    "debug",
+    "wgpu",
 ]
