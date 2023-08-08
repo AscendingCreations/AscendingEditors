@@ -10,5 +10,4 @@ rand.workspace = true
 num-traits.workspace = true
 araiseal_styles.workspace = true
 iced_aw.workspace = true
-iced_style.workspace = true
 iced.workspace = true

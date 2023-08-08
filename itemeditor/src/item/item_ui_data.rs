@@ -1,11 +1,9 @@
 use crate::item::*;
-use araiseal_styles::TEXT_WHITE;
 use araiseal_types::*;
 use araiseal_ui::*;
 use arr_macro::arr;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
-    theme,
     widget::{Column, Row, Rule, Text},
     Element, Length,
 };
@@ -42,9 +40,7 @@ impl ItemUiData {
             row = row.push(
                 Column::new()
                     .spacing(5)
-                    .push(
-                        Text::new(data_labels(id, item_type)),
-                    )
+                    .push(Text::new(data_labels(id, item_type)))
                     .push(control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput)),
             );
             i += 1;

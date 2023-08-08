@@ -1,5 +1,5 @@
 [workspace]
-resolver="2"
+resolver = "2"
 members = [
     "types",
     "styles",
@@ -23,6 +23,8 @@ serde_json = "1.0.82"
 serde-big-array = "0.4.1"
 arr_macro = "0.1.3"
 backtrace = "0.3.66"
+log = "0.4.17"
+itertools = "0.10.3"
 
 [workspace.dependencies.araiseal_logger]
 path = "./logging"
@@ -39,14 +41,6 @@ path = "./styles"
 [workspace.dependencies.iced_aw]
 git = "https://github.com/iced-rs/iced_aw.git"
 version = "0.6.0"
-default-features = false
-features = [
-    "number_input",
-    "color_picker",
-]
-
-[workspace.dependencies.iced_style]
-version = "0.9.0"
 
 [workspace.dependencies.iced]
 version = "0.10.0"
