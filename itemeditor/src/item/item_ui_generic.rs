@@ -1,6 +1,7 @@
 use crate::item::*;
 use araiseal_types::*;
 use araiseal_ui::*;
+use core::convert::Into;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
     widget::{
@@ -9,7 +10,7 @@ use iced::{
     Color, Element, Length,
 };
 use iced_aw::ColorPicker;
-use std::string::ToString;
+use std::path::Path;
 
 #[allow(dead_code)]
 #[derive(Educe)]
@@ -55,19 +56,29 @@ impl ItemUiGeneric {
 
         let sprite_value = self.sprite_input.value;
 
+        let image_path = format!("./resources/items/{}.png", sprite_value);
+
         let row1 = row![column![
-            text("Item Sprite".to_string()),
+            "Item Sprite",
             row![
                 self.sprite_input.view(4, 0, 1000, 1, Message::GenericInput),
-                container(
-                    Image::new(format!("./resources/items/{}.png", sprite_value))
+                if Path::new(&image_path).exists() {
+                    container(
+                        Image::new(&image_path)
+                            .width(Length::Fixed(32.0))
+                            .height(Length::Fixed(32.0)),
+                    )
+                    .center_x()
+                    .center_y()
+                    .width(Length::Fixed(32.0))
+                    .height(Length::Fixed(32.0))
+                } else {
+                    Container::new("")
+                        .center_x()
+                        .center_y()
                         .width(Length::Fixed(32.0))
-                        .height(Length::Fixed(32.0)),
-                )
-                .center_x()
-                .center_y()
-                .width(Length::Fixed(32.0))
-                .height(Length::Fixed(32.0)),
+                        .height(Length::Fixed(32.0))
+                }
             ]
             .align_items(Alignment::Center)
             .spacing(6)
@@ -77,23 +88,23 @@ impl ItemUiGeneric {
 
         let row2 = row![
             column![
-                text("Level Req".to_string()),
+                "Level Req",
                 self.level_input.view(1, 0, 200, 1, Message::GenericInput)
             ]
             .spacing(5),
             column![
-                text("Sound ID".to_string()),
+                "Sound ID",
                 self.sound_input.view(2, 0, 100, 1, Message::GenericInput)
             ]
             .spacing(5),
             column![
-                text("Stack Limit".to_string()),
+                "Stack Limit",
                 self.stack_limit_input
                     .view(3, 1, 1000, 1, Message::GenericInput)
             ]
             .spacing(5),
             column![
-                text("Base Store Price".to_string()),
+                "Base Store Price",
                 self.base_price_input
                     .view(0, 0, 999999999, 1, Message::BasePriceInput)
             ]
@@ -102,13 +113,9 @@ impl ItemUiGeneric {
         .spacing(6);
 
         let row4 = row![
-            checkbox("Breakable".to_owned(), self.breakable, Message::Breakable,),
-            checkbox(
-                "Repairable".to_owned(),
-                self.repairable,
-                Message::Repairable,
-            ),
-            checkbox("Stackable".to_owned(), self.stackable, Message::Stackable,)
+            checkbox("Breakable", self.breakable, Message::Breakable,),
+            checkbox("Repairable", self.repairable, Message::Repairable,),
+            checkbox("Stackable", self.stackable, Message::Stackable,)
         ]
         .spacing(6);
 

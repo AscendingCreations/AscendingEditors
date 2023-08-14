@@ -4,7 +4,7 @@ use araiseal_ui::*;
 use arr_macro::arr;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
-    widget::{column, text, Row, Rule, Text},
+    widget::{column, text, Row, Rule},
     Element, Length,
 };
 
@@ -40,7 +40,7 @@ impl ItemUiData {
 
             row = row.push(
                 column![
-                    Text::new(data_labels(id, item_type)),
+                    data_labels(id, item_type),
                     control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput)
                 ]
                 .spacing(5),
