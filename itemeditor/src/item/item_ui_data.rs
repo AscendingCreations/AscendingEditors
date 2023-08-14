@@ -4,7 +4,7 @@ use araiseal_ui::*;
 use arr_macro::arr;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
-    widget::{Column, Row, Rule, Text},
+    widget::{column, text, Row, Rule, Text},
     Element, Length,
 };
 
@@ -17,35 +17,37 @@ pub struct ItemUiData {
 
 impl ItemUiData {
     pub fn layout(&self, item_type: ItemTypes) -> Element<Message> {
-        let mut i = 0;
-        let mut column = Column::new()
-            .spacing(6)
-            .align_items(Alignment::Center)
-            .push(
-                Text::new("Data Inputs")
-                    .width(Length::Fill)
-                    .vertical_alignment(Vertical::Bottom)
-                    .horizontal_alignment(Horizontal::Center),
-            )
-            .push(Rule::horizontal(0));
+        let mut i: i32 = 0;
+        let mut col = column![
+            text("Data Inputs")
+                .width(Length::Fill)
+                .vertical_alignment(Vertical::Bottom)
+                .horizontal_alignment(Horizontal::Center),
+            Rule::horizontal(0)
+        ]
+        .spacing(6)
+        .align_items(Alignment::Center)
+        .width(Length::Shrink);
+
         let mut row = Row::new().spacing(12).align_items(Alignment::Start);
 
         for (id, control) in self.input.iter().enumerate() {
             if i == 6 {
                 i = 0;
-                column = column.push(row);
+                col = col.push(row);
                 row = Row::new().spacing(12).align_items(Alignment::Start);
             }
 
             row = row.push(
-                Column::new()
-                    .spacing(5)
-                    .push(Text::new(data_labels(id, item_type)))
-                    .push(control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput)),
+                column![
+                    Text::new(data_labels(id, item_type)),
+                    control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput)
+                ]
+                .spacing(5),
             );
             i += 1;
         }
 
-        column.push(row).into()
+        col.push(row).into()
     }
 }

@@ -9,9 +9,9 @@ mod item;
 use araiseal_logger::*;
 use araiseal_ui::*;
 use iced::{
-    theme,
+    executor, font,
     widget::{Column, Container},
-    Element, Length, Sandbox, Settings,
+    Application, Command, Element, Length, Settings, Theme,
 };
 use item::*;
 use std::fs;
@@ -49,21 +49,29 @@ pub struct Pages {
     page: Box<dyn UiRenderer<Message = item::Message>>,
 }
 
-impl Sandbox for Pages {
-    type Message = item::Message;
+impl Application for Pages {
+    type Message = Message;
+    type Flags = ();
+    type Executor = executor::Default;
+    type Theme = Theme;
 
-    fn new() -> Pages {
-        Pages {
-            page: Box::new(item::ItemUI::new()),
-        }
+    fn new(_flags: ()) -> (Self, Command<Message>) {
+        (
+            Self {
+                page: Box::new(item::ItemUI::new()),
+            },
+            font::load(iced_aw::graphics::icons::ICON_FONT_BYTES).map(Message::FontLoaded),
+        )
     }
 
     fn title(&self) -> String {
         self.page.title().to_string()
     }
 
-    fn update(&mut self, event: Message) {
+    fn update(&mut self, event: Message) -> Command<Message> {
         self.page.update(event);
+
+        Command::none()
     }
 
     fn view(&self) -> Element<Message> {
@@ -77,11 +85,10 @@ impl Sandbox for Pages {
             .push(page)
             .into();
 
-        Container::new(content)
-            .height(Length::Fill)
-            .style(theme::Container::Custom(Box::new(
-                araiseal_styles::MainContainer,
-            )))
-            .into()
+        Container::new(content).height(Length::Fill).into()
+    }
+
+    fn theme(&self) -> Self::Theme {
+        Theme::Dark
     }
 }

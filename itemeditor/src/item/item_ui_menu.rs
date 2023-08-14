@@ -2,8 +2,7 @@ use crate::item::*;
 use araiseal_types::*;
 use araiseal_ui::*;
 use iced::{
-    theme,
-    widget::{PickList, Row},
+    widget::{row, PickList},
     Element, Length,
 };
 
@@ -17,20 +16,19 @@ pub struct ItemUiMenu {
 
 impl ItemUiMenu {
     pub fn layout(&self) -> Element<Message> {
-        Row::new()
-            .width(Length::Fill)
-            .spacing(5)
-            .push(
-                PickList::new(
-                    &self.list[..],
-                    self.list_selected.clone(),
-                    Message::ListSelect,
-                )
-                .width(Length::Fill),
+        row![
+            PickList::new(
+                &self.list[..],
+                self.list_selected.clone(),
+                Message::ListSelect,
             )
-            .push(button("Revert").on_press(Message::RevertButtonPress))
-            .push(button("Save").on_press(Message::SaveButtonPress))
-            .push(button("Save All").on_press(Message::SaveAllButtonPress))
-            .into()
+            .width(Length::Fill),
+            button("Revert").on_press(Message::RevertButtonPress),
+            button("Save").on_press(Message::SaveButtonPress),
+            button("Save All").on_press(Message::SaveAllButtonPress)
+        ]
+        .width(Length::Fill)
+        .spacing(5)
+        .into()
     }
 }

@@ -4,8 +4,7 @@ use araiseal_ui::*;
 use std::convert::TryFrom;
 
 use iced::{
-    theme,
-    widget::{Column, Container, Row, Scrollable},
+    widget::{column, row, Column, Container, Scrollable},
     Color, Element, Length,
 };
 
@@ -126,6 +125,9 @@ impl UiRenderer for ItemUI {
                 self.generic.show_color = false;
                 return None;
             }
+            _ => {
+                return None;
+            }
         }
 
         self.data[self.currentid].1 = true;
@@ -204,40 +206,35 @@ impl ItemUI {
     pub fn layout(&self) -> Element<Message> {
         let item_type = self.generic.type_selected.unwrap_or(ItemTypes::None);
 
-        let column =
-            Column::new()
-                .spacing(20)
-                .push(self.menu.layout())
-                .push(Scrollable::new(
-                    Row::new()
-                        .push(
-                            Column::new()
-                                .spacing(5)
-                                .push(
-                                    Container::new(self.generic.layout(
-                                        self.generic.type_selected.unwrap_or(ItemTypes::None),
-                                    ))
-                                    .padding(5)
-                                    .width(Length::Fill)
-                                    .center_x()
-                                    .center_y(),
-                                )
-                                .push(
-                                    Container::new(self.data_ui.layout(item_type))
-                                        .padding(5)
-                                        .width(Length::Fill)
-                                        .center_x()
-                                        .center_y(),
-                                )
-                                .width(Length::FillPortion(30)),
+        Container::new(
+            column![
+                self.menu.layout(),
+                Scrollable::new(row![
+                    column![
+                        Container::new(
+                            self.generic
+                                .layout(self.generic.type_selected.unwrap_or(ItemTypes::None),)
                         )
-                        .push(Column::new().width(Length::FillPortion(1))),
-                ));
-
-        Container::new(column)
-            .width(Length::Fill)
-            .height(Length::Fill)
-            .padding(10)
-            .into()
+                        .padding(5)
+                        .width(Length::Fill)
+                        .center_x()
+                        .center_y(),
+                        Container::new(self.data_ui.layout(item_type))
+                            .padding(5)
+                            .width(Length::Fill)
+                            .center_x()
+                            .center_y(),
+                    ]
+                    .spacing(5)
+                    .width(Length::FillPortion(30)),
+                    Column::new().width(Length::FillPortion(1))
+                ])
+            ]
+            .spacing(20),
+        )
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .padding(10)
+        .into()
     }
 }

@@ -1,6 +1,6 @@
 use araiseal_types::*;
 use araiseal_ui::*;
-use iced::Color;
+use iced::{font, Color};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Message {
@@ -19,4 +19,5 @@ pub enum Message {
     ChooseColor,
     SubmitColor(Color),
     CancelColor,
+    FontLoaded(Result<(), font::Error>),
 }
