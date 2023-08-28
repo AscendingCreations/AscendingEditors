@@ -23,6 +23,7 @@ pub struct ItemData {
 }
 
 impl ItemData {
+    #[allow(dead_code)]
     pub fn create_files() -> Result<(), String> {
         for i in 0..MAX_ITEMS {
             let name = format!("./data/items/{}.json", i);

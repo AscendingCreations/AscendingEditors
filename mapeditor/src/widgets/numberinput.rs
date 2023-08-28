@@ -1,6 +1,5 @@
 use graphics::iced_aw::{NumberInput, NumberInputStyles};
 use graphics::iced_wgpu::Renderer;
-use graphics::iced_widget::{row, PickList};
 use graphics::iced_winit::{
     core::{Element, Length},
     style::Theme,
@@ -36,6 +35,7 @@ impl<V> NumInputMessage<V>
 where
     V: Eq + Copy,
 {
+    #[allow(dead_code)]
     pub fn get_enum(&self) -> V {
         let NumInputMessage::Change(data) = self;
         *data

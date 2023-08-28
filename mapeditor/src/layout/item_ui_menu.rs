@@ -4,7 +4,7 @@ use araiseal_types::*;
 use araiseal_ui::*;
 
 use graphics::iced_wgpu::Renderer;
-use graphics::iced_widget::{row, Button, PickList, Row};
+use graphics::iced_widget::{Button, PickList, Row};
 use graphics::iced_winit::{
     core::{Element, Length},
     style::Theme,

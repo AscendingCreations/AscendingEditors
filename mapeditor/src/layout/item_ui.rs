@@ -112,25 +112,6 @@ impl Ui for ItemUI {
                 self.generic.breakable = value;
                 self.data[self.currentid].0.breakable = value;
             }
-            Message::ChooseColor => {
-                self.generic.show_color = true;
-                return None;
-            }
-            Message::SubmitColor(color) => {
-                self.generic.color = color;
-                self.data[self.currentid].0.rgba.r = (color.r * 255.0) as i16;
-                self.data[self.currentid].0.rgba.g = (color.g * 255.0) as i16;
-                self.data[self.currentid].0.rgba.b = (color.b * 255.0) as i16;
-                self.data[self.currentid].0.rgba.a = (color.a * 255.0) as i16;
-                self.generic.show_color = false;
-            }
-            Message::CancelColor => {
-                self.generic.show_color = false;
-                return None;
-            }
-            _ => {
-                return None;
-            }
         }
 
         self.data[self.currentid].1 = true;

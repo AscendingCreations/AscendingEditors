@@ -153,7 +153,7 @@ async fn main() -> Result<(), AscendingError> {
     map.init_texture_layer(&mut map_renderer);
 
     // prepare the sprites
-    let mut sprites: Vec<Image> = Vec::with_capacity(20);
+    let sprites: Vec<Image> = Vec::with_capacity(20);
 
     //prepare the rendered on map text
     let mut texts: Vec<Text> = Vec::with_capacity(1024);
@@ -327,7 +327,7 @@ async fn main() -> Result<(), AscendingError> {
             *control_flow = ControlFlow::Exit;
         }
 
-        let seconds = frame_time.seconds();
+        //let seconds = frame_time.seconds();
         // update our systems data to the gpu. this is the Camera in the shaders.
         state.system.update(&renderer, &frame_time);
 

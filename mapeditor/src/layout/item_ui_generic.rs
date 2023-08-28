@@ -15,7 +15,6 @@ use graphics::iced_winit::{
     style::Theme,
 };
 
-use graphics::iced_aw::ColorPicker;
 use std::path::Path;
 
 #[allow(dead_code)]
@@ -124,14 +123,6 @@ impl ItemUiGeneric {
             checkbox("Stackable", self.stackable, Message::Stackable,)
         ]
         .spacing(6);
-
-        let colorpicker = ColorPicker::<Message, Theme>::new(
-            self.show_color,
-            self.color,
-            araiseal_ui::button("Set Color").on_press(Message::ChooseColor),
-            Message::CancelColor,
-            Message::SubmitColor,
-        );
 
         let row5 = Row::<Message, Renderer<Theme>>::with_children(vec![
             text(format!(

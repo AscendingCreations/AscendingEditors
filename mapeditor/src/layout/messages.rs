@@ -1,7 +1,6 @@
 use crate::widgets::NumInputMessage;
 use araiseal_types::*;
 use araiseal_ui::ListData;
-use graphics::iced_winit::core::Color;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Message {
@@ -17,7 +16,4 @@ pub enum Message {
     Stackable(bool),
     Breakable(bool),
     NameInput(String),
-    ChooseColor,
-    SubmitColor(Color),
-    CancelColor,
 }
