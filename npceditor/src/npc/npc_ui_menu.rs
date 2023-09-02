@@ -1,11 +1,10 @@
 use crate::npc::*;
 use araiseal_types::*;
 use araiseal_ui::*;
-use iced::pure::{
-    widget::{PickList, Row},
-    Element,
+use iced::{
+    widget::{PickList, row},
+    Element, Length,
 };
-use iced::Length;
 
 #[derive(Educe)]
 #[educe(Default)]
@@ -17,33 +16,19 @@ pub struct NpcUIMenu {
 
 impl NpcUIMenu {
     pub fn layout(&self) -> Element<Message> {
-        Row::new()
-            .width(Length::Fill)
-            .spacing(5)
-            .push(
-                PickList::new(
-                    &self.list[..],
-                    self.list_selected.clone(),
-                    Message::ListSelect,
-                )
-                .style(araiseal_styles::CustomPickList)
-                .width(Length::Fill),
+        row![
+            PickList::new(
+                &self.list[..],
+                self.list_selected.clone(),
+                Message::ListSelect,
             )
-            .push(
-                button("Revert")
-                    .on_press(Message::RevertButtonPress)
-                    .style(araiseal_styles::Button::Primary),
-            )
-            .push(
-                button("Save")
-                    .on_press(Message::SaveButtonPress)
-                    .style(araiseal_styles::Button::Primary),
-            )
-            .push(
-                button("Save All")
-                    .on_press(Message::SaveAllButtonPress)
-                    .style(araiseal_styles::Button::Primary),
-            )
-            .into()
+            .width(Length::Fill),
+            button("Revert").on_press(Message::RevertButtonPress),
+            button("Save").on_press(Message::SaveButtonPress),
+            button("Save All").on_press(Message::SaveAllButtonPress)
+        ]
+        .width(Length::Fill)
+        .spacing(5)
+        .into()
     }
 }

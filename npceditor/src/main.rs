@@ -8,11 +8,11 @@ mod npc;
 
 use araiseal_logger::*;
 use araiseal_ui::*;
-use iced::pure::{
+use iced::{
+    executor, font,
     widget::{Column, Container},
-    Element, Sandbox,
+    Application, Command, Element, Length, Settings, Theme,
 };
-use iced::{Length, Settings};
 use npc::*;
 use std::fs;
 
@@ -25,7 +25,6 @@ pub fn main() -> Result<(), String> {
 
     std::panic::set_hook(Box::new(|panic_info| {
         let bt = backtrace::Backtrace::new();
-
         error!("PANIC: {}, BACKTRACE: {:?}", panic_info, bt);
     }));
 
@@ -35,6 +34,7 @@ pub fn main() -> Result<(), String> {
 
     info!("Checked or Created Directorys");
     NpcData::create_files()?;
+
     info!("Checked or Created Files");
 
     if let Err(err) = Pages::run(Settings::default()) {
@@ -48,21 +48,28 @@ pub struct Pages {
     page: Box<dyn UiRenderer<Message = Message>>,
 }
 
-impl Sandbox for Pages {
+impl Application for Pages {
     type Message = Message;
+    type Flags = ();
+    type Executor = executor::Default;
+    type Theme = Theme;
 
-    fn new() -> Pages {
-        Pages {
-            page: Box::new(NpcUI::new()),
-        }
+    fn new(_flags: ()) -> (Self, Command<Message>) {
+        (
+            Self {
+                page: Box::new(NpcUI::new()),
+            },
+            font::load(iced_aw::graphics::icons::ICON_FONT_BYTES).map(Message::FontLoaded),
+        )
     }
 
     fn title(&self) -> String {
         self.page.title().to_string()
     }
 
-    fn update(&mut self, event: Message) {
+    fn update(&mut self, event: Message) -> Command<Message> {
         self.page.update(event);
+        Command::none()
     }
 
     fn view(&self) -> Element<Message> {
@@ -78,7 +85,10 @@ impl Sandbox for Pages {
 
         Container::new(content)
             .height(Length::Fill)
-            .style(araiseal_styles::MainContainer)
             .into()
+    }
+
+    fn theme(&self) -> Self::Theme {
+        Theme::Dark
     }
 }

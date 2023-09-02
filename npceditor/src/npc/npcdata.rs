@@ -51,11 +51,15 @@ pub struct NpcData {
     pub can_target: bool,
     pub can_move: bool,
     pub can_attack_player: bool,
-    pub has_enemies: bool,
     pub has_allys: bool,
     pub can_attack: bool,
+    pub has_selfonly: bool,
+    pub has_friendonly: bool,
+    pub has_groundonly: bool,
+    pub runsaway: bool,
+    pub isanimated: bool,
+    pub run_damage: u32,
     pub spawntime: (GameTime, GameTime), //skill type to cast it with and  percentage needed to cast and Max Percentage.
-    pub enemies: Vec<u64>,
     pub drops: [(u32, u32, u32); 10], //item dropped on death, chance, amount
     pub drops_max: u16,
 }
