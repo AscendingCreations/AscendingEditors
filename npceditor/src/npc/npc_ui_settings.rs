@@ -1,15 +1,15 @@
 use crate::npc::*;
-use araiseal_styles::{CheckBoxStyle, TEXT_WHITE};
 use araiseal_ui::*;
-use iced::pure::{
-    widget::{Button, Checkbox, Column, Row, Rule, Text},
+use araiseal_types::*;
+use iced::{
+    alignment::{Alignment, Horizontal},
+    widget::{column, row, text, checkbox, Rule},
     Element,
 };
-use iced::{
-    alignment::{Alignment, Horizontal, Vertical},
-    Length,
+use iced_aw::{
+    TimePicker,
+    time_picker::Time
 };
-use iced_aw::pure::time_picker::{Time, TimePicker};
 
 #[derive(Educe)]
 #[educe(Default)]
@@ -23,8 +23,6 @@ pub struct NpcUISettings {
     pub has_selfonly: bool,
     pub has_friendonly: bool,
     pub has_groundonly: bool,
-    pub has_enemyonly: bool,
-    pub has_enemies: bool,
     pub has_allys: bool,
     pub can_attack: bool,
     pub runsaway: bool,
@@ -33,6 +31,7 @@ pub struct NpcUISettings {
     #[educe(Default(expression = "[Time::now_hms(false); 2]"))]
     pub times: [Time; 2],
     pub show_time: [bool; 2],
+    pub spawntime_data: (GameTime, GameTime),
     #[educe(Default(expression = "NumInput::new(0)"))]
     pub target_switch_chance: NumInput<i64, Message>,
     #[educe(Default(expression = "NumInput::new(0)"))]
@@ -40,273 +39,95 @@ pub struct NpcUISettings {
 }
 
 impl NpcUISettings {
-    pub fn layout(&self, npc: &NpcData) -> Element<Message> {
-        Column::new()
-            .spacing(6)
-            .align_items(Alignment::Center)
-            .push(
-                Text::new("Npc Settings")
-                    .width(Length::Fill)
-                    .vertical_alignment(Vertical::Bottom)
-                    .horizontal_alignment(Horizontal::Center)
-                    .color(TEXT_WHITE),
-            )
-            .push(Rule::horizontal(0))
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.target_auto_switch,
-                                String::from("Targeting Auto switch"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((14, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.target_attacked_switch,
-                                String::from("Targets New Attacker"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((15, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.target_range_dropout,
-                                String::from("Drop target when out of Range"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((16, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.can_target,
-                                String::from("Enable Targeting"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((17, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.can_move,
-                                String::from("Enable Npc Movement"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((18, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.can_attack_player,
-                                String::from("Allow Attacking Players"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((19, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.has_selfonly,
-                                String::from("Enable Self cast Skills"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((20, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.has_friendonly,
-                                String::from("Enable Ally cast Skills"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((21, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.has_groundonly,
-                                String::from("Enable Ground cast Skills"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((22, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.has_enemyonly,
-                                String::from("Enable Enemy cast Skills"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((23, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.has_enemies,
-                                String::from("Checks for Enemy Npc's during Targeting"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((24, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.has_allys,
-                                String::from("Checks for Ally Npc's during Targeting"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((25, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.can_attack,
-                                String::from("Enable Skill Casting"),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((26, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.runsaway,
-                                String::from("Will Run when HP is low."),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((27, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.canpassthru,
-                                String::from("Can walk thru."),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((28, i))),
-                    )
-                    .push(
-                        Element::new(
-                            Checkbox::new(
-                                self.isanimated,
-                                String::from("Always Animated movement."),
-                                CheckBoxMessage::Change,
-                            )
-                            .style(CheckBoxStyle),
-                        )
-                        .map(move |i| Message::GenericBoolInput((29, i))),
-                    ),
-            )
-            .push(
-                Row::new()
-                    .spacing(6)
-                    .push(
+    pub fn layout(&self, _npc: &NpcData) -> Element<Message> {
+        column![
+            row![
+                Rule::horizontal(0),
+                text("NPC Settings:").horizontal_alignment(Horizontal::Center),
+                Rule::horizontal(0),
+            ].spacing(10).align_items(Alignment::Center),
+            row![
+                column![
+                    Element::new(
+                        checkbox("Target Auto switch", self.target_auto_switch, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((0, i))),
+                    Element::new(
+                        checkbox("Target Attacked Switch", self.target_attacked_switch, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((1, i))),
+                    Element::new(
+                        checkbox("Target Range Dropout", self.target_range_dropout, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((2, i))),
+                    Element::new(
+                        checkbox("Can Target", self.can_target, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((3, i))),
+                    Element::new(
+                        checkbox("Can Move", self.can_move, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((4, i))),
+                    Element::new(
+                        checkbox("Can Attack Player", self.can_attack_player, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((5, i))),
+                    Element::new(
+                        checkbox("Has Self Only", self.has_selfonly, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((6, i))),
+                ].spacing(5),
+                column![
+                    Element::new(
+                        checkbox("Has Friendly Only", self.has_friendonly, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((7, i))),
+                    Element::new(
+                        checkbox("Has Ground Only", self.has_groundonly, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((8, i))),
+                    Element::new(
+                        checkbox("Has Ally", self.has_allys, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((9, i))),
+                    Element::new(
+                        checkbox("Can Attack", self.can_attack, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((10, i))),
+                    Element::new(
+                        checkbox("Runs Away", self.runsaway, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((11, i))),
+                    Element::new(
+                        checkbox("Can Pass Through", self.canpassthru, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((12, i))),
+                    Element::new(
+                        checkbox("Is Animated", self.isanimated, CheckBoxMessage::Change)
+                    ).map(move |i| Message::GenericBoolInput((13, i))),
+                ].spacing(5),
+                column![
+                    row![
+                        self.target_switch_chance.view(0, 1, 100_000_000, 1, Message::GenericI64Input),
+                        text("Target Switch Chance out of 100,000,000: "),
+                    ].spacing(6),
+                    row![
+                        self.run_damage.view(0, 1, u32::MAX, 1, Message::GenericU32Input),
+                        text("Run Min HP Needed: "),
+                    ].spacing(6),
+                    row![
                         TimePicker::new(
                             self.show_time[0],
                             self.times[0],
-                            Button::new(Text::new("Set Start Time")).on_press(Message::ChooseTime1),
+                            button("Set Start Time").on_press(Message::ChooseTime1),
                             Message::CancelTime,
                             Message::SubmitTime1,
-                        )
-                        .use_24h(),
-                    )
-                    .push(Text::new(format!("Start Time: {:?}", npc.spawntime.0))),
-            )
-            .push(
-                Row::new()
-                    .spacing(6)
-                    .push(
+                        ).use_24h(),
+                        text(format!("Start Time: {:?}", self.spawntime_data.0)),
+                    ].spacing(6).align_items(Alignment::Center),
+                    row![
                         TimePicker::new(
                             self.show_time[1],
                             self.times[1],
-                            Button::new(Text::new("Set End Time")).on_press(Message::ChooseTime2),
+                            button("Set End Time").on_press(Message::ChooseTime1),
                             Message::CancelTime,
-                            Message::SubmitTime2,
-                        )
-                        .use_24h(),
-                    )
-                    .push(Text::new(format!("End Time: {:?}", npc.spawntime.1))),
-            )
-            .push(
-                Row::new()
-                    .spacing(12)
-                    .push(Text::new("Target Switch Chance out of 100,000,000: ").color(TEXT_WHITE))
-                    .push(self.target_switch_chance.view(
-                        0,
-                        1,
-                        100_000_000,
-                        1,
-                        Message::GenericI64Input,
-                    ))
-                    .push(Text::new("Run Min HP Needed: ").color(TEXT_WHITE))
-                    .push(
-                        self.run_damage
-                            .view(2, 1, u32::MAX, 1, Message::GenericU32Input),
-                    ),
-            )
-            .into()
+                            Message::SubmitTime1,
+                        ).use_24h(),
+                        text(format!("End Time: {:?}", self.spawntime_data.1)),
+                    ].spacing(6).align_items(Alignment::Center),
+                ].spacing(6),
+            ].spacing(6),
+            
+        ]
+        .spacing(12)
+        .align_items(Alignment::Start)
+        .into()
     }
 }
