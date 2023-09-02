@@ -6,7 +6,7 @@ members = [
     "ui_helper",
     "logging",
     "itemeditor",
-    #"npceditor",
+    "npceditor",
     "mapeditor",
 ]
 
