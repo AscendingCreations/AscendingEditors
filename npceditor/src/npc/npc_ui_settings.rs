@@ -49,48 +49,48 @@ impl NpcUISettings {
             row![
                 column![
                     Element::new(
-                        checkbox("Target Auto switch", self.target_auto_switch, CheckBoxMessage::Change)
+                        checkbox("Target Auto switch", self.target_auto_switch)
                     ).map(move |i| Message::GenericBoolInput((0, i))),
                     Element::new(
-                        checkbox("Target Attacked Switch", self.target_attacked_switch, CheckBoxMessage::Change)
+                        checkbox("Target Attacked Switch", self.target_attacked_switch)
                     ).map(move |i| Message::GenericBoolInput((1, i))),
                     Element::new(
-                        checkbox("Target Range Dropout", self.target_range_dropout, CheckBoxMessage::Change)
+                        checkbox("Target Range Dropout", self.target_range_dropout)
                     ).map(move |i| Message::GenericBoolInput((2, i))),
                     Element::new(
-                        checkbox("Can Target", self.can_target, CheckBoxMessage::Change)
+                        checkbox("Can Target", self.can_target)
                     ).map(move |i| Message::GenericBoolInput((3, i))),
                     Element::new(
-                        checkbox("Can Move", self.can_move, CheckBoxMessage::Change)
+                        checkbox("Can Move", self.can_move)
                     ).map(move |i| Message::GenericBoolInput((4, i))),
                     Element::new(
-                        checkbox("Can Attack Player", self.can_attack_player, CheckBoxMessage::Change)
+                        checkbox("Can Attack Player", self.can_attack_player)
                     ).map(move |i| Message::GenericBoolInput((5, i))),
                     Element::new(
-                        checkbox("Has Self Only", self.has_selfonly, CheckBoxMessage::Change)
+                        checkbox("Has Self Only", self.has_selfonly)
                     ).map(move |i| Message::GenericBoolInput((6, i))),
                 ].spacing(5),
                 column![
                     Element::new(
-                        checkbox("Has Friendly Only", self.has_friendonly, CheckBoxMessage::Change)
+                        checkbox("Has Friendly Only", self.has_friendonly)
                     ).map(move |i| Message::GenericBoolInput((7, i))),
                     Element::new(
-                        checkbox("Has Ground Only", self.has_groundonly, CheckBoxMessage::Change)
+                        checkbox("Has Ground Only", self.has_groundonly)
                     ).map(move |i| Message::GenericBoolInput((8, i))),
                     Element::new(
-                        checkbox("Has Ally", self.has_allys, CheckBoxMessage::Change)
+                        checkbox("Has Ally", self.has_allys)
                     ).map(move |i| Message::GenericBoolInput((9, i))),
                     Element::new(
-                        checkbox("Can Attack", self.can_attack, CheckBoxMessage::Change)
+                        checkbox("Can Attack", self.can_attack)
                     ).map(move |i| Message::GenericBoolInput((10, i))),
                     Element::new(
-                        checkbox("Runs Away", self.runsaway, CheckBoxMessage::Change)
+                        checkbox("Runs Away", self.runsaway)
                     ).map(move |i| Message::GenericBoolInput((11, i))),
                     Element::new(
-                        checkbox("Can Pass Through", self.canpassthru, CheckBoxMessage::Change)
+                        checkbox("Can Pass Through", self.canpassthru)
                     ).map(move |i| Message::GenericBoolInput((12, i))),
                     Element::new(
-                        checkbox("Is Animated", self.isanimated, CheckBoxMessage::Change)
+                        checkbox("Is Animated", self.isanimated)
                     ).map(move |i| Message::GenericBoolInput((13, i))),
                 ].spacing(5),
                 column![

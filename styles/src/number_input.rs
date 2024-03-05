@@ -1,4 +1,4 @@
-use iced::{theme, widget::text_input, Background, Color, Theme};
+use iced::{theme, widget::text_input, Background, Color, Theme, Border};
 use iced_aw::number_input;
 
 const BACKGROUND: Color = Color {
@@ -62,9 +62,11 @@ impl text_input::StyleSheet for CustomTextInput {
     fn active(&self, _style: &Self::Style) -> text_input::Appearance {
         text_input::Appearance {
             background: BACKGROUND.into(),
-            border_color: PRIMARY,
-            border_width: 1.0,
-            border_radius: 5.5.into(),
+            border: Border {
+                color: PRIMARY,
+                width: 1.0,
+                radius: 5.5.into(),
+            },
             icon_color: theme::Palette::DARK.text,
         }
     }
@@ -72,9 +74,11 @@ impl text_input::StyleSheet for CustomTextInput {
     fn hovered(&self, _style: &Self::Style) -> text_input::Appearance {
         text_input::Appearance {
             background: BACKGROUND.into(),
-            border_radius: 5.5.into(),
-            border_width: 1.0,
-            border_color: HOVERED,
+            border: Border {
+                color: HOVERED,
+                width: 1.0,
+                radius: 5.5.into(),
+            },
             icon_color: theme::Palette::DARK.text,
         }
     }
@@ -83,7 +87,10 @@ impl text_input::StyleSheet for CustomTextInput {
         let active = self.active(style);
 
         text_input::Appearance {
-            border_color: PRIMARY,
+            border: Border {
+                color: PRIMARY,
+                ..active.border
+            },
             ..active
         }
     }
@@ -103,9 +110,11 @@ impl text_input::StyleSheet for CustomTextInput {
     fn disabled(&self, _style: &Self::Style) -> text_input::Appearance {
         text_input::Appearance {
             background: PRIMARY.into(),
-            border_radius: 5.5.into(),
-            border_width: 1.0,
-            border_color: theme::Palette::DARK.text,
+            border: Border {
+                color: theme::Palette::DARK.text,
+                width: 1.0,
+                radius: 5.5.into(),
+            },
             icon_color: theme::Palette::DARK.text,
         }
     }

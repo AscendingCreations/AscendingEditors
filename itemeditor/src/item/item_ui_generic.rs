@@ -113,9 +113,9 @@ impl ItemUiGeneric {
         .spacing(6);
 
         let row4 = row![
-            checkbox("Breakable", self.breakable, Message::Breakable,),
-            checkbox("Repairable", self.repairable, Message::Repairable,),
-            checkbox("Stackable", self.stackable, Message::Stackable,)
+            checkbox("Breakable", self.breakable,),
+            checkbox("Repairable", self.repairable,),
+            checkbox("Stackable", self.stackable,)
         ]
         .spacing(6);
 

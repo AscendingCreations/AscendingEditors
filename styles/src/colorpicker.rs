@@ -1,4 +1,4 @@
-use iced::{Color, Theme};
+use iced::{Theme, Color};
 use iced_aw::style::color_picker::{Appearance, StyleSheet};
 
 const BACKGROUND: Color = Color {

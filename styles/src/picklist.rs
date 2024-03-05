@@ -1,4 +1,4 @@
-use iced::{widget::pick_list, Background, Color, Theme};
+use iced::{widget::pick_list, Background, Color, Theme, Border};
 
 const BACKGROUND: Color = Color {
     r: 48.0 / 255.0,
@@ -29,9 +29,11 @@ impl pick_list::StyleSheet for CustomPickList {
         pick_list::Appearance {
             text_color: Color::WHITE,
             background: Background::Color(BACKGROUND),
-            border_color: PRIMARY,
-            border_radius: 2.0.into(),
-            border_width: 1.0,
+            border: Border {
+                color: PRIMARY,
+                width: 1.0,
+                radius: 2.0.into(),
+            },
             placeholder_color: PRIMARY,
             handle_color: PRIMARY,
         }
@@ -39,7 +41,10 @@ impl pick_list::StyleSheet for CustomPickList {
 
     fn hovered(&self, style: &Self::Style) -> pick_list::Appearance {
         pick_list::Appearance {
-            border_color: HOVERED,
+            border: Border {
+                color: HOVERED,
+                ..self.active(style).border
+            },
             ..self.active(style)
         }
     }

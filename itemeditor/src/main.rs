@@ -60,7 +60,7 @@ impl Application for Pages {
             Self {
                 page: Box::new(item::ItemUI::new()),
             },
-            font::load(iced_aw::graphics::icons::ICON_FONT_BYTES).map(Message::FontLoaded),
+            font::load(iced_aw::core::icons::BOOTSTRAP_FONT_BYTES).map(Message::FontLoaded),
         )
     }
 
