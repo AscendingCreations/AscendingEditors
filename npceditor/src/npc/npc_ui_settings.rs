@@ -48,50 +48,36 @@ impl NpcUISettings {
             ].spacing(10).align_items(Alignment::Center),
             row![
                 column![
-                    Element::new(
-                        checkbox("Target Auto switch", self.target_auto_switch)
-                    ).map(move |i| Message::GenericBoolInput((0, i))),
-                    Element::new(
-                        checkbox("Target Attacked Switch", self.target_attacked_switch)
-                    ).map(move |i| Message::GenericBoolInput((1, i))),
-                    Element::new(
-                        checkbox("Target Range Dropout", self.target_range_dropout)
-                    ).map(move |i| Message::GenericBoolInput((2, i))),
-                    Element::new(
-                        checkbox("Can Target", self.can_target)
-                    ).map(move |i| Message::GenericBoolInput((3, i))),
-                    Element::new(
-                        checkbox("Can Move", self.can_move)
-                    ).map(move |i| Message::GenericBoolInput((4, i))),
-                    Element::new(
-                        checkbox("Can Attack Player", self.can_attack_player)
-                    ).map(move |i| Message::GenericBoolInput((5, i))),
-                    Element::new(
-                        checkbox("Has Self Only", self.has_selfonly)
-                    ).map(move |i| Message::GenericBoolInput((6, i))),
+                    checkbox("Target Auto switch", self.target_auto_switch)
+                        .on_toggle(move |i| Message::GenericBoolInput((0, CheckBoxMessage::Change(i)))),
+                    checkbox("Target Attacked Switch", self.target_attacked_switch)
+                        .on_toggle(move |i| Message::GenericBoolInput((1, CheckBoxMessage::Change(i)))),
+                    checkbox("Target Range Dropout", self.target_range_dropout)
+                        .on_toggle(move |i| Message::GenericBoolInput((2, CheckBoxMessage::Change(i)))),
+                    checkbox("Can Target", self.can_target)
+                        .on_toggle(move |i| Message::GenericBoolInput((3, CheckBoxMessage::Change(i)))),
+                    checkbox("Can Move", self.can_move)
+                        .on_toggle(move |i| Message::GenericBoolInput((4, CheckBoxMessage::Change(i)))),
+                    checkbox("Can Attack Player", self.can_attack_player)
+                        .on_toggle(move |i| Message::GenericBoolInput((5, CheckBoxMessage::Change(i)))),
+                    checkbox("Has Self Only", self.has_selfonly)
+                        .on_toggle(move |i| Message::GenericBoolInput((6, CheckBoxMessage::Change(i)))),
                 ].spacing(5),
                 column![
-                    Element::new(
-                        checkbox("Has Friendly Only", self.has_friendonly)
-                    ).map(move |i| Message::GenericBoolInput((7, i))),
-                    Element::new(
-                        checkbox("Has Ground Only", self.has_groundonly)
-                    ).map(move |i| Message::GenericBoolInput((8, i))),
-                    Element::new(
-                        checkbox("Has Ally", self.has_allys)
-                    ).map(move |i| Message::GenericBoolInput((9, i))),
-                    Element::new(
-                        checkbox("Can Attack", self.can_attack)
-                    ).map(move |i| Message::GenericBoolInput((10, i))),
-                    Element::new(
-                        checkbox("Runs Away", self.runsaway)
-                    ).map(move |i| Message::GenericBoolInput((11, i))),
-                    Element::new(
-                        checkbox("Can Pass Through", self.canpassthru)
-                    ).map(move |i| Message::GenericBoolInput((12, i))),
-                    Element::new(
-                        checkbox("Is Animated", self.isanimated)
-                    ).map(move |i| Message::GenericBoolInput((13, i))),
+                    checkbox("Has Friendly Only", self.has_friendonly)
+                        .on_toggle(move |i| Message::GenericBoolInput((7, CheckBoxMessage::Change(i)))),
+                    checkbox("Has Ground Only", self.has_groundonly)
+                        .on_toggle(move |i| Message::GenericBoolInput((8, CheckBoxMessage::Change(i)))),
+                    checkbox("Has Ally", self.has_allys)
+                        .on_toggle(move |i| Message::GenericBoolInput((9, CheckBoxMessage::Change(i)))),
+                    checkbox("Can Attack", self.can_attack)
+                        .on_toggle(move |i| Message::GenericBoolInput((10, CheckBoxMessage::Change(i)))),
+                    checkbox("Runs Away", self.runsaway)
+                        .on_toggle(move |i| Message::GenericBoolInput((11, CheckBoxMessage::Change(i)))),
+                    checkbox("Can Pass Through", self.canpassthru)
+                        .on_toggle(move |i| Message::GenericBoolInput((12, CheckBoxMessage::Change(i)))),
+                    checkbox("Is Animated", self.isanimated)
+                        .on_toggle(move |i| Message::GenericBoolInput((13, CheckBoxMessage::Change(i)))),
                 ].spacing(5),
                 column![
                     row![
