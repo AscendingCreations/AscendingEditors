@@ -5,7 +5,6 @@ use iced::{
     widget::{column, row, Column, Container, Scrollable},
     Element, Length,
 };
-use std::convert::TryFrom;
 
 #[allow(dead_code)]
 #[derive(Educe)]
@@ -269,9 +268,12 @@ impl UiRenderer for NpcUI {
             Message::ItemDropSlotSelect(data) => {
                 self.generic.itemdrop_selected = Some(data);
                 self.currentitemdropslot = data;
-                self.generic.item_drops.item_id.value = self.data[self.currentid].0.drops[self.currentitemdropslot].0;
-                self.generic.item_drops.chance.value = self.data[self.currentid].0.drops[self.currentitemdropslot].1;
-                self.generic.item_drops.amount.value = self.data[self.currentid].0.drops[self.currentitemdropslot].2;
+                self.generic.item_drops.item_id.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].0;
+                self.generic.item_drops.chance.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].1;
+                self.generic.item_drops.amount.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].2;
             }
             _ => {
                 return None;
@@ -372,7 +374,8 @@ impl NpcUI {
 
         self.generic.itemdrop_selected = Some(0);
         self.currentitemdropslot = 0;
-        self.generic.item_drops.item_id.value = self.data[index].0.drops[self.currentitemdropslot].0;
+        self.generic.item_drops.item_id.value =
+            self.data[index].0.drops[self.currentitemdropslot].0;
         self.generic.item_drops.chance.value = self.data[index].0.drops[self.currentitemdropslot].1;
         self.generic.item_drops.amount.value = self.data[index].0.drops[self.currentitemdropslot].2;
     }

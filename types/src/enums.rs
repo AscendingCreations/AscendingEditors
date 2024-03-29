@@ -1,10 +1,8 @@
 use num_enum::TryFromPrimitive;
-use serde_repr::*;
+use serde::*;
 use strum_macros::Display;
 
-#[derive(
-    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize_repr, Deserialize_repr, Default,
-)]
+#[derive(Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default)]
 #[repr(u8)]
 pub enum UserAccess {
     #[default]
@@ -14,16 +12,7 @@ pub enum UserAccess {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    TryFromPrimitive,
-    Eq,
-    PartialEq,
-    Serialize_repr,
-    Deserialize_repr,
-    Default,
-    Display,
+    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default, Display,
 )]
 #[repr(u8)]
 pub enum AIBehavior {
@@ -69,8 +58,8 @@ impl AIBehavior {
     TryFromPrimitive,
     Eq,
     PartialEq,
-    Serialize_repr,
-    Deserialize_repr,
+    Serialize,
+    Deserialize,
     Default,
     Display,
     Hash,
@@ -98,16 +87,7 @@ pub enum ItemTypes {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    TryFromPrimitive,
-    Eq,
-    PartialEq,
-    Serialize_repr,
-    Deserialize_repr,
-    Default,
-    Display,
+    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default, Display,
 )]
 #[repr(u8)]
 pub enum VitalTypes {
@@ -116,30 +96,6 @@ pub enum VitalTypes {
     Sp,
     #[default]
     #[strum(serialize = "None")]
-    Count,
-}
-
-#[derive(
-    Copy, Clone, Serialize_repr, Deserialize_repr, Display, TryFromPrimitive, Eq, PartialEq,
-)]
-#[repr(u8)]
-pub enum MapAttributes {
-    None,
-    Blocked,
-    DirBlocked,
-    NpcBlocked,
-    PlayerBlocked,
-    Bank,
-    Shop,
-    Door,
-    Craft,
-    Slide,
-    Warp,
-    Item,
-    Portal,
-    CheckPoint,
-    Sign,
-    Resource,
     Count,
 }
 
@@ -158,16 +114,7 @@ pub enum MapLayers {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    TryFromPrimitive,
-    Eq,
-    PartialEq,
-    Serialize_repr,
-    Deserialize_repr,
-    Default,
-    Display,
+    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default, Display,
 )]
 #[repr(u8)]
 pub enum ToolType {
@@ -182,16 +129,7 @@ pub enum ToolType {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    TryFromPrimitive,
-    Eq,
-    PartialEq,
-    Default,
-    Display,
-    Serialize_repr,
-    Deserialize_repr,
+    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Default, Display, Serialize, Deserialize,
 )]
 #[repr(u8)]
 pub enum NpcMode {
