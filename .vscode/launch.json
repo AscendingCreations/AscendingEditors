@@ -40,5 +40,23 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'shop_editor'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=shop_editor",
+                    "--package=shop_editor"
+                ],
+                "filter": {
+                    "name": "shop_editor",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }

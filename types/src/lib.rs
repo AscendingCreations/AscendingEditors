@@ -26,3 +26,6 @@ pub const MAX_SKILL_INV: usize = 11;
 ///Array Data Maxs
 pub const MAX_NPCS: usize = 1000;
 pub const MAX_ITEMS: usize = 2000;
+pub const MAX_SHOPS: usize = 100;
+
+pub const MAX_SHOP_ITEM: usize = 20;
