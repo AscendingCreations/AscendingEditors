@@ -1,4 +1,4 @@
-use iced::{theme, widget::button, Background, Color, Theme, Vector, Border};
+use iced::{theme, widget::button, Background, Border, Color, Theme, Vector};
 
 #[allow(dead_code)]
 pub enum Button {
@@ -19,7 +19,7 @@ impl button::StyleSheet for Button {
             })),
             border: Border {
                 color: Color::from_rgb8(45, 51, 58),
-                width: 1.0.into(),
+                width: 1.0,
                 radius: 12.0.into(),
             },
             shadow_offset: Vector::new(1.0, 1.0),
@@ -33,7 +33,7 @@ impl button::StyleSheet for Button {
             text_color: Color::WHITE,
             border: Border {
                 color: Color::from_rgb8(45, 51, 58),
-                width: 1.0.into(),
+                width: 1.0,
                 radius: 12.0.into(),
             },
             shadow_offset: Vector::new(1.0, 2.0),

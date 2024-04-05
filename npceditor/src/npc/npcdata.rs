@@ -62,9 +62,10 @@ pub struct NpcData {
     pub run_damage: u32,
     pub spawntime: (GameTime, GameTime), //skill type to cast it with and  percentage needed to cast and Max Percentage.
     pub range: i32, // New       //attack range. How far they need to be to hit their target.
-    pub enemies: Vec<u64>,// New //list of enemies the npcs can attack of other npc's... WAR!
+    pub enemies: Vec<u64>, // New //list of enemies the npcs can attack of other npc's... WAR!
     pub drops: [(u32, u32, u32); 10], //item dropped on death, chance, amount
     pub drops_max: u16,
+    pub exp: i64,
 }
 
 impl NpcData {

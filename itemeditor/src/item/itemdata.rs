@@ -20,6 +20,7 @@ pub struct ItemData {
     pub baseprice: u64,
     pub repairable: bool,
     pub rgba: Rgba,
+    pub sound_index: u64,
 }
 
 impl ItemData {
