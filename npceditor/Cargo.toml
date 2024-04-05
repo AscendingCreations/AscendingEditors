@@ -11,7 +11,6 @@ serde.workspace = true
 serde_json.workspace = true
 serde-big-array.workspace = true
 educe.workspace = true
-serde_repr.workspace = true
 chrono.workspace = true
 strum_macros.workspace = true
 arr_macro.workspace = true

@@ -15,7 +15,6 @@ rand = "0.8.5"
 num-traits = "0.2.16"
 serde = { version = "1.0.183", features = ["derive"] }
 educe = "0.4.22"
-serde_repr = "0.1.16"
 chrono = { version = "0.4.26", features = ["serde"] }
 strum_macros = "0.25.2"
 num_enum = "0.6.1"
