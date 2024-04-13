@@ -1,7 +1,6 @@
 use crate::item::*;
 use araiseal_types::*;
 use araiseal_ui::*;
-use std::convert::TryFrom;
 
 use iced::{
     widget::{column, row, Column, Container, Scrollable},
@@ -32,6 +31,10 @@ impl UiRenderer for ItemUI {
                 self.data[self.currentid]
                     .0
                     .save_file(self.currentid)
+                    .unwrap();
+                self.data[self.currentid]
+                    .0
+                    .save_bin_file(self.currentid)
                     .unwrap();
                 return None;
             }
@@ -157,9 +160,7 @@ impl ItemUI {
         ui.menu.list_selected = Some(ui.menu.list[0].clone());
 
         for i in 0..ItemTypes::Count as usize {
-            ui.generic
-                .type_list
-                .push(ItemTypes::try_from(i as u8).unwrap_or(ItemTypes::None));
+            ui.generic.type_list.push(ItemTypes::from_index(i));
         }
 
         ui.set_object_to_layout(0);
@@ -174,6 +175,9 @@ impl ItemUI {
 
             if let Err(e) = v.0.save_file(i) {
                 println!("Could not save Item {}, err {}", i, e);
+            }
+            if let Err(e) = v.0.save_bin_file(i) {
+                println!("Could not save bin Item {}, err {}", i, e);
             }
         }
     }

@@ -32,6 +32,10 @@ impl UiRenderer for ShopUI {
                     .0
                     .save_file(self.currentid)
                     .unwrap();
+                self.data[self.currentid]
+                    .0
+                    .save_bin_file(self.currentid)
+                    .unwrap();
                 return None;
             }
             Message::RevertButtonPress => {
@@ -138,6 +142,9 @@ impl ShopUI {
 
             if let Err(e) = v.0.save_file(i) {
                 println!("Could not save Shop {}, err {}", i, e);
+            }
+            if let Err(e) = v.0.save_bin_file(i) {
+                println!("Could not save bin Shop {}, err {}", i, e);
             }
         }
     }

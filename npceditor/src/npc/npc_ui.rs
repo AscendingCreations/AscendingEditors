@@ -33,6 +33,10 @@ impl UiRenderer for NpcUI {
                     .0
                     .save_file(self.currentid)
                     .unwrap();
+                self.data[self.currentid]
+                    .0
+                    .save_bin_file(self.currentid)
+                    .unwrap();
                 return None;
             }
             Message::RevertButtonPress => {
@@ -305,9 +309,7 @@ impl NpcUI {
         }
 
         for i in 0..=AIBehavior::ReactiveHealer as usize {
-            ui.generic
-                .behaviours
-                .push(AIBehavior::try_from(i as u8).unwrap_or(AIBehavior::ReactiveHealer))
+            ui.generic.behaviours.push(AIBehavior::from_index(i))
         }
 
         ui.menu.list_selected = Some(ui.menu.list[0].clone());
@@ -323,6 +325,9 @@ impl NpcUI {
 
             if let Err(e) = v.0.save_file(i) {
                 println!("Could not save NPC {}, err {}", i, e);
+            }
+            if let Err(e) = v.0.save_bin_file(i) {
+                println!("Could not save bin NPC {}, err {}", i, e);
             }
         }
     }

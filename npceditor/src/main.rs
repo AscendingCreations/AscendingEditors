@@ -28,7 +28,7 @@ pub fn main() -> Result<(), String> {
         error!("PANIC: {}, BACKTRACE: {:?}", panic_info, bt);
     }));
 
-    if let Err(e) = fs::create_dir_all("./data/npcs/") {
+    if let Err(e) = fs::create_dir_all("./data/npcs/bin/") {
         return Err(format!("Err: {:?}", e));
     }
 
@@ -83,9 +83,7 @@ impl Application for Pages {
             .push(page)
             .into();
 
-        Container::new(content)
-            .height(Length::Fill)
-            .into()
+        Container::new(content).height(Length::Fill).into()
     }
 
     fn theme(&self) -> Self::Theme {

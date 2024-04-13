@@ -1,9 +1,8 @@
-use num_enum::TryFromPrimitive;
+use bytey::{ByteBufferRead, ByteBufferWrite};
 use serde::*;
 use strum_macros::Display;
 
-#[derive(Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default)]
-#[repr(u8)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Default)]
 pub enum UserAccess {
     #[default]
     None,
@@ -12,9 +11,18 @@ pub enum UserAccess {
 }
 
 #[derive(
-    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default, Display,
+    Copy,
+    Clone,
+    Debug,
+    Eq,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    Default,
+    Display,
+    ByteBufferRead,
+    ByteBufferWrite,
 )]
-#[repr(u8)]
 pub enum AIBehavior {
     #[default]
     Friendly, //Never Attack or be attacked
@@ -24,6 +32,20 @@ pub enum AIBehavior {
     Healer,          //Will never Attack only heal other npcs
     AgressiveHealer, //Will attack on sight and heal
     ReactiveHealer,  //Will attack when attacked and heal
+}
+
+impl AIBehavior {
+    pub fn from_index(index: usize) -> Self {
+        match index {
+            1 => AIBehavior::Agressive,
+            2 => AIBehavior::Reactive,
+            3 => AIBehavior::HelpReactive,
+            4 => AIBehavior::Healer,
+            5 => AIBehavior::AgressiveHealer,
+            6 => AIBehavior::ReactiveHealer,
+            _ => AIBehavior::Friendly,
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -55,7 +77,6 @@ impl AIBehavior {
     Copy,
     Clone,
     Debug,
-    TryFromPrimitive,
     Eq,
     PartialEq,
     Serialize,
@@ -63,8 +84,9 @@ impl AIBehavior {
     Default,
     Display,
     Hash,
+    ByteBufferRead,
+    ByteBufferWrite,
 )]
-#[repr(u8)]
 pub enum ItemTypes {
     #[default]
     None,
@@ -86,10 +108,30 @@ pub enum ItemTypes {
     Count,
 }
 
-#[derive(
-    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default, Display,
-)]
-#[repr(u8)]
+impl ItemTypes {
+    pub fn from_index(index: usize) -> Self {
+        match index {
+            1 => ItemTypes::Weapon,
+            2 => ItemTypes::Accessory,
+            3 => ItemTypes::Cosmetic,
+            4 => ItemTypes::Helmet,
+            5 => ItemTypes::Armor,
+            6 => ItemTypes::Trouser,
+            7 => ItemTypes::Boots,
+            8 => ItemTypes::Consume,
+            9 => ItemTypes::Tool,
+            10 => ItemTypes::Blueprint,
+            11 => ItemTypes::Book,
+            12 => ItemTypes::Questitem,
+            13 => ItemTypes::Trap,
+            14 => ItemTypes::Heavyobject,
+            15 => ItemTypes::Key,
+            _ => ItemTypes::None,
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Default, Display)]
 pub enum VitalTypes {
     Hp,
     Mp,
@@ -113,10 +155,7 @@ pub enum MapLayers {
     Count,
 }
 
-#[derive(
-    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Serialize, Deserialize, Default, Display,
-)]
-#[repr(u8)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Default, Display)]
 pub enum ToolType {
     #[default]
     None,
@@ -128,10 +167,7 @@ pub enum ToolType {
     Shovel,
 }
 
-#[derive(
-    Copy, Clone, Debug, TryFromPrimitive, Eq, PartialEq, Default, Display, Serialize, Deserialize,
-)]
-#[repr(u8)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Default, Display, Serialize, Deserialize)]
 pub enum NpcMode {
     None,
     #[default]

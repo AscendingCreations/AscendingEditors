@@ -29,7 +29,7 @@ pub fn main() -> Result<(), String> {
         error!("PANIC: {}, BACKTRACE: {:?}", panic_info, bt);
     }));
 
-    if let Err(e) = fs::create_dir_all("./data/shops/") {
+    if let Err(e) = fs::create_dir_all("./data/shops/bin/") {
         return Err(format!("Err: {:?}", e));
     }
 

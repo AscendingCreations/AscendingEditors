@@ -1,9 +1,10 @@
 use araiseal_types::*;
+use bytey::{ByteBuffer, ByteBufferRead, ByteBufferWrite};
 use serde::{Deserialize, Serialize};
-use std::fs::OpenOptions;
 use std::io::BufReader;
+use std::{fs::OpenOptions, io::Write};
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Educe)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Educe, ByteBufferRead, ByteBufferWrite)]
 #[educe(Default)]
 pub struct ShopItem {
     pub index: u16,
@@ -11,7 +12,7 @@ pub struct ShopItem {
     pub price: u64,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, Educe)]
+#[derive(Clone, Debug, Deserialize, Serialize, Educe, ByteBufferRead, ByteBufferWrite)]
 #[educe(Default)]
 pub struct ShopData {
     pub name: String,
@@ -30,6 +31,26 @@ impl ShopData {
 
                     if let Err(e) = serde_json::to_writer_pretty(&file, &data) {
                         return Err(format!("Serdes File Error {:?}", e));
+                    }
+                }
+                Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                Err(e) => return Err(format!("Failed to open {}, Err {:?}", name, e)),
+            }
+
+            let name = format!("./data/shops/bin/{}.bin", i);
+
+            match OpenOptions::new().write(true).create_new(true).open(&name) {
+                Ok(mut file) => {
+                    let data = ShopData::default();
+
+                    let mut buf = match ByteBuffer::new() {
+                        Ok(data) => data,
+                        Err(_) => return Ok(()),
+                    };
+                    buf.write(data).unwrap();
+
+                    if let Err(e) = file.write(buf.as_slice()) {
+                        return Err(format!("File Error {:?}", e));
                     }
                 }
                 Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
@@ -56,6 +77,33 @@ impl ShopData {
         }
     }
 
+    pub fn save_bin_file(&self, id: usize) -> Result<(), String> {
+        let name = format!("./data/shops/bin/{}.bin", id);
+
+        let mut buf = match ByteBuffer::new() {
+            Ok(data) => data,
+            Err(_) => return Ok(()),
+        };
+
+        buf.write(self).unwrap();
+
+        match OpenOptions::new()
+            .truncate(true)
+            .write(true)
+            .create(true)
+            .open(&name)
+        {
+            Ok(mut file) => {
+                if let Err(e) = file.write(buf.as_slice()) {
+                    Err(format!("File Error {:?}", e))
+                } else {
+                    Ok(())
+                }
+            }
+            Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),
+        }
+    }
+
     pub fn load_files() -> Result<Vec<(ShopData, bool)>, String> {
         let mut shops = Vec::<(ShopData, bool)>::new();
 
@@ -67,6 +115,7 @@ impl ShopData {
 
             if result.1 {
                 result.0.save_file(i)?;
+                result.0.save_bin_file(i)?;
                 result.1 = false;
             }
 
