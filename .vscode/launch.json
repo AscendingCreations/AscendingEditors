@@ -58,5 +58,23 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'mapeditor'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=mapeditor",
+                    "--package=mapeditor"
+                ],
+                "filter": {
+                    "name": "mapeditor",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }

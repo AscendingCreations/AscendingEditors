@@ -8,6 +8,7 @@ members = [
     "itemeditor",
     "npceditor",
     "shopeditor",
+    "mapeditor",
 ]
 
 
