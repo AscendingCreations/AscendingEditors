@@ -154,6 +154,10 @@ impl UiRenderer for NpcUI {
                     self.generic.follow_sight_input.value = data.get_data();
                     self.data[self.currentid].0.follow_sight = data.get_data();
                 }
+                4 => {
+                    self.generic.range_input.value = data.get_data();
+                    self.data[self.currentid].0.range = data.get_data();
+                }
                 _ => return None,
             },
             Message::GenericU32Input((id, data)) => match id {
@@ -231,6 +235,10 @@ impl UiRenderer for NpcUI {
                 5 => {
                     self.generic.spawn_wait_input.value = data.get_data();
                     self.data[self.currentid].0.spawn_wait = data.get_data();
+                }
+                6 => {
+                    self.generic.exp_input.value = data.get_data();
+                    self.data[self.currentid].0.exp = data.get_data();
                 }
                 _ => return None,
             },
@@ -365,6 +373,8 @@ impl NpcUI {
         self.generic.attack_wait_input.value = self.data[index].0.attack_wait;
         self.generic.intervaled_wait_input.value = self.data[index].0.intervaled_wait;
         self.generic.spawn_wait_input.value = self.data[index].0.spawn_wait;
+        self.generic.range_input.value = self.data[index].0.range;
+        self.generic.exp_input.value = self.data[index].0.exp;
 
         self.settings.target_auto_switch = self.data[index].0.target_auto_switch;
         self.settings.target_attacked_switch = self.data[index].0.target_attacked_switch;
