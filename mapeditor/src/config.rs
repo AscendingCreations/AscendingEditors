@@ -18,6 +18,7 @@ pub struct ConfigData {
     pub hide_mapview_bg: bool,
     pub map_selection_color: [u8; 4],
     pub tile_selection_color: [u8; 4],
+    pub save_json: bool,
 }
 
 impl ConfigData {
@@ -58,11 +59,12 @@ impl ConfigData {
             hide_mapview_bg: false,
             map_selection_color: [0, 0, 150, 150],
             tile_selection_color: [80, 0, 0, 150],
+            save_json: false,
         }
     }
 
     pub fn save_config(&self) -> Result<(), GraphicsError> {
-        let name = "./config.json".to_string();
+        let name = "./map_config.json".to_string();
 
         match OpenOptions::new().truncate(true).write(true).open(&name) {
             Ok(file) => {
@@ -94,7 +96,7 @@ impl ConfigData {
 }
 
 pub fn create_config(data: &ConfigData) -> Result<(), GraphicsError> {
-    let name = "./config.json".to_string();
+    let name = "./map_config.json".to_string();
 
     match OpenOptions::new().write(true).create_new(true).open(&name) {
         Ok(file) => {
@@ -124,7 +126,7 @@ pub fn load_config() -> ConfigData {
         }
     }
 
-    match OpenOptions::new().read(true).open("./config.json") {
+    match OpenOptions::new().read(true).open("./map_config.json") {
         Ok(file) => {
             let reader = BufReader::new(file);
 
@@ -141,6 +143,6 @@ pub fn load_config() -> ConfigData {
 }
 
 pub fn is_config_exist() -> bool {
-    let name = "./config.json".to_string();
+    let name = "./map_config.json".to_string();
     Path::new(&name).exists()
 }

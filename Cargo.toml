@@ -27,6 +27,7 @@ backtrace = "0.3.66"
 log = "0.4.17"
 itertools = "0.10.3"
 bytey = { version = "0.3.0", git = "https://github.com/Stefanowhb/bytey.git" }
+speedy = "=0.8.7"
 
 [workspace.dependencies.araiseal_logger]
 path = "./logging"

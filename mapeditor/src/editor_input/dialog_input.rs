@@ -6,6 +6,7 @@ fn dialog_release_input(
     gameinput: &mut GameInput,
     gui: &mut Interface,
     database: &mut EditorData,
+    config: &ConfigData,
     mapview: &mut MapView,
     elwt: &winit::event_loop::EventLoopWindowTarget<()>,
 ) {
@@ -21,11 +22,8 @@ fn dialog_release_input(
                 DialogType::ExitConfirm => elwt.exit(),
                 DialogType::MapLoad => {
                     let (mut x, mut y, mut group) = (0_i32, 0_i32, 0_u64);
-                    for (index, textbox) in
-                        dialog.editor_textbox.iter().enumerate()
-                    {
-                        let value =
-                            textbox.data.parse::<i64>().unwrap_or_default();
+                    for (index, textbox) in dialog.editor_textbox.iter().enumerate() {
+                        let value = textbox.data.parse::<i64>().unwrap_or_default();
                         match index {
                             1 => {
                                 y = value as i32;
@@ -46,7 +44,7 @@ fn dialog_release_input(
                     gui.close_dialog(systems);
                 }
                 DialogType::MapSave => {
-                    database.save_all_maps(mapview);
+                    database.save_all_maps(mapview, config);
                     elwt.exit()
                 }
                 _ => {}
@@ -70,6 +68,7 @@ pub fn dialog_input(
     gameinput: &mut GameInput,
     gui: &mut Interface,
     database: &mut EditorData,
+    config: &ConfigData,
     mapview: &mut MapView,
     elwt: &winit::event_loop::EventLoopWindowTarget<()>,
 ) {
@@ -85,19 +84,16 @@ pub fn dialog_input(
 
                 // Prevent other inputs when we are holding the scrollbar
                 if !dialog.scrollbar.in_hold {
-                    gameinput.selected_dialog_type =
-                        dialog.click_buttons(systems, screen_pos);
+                    gameinput.selected_dialog_type = dialog.click_buttons(systems, screen_pos);
                     gameinput.dialog_button_press = true;
                     dialog.select_text(systems, screen_pos);
                 }
             }
             MouseInputType::LeftDownMove => {
                 if dialog.dialog_type == DialogType::MapSave {
-                    dialog.scrollbar.move_scrollbar(
-                        systems,
-                        screen_pos.y,
-                        false,
-                    );
+                    dialog
+                        .scrollbar
+                        .move_scrollbar(systems, screen_pos.y, false);
                     if dialog.update_scroll(dialog.scrollbar.cur_value) {
                         dialog.update_list(systems);
                     }
@@ -112,27 +108,19 @@ pub fn dialog_input(
                 dialog.release_click(systems);
                 dialog.scrollbar.release_scrollbar(systems);
                 if gameinput.dialog_button_press {
-                    dialog_release_input(
-                        systems, gameinput, gui, database, mapview, elwt,
-                    );
+                    dialog_release_input(systems, gameinput, gui, database, config, mapview, elwt);
                 }
             }
         }
     }
 }
 
-pub fn dialog_key_input(
-    systems: &mut DrawSetting,
-    event: &KeyEvent,
-    dialog: &mut Dialog,
-) {
+pub fn dialog_key_input(systems: &mut DrawSetting, event: &KeyEvent, dialog: &mut Dialog) {
     if dialog.dialog_type == DialogType::MapLoad {
         if dialog.editing_index < 2 {
-            dialog.editor_textbox[dialog.editing_index]
-                .enter_numeric(systems, event, 5, true);
+            dialog.editor_textbox[dialog.editing_index].enter_numeric(systems, event, 5, true);
         } else {
-            dialog.editor_textbox[dialog.editing_index]
-                .enter_numeric(systems, event, 5, false);
+            dialog.editor_textbox[dialog.editing_index].enter_numeric(systems, event, 5, false);
         }
     }
 }

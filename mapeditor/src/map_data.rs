@@ -1,13 +1,15 @@
 use graphics::*;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
-use std::io::BufReader;
+use speedy::{Endianness, Readable, Writable};
+use std::fs::{File, OpenOptions};
+use std::io::Write;
+use std::io::{BufReader, Read};
 use std::path::Path;
-use std::{fs::OpenOptions, io::Write};
 
-use bytey::{ByteBuffer, ByteBufferError, ByteBufferRead, ByteBufferWrite};
+//use bytey::{ByteBuffer, ByteBufferError, ByteBufferRead, ByteBufferWrite};
 
-use crate::{attributes::*, map::*, DrawSetting, Interface};
+use crate::{attributes::*, map::*, ConfigData, DrawSetting, Interface};
 
 #[derive(Debug)]
 pub enum Direction {
@@ -134,7 +136,12 @@ impl EditorData {
         temp_key
     }
 
-    pub fn save_map_data(&mut self, mapview: &MapView, old_map_key: Option<String>) {
+    pub fn save_map_data(
+        &mut self,
+        mapview: &MapView,
+        old_map_key: Option<String>,
+        config: &ConfigData,
+    ) {
         // Check if the map should be save as file or temporary data
         let (should_save, find_key);
         if old_map_key.is_some() {
@@ -172,7 +179,9 @@ impl EditorData {
             mapdata.weather = Weather::None; //ToDo mapview.fixed_weather;
             mapdata.music = mapview.music.clone();
             if should_save {
-                mapdata.save_file().unwrap();
+                if config.save_json {
+                    mapdata.save_file().unwrap();
+                }
                 mapdata.save_file_bin().unwrap();
                 // Since we have saved the map, let's mark the map as 'no change'
                 if let Some(did_change) = self.did_map_change.get_mut(&self.current_index) {
@@ -182,7 +191,7 @@ impl EditorData {
         }
     }
 
-    pub fn save_all_maps(&mut self, mapview: &MapView) {
+    pub fn save_all_maps(&mut self, mapview: &MapView, config: &ConfigData) {
         let keys_to_remove: Vec<_> = self
             .did_map_change
             .keys()
@@ -201,9 +210,11 @@ impl EditorData {
                     if let Some(did_change) = self.did_map_change.get_mut(&key) {
                         *did_change = false;
                     }
-                    self.save_map_data(mapview, None);
+                    self.save_map_data(mapview, None, config);
                 } else {
-                    mapdata.save_file().unwrap();
+                    if config.save_json {
+                        mapdata.save_file().unwrap();
+                    }
                     mapdata.save_file_bin().unwrap();
                 }
             }
@@ -403,7 +414,7 @@ impl EditorData {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, ByteBufferRead, ByteBufferWrite)]
+#[derive(Clone, Debug, Serialize, Deserialize, Readable, Writable)]
 pub struct MapPosition {
     pub x: i32,
     pub y: i32,
@@ -411,16 +422,7 @@ pub struct MapPosition {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Serialize,
-    Deserialize,
-    PartialEq,
-    Eq,
-    Default,
-    Debug,
-    ByteBufferRead,
-    ByteBufferWrite,
+    Copy, Clone, Serialize, Deserialize, PartialEq, Eq, Default, Debug, Readable, Writable,
 )]
 pub enum Weather {
     #[default]
@@ -436,12 +438,12 @@ pub enum Weather {
     Windy,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, ByteBufferRead, ByteBufferWrite)]
+#[derive(Clone, Debug, Serialize, Deserialize, Readable, Writable)]
 pub struct Tile {
     pub id: Vec<u32>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, ByteBufferRead, ByteBufferWrite)]
+#[derive(Clone, Debug, Serialize, Deserialize, Readable, Writable)]
 pub struct MapData {
     pub position: MapPosition,
     pub tile: Vec<Tile>,
@@ -502,12 +504,7 @@ impl MapData {
             self.position.x, self.position.y, self.position.group
         );
 
-        let mut buf = match ByteBuffer::new() {
-            Ok(data) => data,
-            Err(_) => return Ok(()),
-        };
-
-        buf.write(self).unwrap();
+        let bytes = self.write_to_vec().unwrap();
 
         match OpenOptions::new()
             .truncate(true)
@@ -516,7 +513,7 @@ impl MapData {
             .open(&name)
         {
             Ok(mut file) => {
-                if let Err(e) = file.write(buf.as_slice()) {
+                if let Err(e) = file.write(bytes.as_slice()) {
                     Err(GraphicsError::Other(OtherError::new(&format!(
                         "File Error Err {:?}",
                         e
@@ -534,13 +531,15 @@ impl MapData {
 }
 
 pub fn create_file(x: i32, y: i32, group: u64, data: &MapData) -> Result<(), GraphicsError> {
-    let name = format!("./data/maps/{}_{}_{}.json", x, y, group);
+    let name = format!("./data/maps/{}_{}_{}.bin", x, y, group);
+
+    let bytes = data.write_to_vec().unwrap();
 
     match OpenOptions::new().write(true).create_new(true).open(&name) {
-        Ok(file) => {
-            if let Err(e) = serde_json::to_writer_pretty(&file, &data) {
+        Ok(mut file) => {
+            if let Err(e) = file.write(bytes.as_slice()) {
                 Err(GraphicsError::Other(OtherError::new(&format!(
-                    "Serdes File Error Err {:?}",
+                    "File Error Err {:?}",
                     e
                 ))))
             } else {
@@ -564,28 +563,19 @@ pub fn load_file(x: i32, y: i32, group: u64) -> Result<MapData, GraphicsError> {
         }
     }
 
-    let name = format!("./data/maps/{}_{}_{}.json", x, y, group);
-    match OpenOptions::new().read(true).open(&name) {
-        Ok(file) => {
-            let reader = BufReader::new(file);
-
-            match serde_json::from_reader(reader) {
-                Ok(data) => Ok(data),
-                Err(e) => {
-                    println!("Error {:?}", e);
-                    Ok(MapData::default(x, y, group))
-                }
-            }
+    let name: String = format!("./data/maps/{}_{}_{}.bin", x, y, group);
+    match OpenOptions::new().read(true).open(name) {
+        Ok(mut file) => {
+            let mut bytes = Vec::new();
+            file.read_to_end(&mut bytes)?;
+            Ok(MapData::read_from_buffer(&bytes).unwrap())
         }
-        Err(e) => Err(GraphicsError::Other(OtherError::new(&format!(
-            "Failed to open {}, Err {:?}",
-            name, e
-        )))),
+        Err(_) => Ok(MapData::default(x, y, group)),
     }
 }
 
 pub fn is_map_exist(x: i32, y: i32, group: u64) -> bool {
-    let name = format!("./data/maps/{}_{}_{}.json", x, y, group);
+    let name = format!("./data/maps/{}_{}_{}.bin", x, y, group);
     Path::new(&name).exists()
 }
 

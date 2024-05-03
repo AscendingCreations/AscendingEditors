@@ -1,15 +1,12 @@
 use crate::npc::*;
-use araiseal_ui::*;
 use araiseal_types::*;
+use araiseal_ui::*;
 use iced::{
     alignment::{Alignment, Horizontal},
-    widget::{column, row, text, checkbox, Rule},
+    widget::{checkbox, column, row, text, Rule},
     Element,
 };
-use iced_aw::{
-    TimePicker,
-    time_picker::Time
-};
+use iced_aw::{time_picker::Time, TimePicker};
 
 #[derive(Educe)]
 #[educe(Default)]
@@ -45,49 +42,76 @@ impl NpcUISettings {
                 Rule::horizontal(0),
                 text("NPC Settings:").horizontal_alignment(Horizontal::Center),
                 Rule::horizontal(0),
-            ].spacing(10).align_items(Alignment::Center),
+            ]
+            .spacing(10)
+            .align_items(Alignment::Center),
             row![
                 column![
-                    checkbox("Target Auto switch", self.target_auto_switch)
-                        .on_toggle(move |i| Message::GenericBoolInput((0, CheckBoxMessage::Change(i)))),
-                    checkbox("Target Attacked Switch", self.target_attacked_switch)
-                        .on_toggle(move |i| Message::GenericBoolInput((1, CheckBoxMessage::Change(i)))),
-                    checkbox("Target Range Dropout", self.target_range_dropout)
-                        .on_toggle(move |i| Message::GenericBoolInput((2, CheckBoxMessage::Change(i)))),
-                    checkbox("Can Target", self.can_target)
-                        .on_toggle(move |i| Message::GenericBoolInput((3, CheckBoxMessage::Change(i)))),
-                    checkbox("Can Move", self.can_move)
-                        .on_toggle(move |i| Message::GenericBoolInput((4, CheckBoxMessage::Change(i)))),
-                    checkbox("Can Attack Player", self.can_attack_player)
-                        .on_toggle(move |i| Message::GenericBoolInput((5, CheckBoxMessage::Change(i)))),
-                    checkbox("Has Self Only", self.has_selfonly)
-                        .on_toggle(move |i| Message::GenericBoolInput((6, CheckBoxMessage::Change(i)))),
-                ].spacing(5),
+                    checkbox("Target Auto switch", self.target_auto_switch).on_toggle(move |i| {
+                        Message::GenericBoolInput((0, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Target Attacked Switch", self.target_attacked_switch).on_toggle(
+                        move |i| Message::GenericBoolInput((1, CheckBoxMessage::Change(i)))
+                    ),
+                    checkbox("Target Range Dropout", self.target_range_dropout).on_toggle(
+                        move |i| Message::GenericBoolInput((2, CheckBoxMessage::Change(i)))
+                    ),
+                    checkbox("Can Target", self.can_target).on_toggle(move |i| {
+                        Message::GenericBoolInput((3, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Can Move", self.can_move).on_toggle(move |i| {
+                        Message::GenericBoolInput((4, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Can Attack Player", self.can_attack_player).on_toggle(move |i| {
+                        Message::GenericBoolInput((5, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Has Self Only", self.has_selfonly).on_toggle(move |i| {
+                        Message::GenericBoolInput((6, CheckBoxMessage::Change(i)))
+                    }),
+                ]
+                .spacing(5),
                 column![
-                    checkbox("Has Friendly Only", self.has_friendonly)
-                        .on_toggle(move |i| Message::GenericBoolInput((7, CheckBoxMessage::Change(i)))),
-                    checkbox("Has Ground Only", self.has_groundonly)
-                        .on_toggle(move |i| Message::GenericBoolInput((8, CheckBoxMessage::Change(i)))),
-                    checkbox("Has Ally", self.has_allys)
-                        .on_toggle(move |i| Message::GenericBoolInput((9, CheckBoxMessage::Change(i)))),
-                    checkbox("Can Attack", self.can_attack)
-                        .on_toggle(move |i| Message::GenericBoolInput((10, CheckBoxMessage::Change(i)))),
-                    checkbox("Runs Away", self.runsaway)
-                        .on_toggle(move |i| Message::GenericBoolInput((11, CheckBoxMessage::Change(i)))),
-                    checkbox("Can Pass Through", self.canpassthru)
-                        .on_toggle(move |i| Message::GenericBoolInput((12, CheckBoxMessage::Change(i)))),
-                    checkbox("Is Animated", self.isanimated)
-                        .on_toggle(move |i| Message::GenericBoolInput((13, CheckBoxMessage::Change(i)))),
-                ].spacing(5),
+                    checkbox("Has Friendly Only", self.has_friendonly).on_toggle(move |i| {
+                        Message::GenericBoolInput((7, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Has Ground Only", self.has_groundonly).on_toggle(move |i| {
+                        Message::GenericBoolInput((8, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Has Ally", self.has_allys).on_toggle(move |i| {
+                        Message::GenericBoolInput((9, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Can Attack", self.can_attack).on_toggle(move |i| {
+                        Message::GenericBoolInput((10, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Runs Away", self.runsaway).on_toggle(move |i| {
+                        Message::GenericBoolInput((11, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Can Pass Through", self.canpassthru).on_toggle(move |i| {
+                        Message::GenericBoolInput((12, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Is Animated", self.isanimated).on_toggle(move |i| {
+                        Message::GenericBoolInput((13, CheckBoxMessage::Change(i)))
+                    }),
+                ]
+                .spacing(5),
                 column![
                     row![
-                        self.target_switch_chance.view(0, 1, 100_000_000, 1, Message::GenericI64Input),
+                        self.target_switch_chance.view(
+                            0,
+                            1,
+                            100_000_000,
+                            1,
+                            Message::GenericI64Input
+                        ),
                         text("Target Switch Chance out of 100,000,000: "),
-                    ].spacing(6),
+                    ]
+                    .spacing(6),
                     row![
-                        self.run_damage.view(0, 1, u32::MAX, 1, Message::GenericU32Input),
+                        self.run_damage
+                            .view(0, 1, u32::MAX, 1, Message::GenericU32Input),
                         text("Run Min HP Needed: "),
-                    ].spacing(6),
+                    ]
+                    .spacing(6),
                     row![
                         TimePicker::new(
                             self.show_time[0],
@@ -95,22 +119,29 @@ impl NpcUISettings {
                             button("Set Start Time").on_press(Message::ChooseTime1),
                             Message::CancelTime,
                             Message::SubmitTime1,
-                        ).use_24h(),
+                        )
+                        .use_24h(),
                         text(format!("Start Time: {:?}", self.spawntime_data.0)),
-                    ].spacing(6).align_items(Alignment::Center),
+                    ]
+                    .spacing(6)
+                    .align_items(Alignment::Center),
                     row![
                         TimePicker::new(
                             self.show_time[1],
                             self.times[1],
-                            button("Set End Time").on_press(Message::ChooseTime1),
+                            button("Set End Time").on_press(Message::ChooseTime2),
                             Message::CancelTime,
-                            Message::SubmitTime1,
-                        ).use_24h(),
+                            Message::SubmitTime2,
+                        )
+                        .use_24h(),
                         text(format!("End Time: {:?}", self.spawntime_data.1)),
-                    ].spacing(6).align_items(Alignment::Center),
-                ].spacing(6),
-            ].spacing(6),
-            
+                    ]
+                    .spacing(6)
+                    .align_items(Alignment::Center),
+                ]
+                .spacing(6),
+            ]
+            .spacing(6),
         ]
         .spacing(12)
         .align_items(Alignment::Start)

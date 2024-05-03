@@ -1,10 +1,10 @@
 use araiseal_types::*;
-use bytey::{ByteBuffer, ByteBufferRead, ByteBufferWrite};
 use serde::{Deserialize, Serialize};
-use std::io::BufReader;
+use speedy::{Readable, Writable};
+use std::io::Read;
 use std::{fs::OpenOptions, io::Write};
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize, Educe, ByteBufferRead, ByteBufferWrite)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, Educe, Readable, Writable)]
 #[educe(Default)]
 pub struct ShopItem {
     pub index: u16,
@@ -12,7 +12,7 @@ pub struct ShopItem {
     pub price: u64,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, Educe, ByteBufferRead, ByteBufferWrite)]
+#[derive(Clone, Debug, Deserialize, Serialize, Educe, Readable, Writable)]
 #[educe(Default)]
 pub struct ShopData {
     pub name: String,
@@ -23,7 +23,7 @@ pub struct ShopData {
 impl ShopData {
     pub fn create_files() -> Result<(), String> {
         for i in 0..MAX_SHOPS {
-            let name = format!("./data/shops/{}.json", i);
+            let name = format!("./data/shops/json/{}.json", i);
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(file) => {
@@ -37,19 +37,15 @@ impl ShopData {
                 Err(e) => return Err(format!("Failed to open {}, Err {:?}", name, e)),
             }
 
-            let name = format!("./data/shops/bin/{}.bin", i);
+            let name = format!("./data/shops/{}.bin", i);
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(mut file) => {
                     let data = ShopData::default();
 
-                    let mut buf = match ByteBuffer::new() {
-                        Ok(data) => data,
-                        Err(_) => return Ok(()),
-                    };
-                    buf.write(data).unwrap();
+                    let bytes = data.write_to_vec().unwrap();
 
-                    if let Err(e) = file.write(buf.as_slice()) {
+                    if let Err(e) = file.write(bytes.as_slice()) {
                         return Err(format!("File Error {:?}", e));
                     }
                 }
@@ -62,7 +58,7 @@ impl ShopData {
     }
 
     pub fn save_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/shops/{}.json", id);
+        let name = format!("./data/shops/json/{}.json", id);
 
         match OpenOptions::new().truncate(true).write(true).open(&name) {
             Ok(file) => {
@@ -78,14 +74,9 @@ impl ShopData {
     }
 
     pub fn save_bin_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/shops/bin/{}.bin", id);
+        let name = format!("./data/shops/{}.bin", id);
 
-        let mut buf = match ByteBuffer::new() {
-            Ok(data) => data,
-            Err(_) => return Ok(()),
-        };
-
-        buf.write(self).unwrap();
+        let bytes = self.write_to_vec().unwrap();
 
         match OpenOptions::new()
             .truncate(true)
@@ -94,7 +85,7 @@ impl ShopData {
             .open(&name)
         {
             Ok(mut file) => {
-                if let Err(e) = file.write(buf.as_slice()) {
+                if let Err(e) = file.write(bytes.as_slice()) {
                     Err(format!("File Error {:?}", e))
                 } else {
                     Ok(())
@@ -104,7 +95,7 @@ impl ShopData {
         }
     }
 
-    pub fn load_files() -> Result<Vec<(ShopData, bool)>, String> {
+    pub fn load_files(save_json: bool) -> Result<Vec<(ShopData, bool)>, String> {
         let mut shops = Vec::<(ShopData, bool)>::new();
 
         for i in 0..MAX_SHOPS {
@@ -114,7 +105,9 @@ impl ShopData {
             };
 
             if result.1 {
-                result.0.save_file(i)?;
+                if save_json {
+                    result.0.save_file(i)?;
+                }
                 result.0.save_bin_file(i)?;
                 result.1 = false;
             }
@@ -125,18 +118,14 @@ impl ShopData {
     }
 
     pub fn load_file(id: usize) -> Result<(ShopData, bool), String> {
-        let name = format!("./data/shops/{}.json", id);
+        let name = format!("./data/shops/{}.bin", id);
 
         match OpenOptions::new().read(true).open(&name) {
-            Ok(file) => {
-                let reader = BufReader::new(file);
-
-                match serde_json::from_reader(reader) {
-                    Ok(v) => Ok((v, false)),
-                    Err(e) => {
-                        println!("Error {:?}", e);
-                        Ok((ShopData::default(), true))
-                    }
+            Ok(mut file) => {
+                let mut bytes = Vec::new();
+                match file.read_to_end(&mut bytes) {
+                    Ok(_) => Ok((ShopData::read_from_buffer(&bytes).unwrap(), false)),
+                    Err(_) => Ok((ShopData::default(), true)),
                 }
             }
             Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),

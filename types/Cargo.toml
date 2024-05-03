@@ -12,3 +12,4 @@ chrono.workspace = true
 strum_macros.workspace = true
 num_enum.workspace = true
 bytey.workspace = true
+speedy.workspace = true

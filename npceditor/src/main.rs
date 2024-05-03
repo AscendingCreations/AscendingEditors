@@ -4,7 +4,10 @@
 extern crate educe;
 extern crate serde_big_array;
 
+mod config;
 mod npc;
+
+use config::*;
 
 use araiseal_logger::*;
 use araiseal_ui::*;
@@ -28,7 +31,7 @@ pub fn main() -> Result<(), String> {
         error!("PANIC: {}, BACKTRACE: {:?}", panic_info, bt);
     }));
 
-    if let Err(e) = fs::create_dir_all("./data/npcs/bin/") {
+    if let Err(e) = fs::create_dir_all("./data/npcs/json/") {
         return Err(format!("Err: {:?}", e));
     }
 

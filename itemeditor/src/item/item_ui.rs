@@ -1,4 +1,4 @@
-use crate::item::*;
+use crate::{item::*, load_config, ConfigData};
 use araiseal_types::*;
 use araiseal_ui::*;
 
@@ -17,6 +17,7 @@ pub struct ItemUI {
     generic: ItemUiGeneric, //Generic Item Data.
     data_ui: ItemUiData,    //Item Generic Data Types.
     currentid: usize,
+    config: ConfigData,
 }
 
 impl UiRenderer for ItemUI {
@@ -28,10 +29,12 @@ impl UiRenderer for ItemUI {
                 return None;
             }
             Message::SaveButtonPress => {
-                self.data[self.currentid]
-                    .0
-                    .save_file(self.currentid)
-                    .unwrap();
+                if self.config.save_json {
+                    self.data[self.currentid]
+                        .0
+                        .save_file(self.currentid)
+                        .unwrap();
+                }
                 self.data[self.currentid]
                     .0
                     .save_bin_file(self.currentid)
@@ -148,8 +151,11 @@ impl UiRenderer for ItemUI {
 
 impl ItemUI {
     pub fn new() -> Self {
+        let config: ConfigData = load_config();
+
         let mut ui = ItemUI {
-            data: ItemData::load_files().unwrap(),
+            data: ItemData::load_files(config.save_json).unwrap(),
+            config,
             ..Default::default()
         };
 
@@ -173,8 +179,10 @@ impl ItemUI {
                 continue;
             }
 
-            if let Err(e) = v.0.save_file(i) {
-                println!("Could not save Item {}, err {}", i, e);
+            if self.config.save_json {
+                if let Err(e) = v.0.save_file(i) {
+                    println!("Could not save Item {}, err {}", i, e);
+                }
             }
             if let Err(e) = v.0.save_bin_file(i) {
                 println!("Could not save bin Item {}, err {}", i, e);

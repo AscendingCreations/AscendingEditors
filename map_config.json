@@ -1,0 +1,86 @@
+{
+  "key_code": [
+    {
+      "Character": "o"
+    },
+    {
+      "Character": "s"
+    },
+    {
+      "Character": "z"
+    },
+    {
+      "Character": "y"
+    },
+    {
+      "Character": "d"
+    },
+    {
+      "Character": "e"
+    },
+    {
+      "Character": "f"
+    },
+    {
+      "Character": "y"
+    }
+  ],
+  "key_code_modifier": [
+    [
+      true,
+      false,
+      false
+    ],
+    [
+      true,
+      false,
+      false
+    ],
+    [
+      true,
+      false,
+      false
+    ],
+    [
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false
+    ]
+  ],
+  "hide_fps": false,
+  "hide_tileset_bg": false,
+  "hide_mapview_bg": false,
+  "map_selection_color": [
+    0,
+    0,
+    150,
+    150
+  ],
+  "tile_selection_color": [
+    80,
+    0,
+    0,
+    150
+  ],
+  "save_json": false
+}

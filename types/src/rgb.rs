@@ -1,17 +1,8 @@
-use bytey::{ByteBufferRead, ByteBufferWrite};
 use serde::{Deserialize, Serialize};
+use speedy::{Readable, Writable};
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    PartialEq,
-    Eq,
-    Default,
-    Deserialize,
-    Serialize,
-    ByteBufferRead,
-    ByteBufferWrite,
+    Copy, Clone, Debug, PartialEq, Eq, Default, Deserialize, Serialize, Readable, Writable,
 )]
 pub struct Rgba {
     pub r: i16,

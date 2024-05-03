@@ -1,5 +1,5 @@
-use bytey::{ByteBufferRead, ByteBufferWrite};
 use serde::*;
+use speedy::{Readable, Writable};
 use strum_macros::Display;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Default)]
@@ -11,17 +11,7 @@ pub enum UserAccess {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    Eq,
-    PartialEq,
-    Serialize,
-    Deserialize,
-    Default,
-    Display,
-    ByteBufferRead,
-    ByteBufferWrite,
+    Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Default, Display, Readable, Writable,
 )]
 pub enum AIBehavior {
     #[default]
@@ -84,8 +74,8 @@ impl AIBehavior {
     Default,
     Display,
     Hash,
-    ByteBufferRead,
-    ByteBufferWrite,
+    Readable,
+    Writable,
 )]
 pub enum ItemTypes {
     #[default]

@@ -1,4 +1,4 @@
-use crate::npc::*;
+use crate::{load_config, npc::*, ConfigData};
 use araiseal_types::*;
 use araiseal_ui::*;
 use iced::{
@@ -17,6 +17,7 @@ pub struct NpcUI {
     settings: NpcUISettings,
     currentid: usize,
     currentitemdropslot: usize,
+    config: ConfigData,
 }
 
 impl UiRenderer for NpcUI {
@@ -29,10 +30,12 @@ impl UiRenderer for NpcUI {
                 return None;
             }
             Message::SaveButtonPress => {
-                self.data[self.currentid]
-                    .0
-                    .save_file(self.currentid)
-                    .unwrap();
+                if self.config.save_json {
+                    self.data[self.currentid]
+                        .0
+                        .save_file(self.currentid)
+                        .unwrap();
+                }
                 self.data[self.currentid]
                     .0
                     .save_bin_file(self.currentid)
@@ -299,8 +302,11 @@ impl UiRenderer for NpcUI {
 
 impl NpcUI {
     pub fn new() -> Self {
+        let config: ConfigData = load_config();
+
         let mut ui = NpcUI {
-            data: NpcData::load_files().unwrap(),
+            data: NpcData::load_files(config.save_json).unwrap(),
+            config,
             ..Default::default()
         };
 
@@ -323,8 +329,10 @@ impl NpcUI {
                 continue;
             }
 
-            if let Err(e) = v.0.save_file(i) {
-                println!("Could not save NPC {}, err {}", i, e);
+            if self.config.save_json {
+                if let Err(e) = v.0.save_file(i) {
+                    println!("Could not save NPC {}, err {}", i, e);
+                }
             }
             if let Err(e) = v.0.save_bin_file(i) {
                 println!("Could not save bin NPC {}, err {}", i, e);

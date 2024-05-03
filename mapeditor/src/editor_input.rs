@@ -92,7 +92,14 @@ pub fn handle_input(
     // If dialog open, cancel all other inputs
     if gui.dialog.is_some() {
         dialog_input(
-            systems, &inputtype, screen_pos, gameinput, gui, database, mapview,
+            systems,
+            &inputtype,
+            screen_pos,
+            gameinput,
+            gui,
+            database,
+            config_data,
+            mapview,
             elwt,
         );
         return;
@@ -113,8 +120,15 @@ pub fn handle_input(
 
     // Handle Mapview Inputs
     mapview_input(
-        systems, &inputtype, screen_pos, gameinput, gui, tileset, mapview,
+        systems,
+        &inputtype,
+        screen_pos,
+        gameinput,
+        gui,
+        tileset,
+        mapview,
         database,
+        config_data,
     );
     // Handle tileset inputs
     tileset_input(
@@ -179,12 +193,10 @@ pub fn access_shortcut(
 
     // Read Input
     match event.physical_key {
-        PhysicalKey::Code(KeyCode::ControlLeft)
-        | PhysicalKey::Code(KeyCode::ControlRight) => {
+        PhysicalKey::Code(KeyCode::ControlLeft) | PhysicalKey::Code(KeyCode::ControlRight) => {
             gameinput.hold_key_modifier[0] = event.state.is_pressed()
         }
-        PhysicalKey::Code(KeyCode::ShiftLeft)
-        | PhysicalKey::Code(KeyCode::ShiftRight) => {
+        PhysicalKey::Code(KeyCode::ShiftLeft) | PhysicalKey::Code(KeyCode::ShiftRight) => {
             gameinput.hold_key_modifier[1] = event.state.is_pressed()
         }
         PhysicalKey::Code(KeyCode::Space) => {
@@ -250,7 +262,7 @@ pub fn gui_button_select(
             gui.open_dialog(systems, DialogType::MapLoad, None);
         }
         TOOL_SAVE => {
-            database.save_map_data(mapview, None);
+            database.save_map_data(mapview, None, config_data);
             update_map_name(systems, gui, database);
         }
         TOOL_UNDO => {
@@ -281,11 +293,7 @@ pub fn gui_button_select(
     }
 }
 
-pub fn update_map_name(
-    systems: &mut DrawSetting,
-    gui: &mut Interface,
-    database: &EditorData,
-) {
+pub fn update_map_name(systems: &mut DrawSetting, gui: &mut Interface, database: &EditorData) {
     if database.did_change(database.x, database.y, database.group) {
         systems.gfx.set_text(
             &mut systems.renderer,

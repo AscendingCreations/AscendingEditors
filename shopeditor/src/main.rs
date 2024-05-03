@@ -4,7 +4,10 @@
 extern crate educe;
 extern crate serde_big_array;
 
+mod config;
 mod shop;
+
+use config::*;
 
 use araiseal_logger::*;
 use araiseal_ui::*;
@@ -29,7 +32,7 @@ pub fn main() -> Result<(), String> {
         error!("PANIC: {}, BACKTRACE: {:?}", panic_info, bt);
     }));
 
-    if let Err(e) = fs::create_dir_all("./data/shops/bin/") {
+    if let Err(e) = fs::create_dir_all("./data/shops/json/") {
         return Err(format!("Err: {:?}", e));
     }
 

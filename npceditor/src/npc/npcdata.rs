@@ -1,10 +1,10 @@
 use araiseal_types::*;
-use bytey::{ByteBuffer, ByteBufferRead, ByteBufferWrite};
 use serde::{Deserialize, Serialize};
-use std::io::BufReader;
+use speedy::{Readable, Writable};
+use std::io::Read;
 use std::{fs::OpenOptions, io::Write};
 
-#[derive(Educe, Clone, Debug, Serialize, Deserialize, Eq, ByteBufferRead, ByteBufferWrite)]
+#[derive(Educe, Clone, Debug, Serialize, Deserialize, Eq, Readable, Writable)]
 #[educe(PartialEq, Default)]
 pub struct NpcData {
     pub name: String,
@@ -72,7 +72,7 @@ pub struct NpcData {
 impl NpcData {
     pub fn create_files() -> Result<(), String> {
         for i in 0..MAX_NPCS {
-            let name = format!("./data/npcs/{}.json", i);
+            let name = format!("./data/npcs/json/{}.json", i);
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(file) => {
@@ -86,20 +86,15 @@ impl NpcData {
                 Err(e) => return Err(format!("Failed to open {}, Err {:?}", name, e)),
             }
 
-            let name = format!("./data/npcs/bin/{}.bin", i);
+            let name = format!("./data/npcs/{}.bin", i);
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(mut file) => {
                     let data = NpcData::default();
 
-                    let mut buf = match ByteBuffer::new() {
-                        Ok(data) => data,
-                        Err(_) => return Ok(()),
-                    };
+                    let bytes = data.write_to_vec().unwrap();
 
-                    buf.write(data).unwrap();
-
-                    if let Err(e) = file.write(buf.as_slice()) {
+                    if let Err(e) = file.write(bytes.as_slice()) {
                         return Err(format!("File Error {:?}", e));
                     }
                 }
@@ -112,7 +107,7 @@ impl NpcData {
     }
 
     pub fn save_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/npcs/{}.json", id);
+        let name = format!("./data/npcs/json/{}.json", id);
 
         match OpenOptions::new().truncate(true).write(true).open(&name) {
             Ok(file) => {
@@ -128,14 +123,9 @@ impl NpcData {
     }
 
     pub fn save_bin_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/npcs/bin/{}.bin", id);
+        let name = format!("./data/npcs/{}.bin", id);
 
-        let mut buf = match ByteBuffer::new() {
-            Ok(data) => data,
-            Err(_) => return Ok(()),
-        };
-
-        buf.write(self).unwrap();
+        let bytes = self.write_to_vec().unwrap();
 
         match OpenOptions::new()
             .truncate(true)
@@ -144,7 +134,7 @@ impl NpcData {
             .open(&name)
         {
             Ok(mut file) => {
-                if let Err(e) = file.write(buf.as_slice()) {
+                if let Err(e) = file.write(bytes.as_slice()) {
                     Err(format!("File Error {:?}", e))
                 } else {
                     Ok(())
@@ -154,7 +144,7 @@ impl NpcData {
         }
     }
 
-    pub fn load_files() -> Result<Vec<(NpcData, bool)>, String> {
+    pub fn load_files(save_json: bool) -> Result<Vec<(NpcData, bool)>, String> {
         let mut data = Vec::<(NpcData, bool)>::new();
 
         for i in 0..MAX_NPCS {
@@ -164,7 +154,9 @@ impl NpcData {
             };
 
             if result.1 {
-                result.0.save_file(i)?;
+                if save_json {
+                    result.0.save_file(i)?;
+                }
                 result.0.save_bin_file(i)?;
                 result.1 = false;
             }
@@ -175,18 +167,14 @@ impl NpcData {
     }
 
     pub fn load_file(id: usize) -> Result<(NpcData, bool), String> {
-        let name = format!("./data/npcs/{}.json", id);
+        let name = format!("./data/npcs/{}.bin", id);
 
         match OpenOptions::new().read(true).open(&name) {
-            Ok(file) => {
-                let reader = BufReader::new(file);
-
-                match serde_json::from_reader(reader) {
-                    Ok(v) => Ok((v, false)),
-                    Err(e) => {
-                        println!("Error {:?}", e);
-                        Ok((NpcData::default(), true))
-                    }
+            Ok(mut file) => {
+                let mut bytes = Vec::new();
+                match file.read_to_end(&mut bytes) {
+                    Ok(_) => Ok((NpcData::read_from_buffer(&bytes).unwrap(), false)),
+                    Err(_) => Ok((NpcData::default(), true)),
                 }
             }
             Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),

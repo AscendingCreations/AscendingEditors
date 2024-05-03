@@ -1,4 +1,4 @@
-use crate::shop::*;
+use crate::{load_config, shop::*, ConfigData};
 use araiseal_types::*;
 use araiseal_ui::*;
 
@@ -17,6 +17,7 @@ pub struct ShopUI {
     generic: ShopUiGeneric, //Generic Shop Data.
     currentid: usize,
     current_shopid: usize,
+    config: ConfigData,
 }
 
 impl UiRenderer for ShopUI {
@@ -28,10 +29,12 @@ impl UiRenderer for ShopUI {
                 return None;
             }
             Message::SaveButtonPress => {
-                self.data[self.currentid]
-                    .0
-                    .save_file(self.currentid)
-                    .unwrap();
+                if self.config.save_json {
+                    self.data[self.currentid]
+                        .0
+                        .save_file(self.currentid)
+                        .unwrap();
+                }
                 self.data[self.currentid]
                     .0
                     .save_bin_file(self.currentid)
@@ -116,8 +119,11 @@ impl UiRenderer for ShopUI {
 
 impl ShopUI {
     pub fn new() -> Self {
+        let config: ConfigData = load_config();
+
         let mut ui = ShopUI {
-            data: ShopData::load_files().unwrap(),
+            data: ShopData::load_files(config.save_json).unwrap(),
+            config,
             ..Default::default()
         };
 
@@ -140,8 +146,10 @@ impl ShopUI {
                 continue;
             }
 
-            if let Err(e) = v.0.save_file(i) {
-                println!("Could not save Shop {}, err {}", i, e);
+            if self.config.save_json {
+                if let Err(e) = v.0.save_file(i) {
+                    println!("Could not save Shop {}, err {}", i, e);
+                }
             }
             if let Err(e) = v.0.save_bin_file(i) {
                 println!("Could not save bin Shop {}, err {}", i, e);

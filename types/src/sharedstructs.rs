@@ -1,17 +1,8 @@
-use bytey::{ByteBufferRead, ByteBufferWrite};
 use serde::{Deserialize, Serialize};
+use speedy::{Readable, Writable};
 
 #[derive(
-    Clone,
-    Copy,
-    Debug,
-    PartialEq,
-    Eq,
-    Deserialize,
-    Serialize,
-    Default,
-    ByteBufferRead,
-    ByteBufferWrite,
+    Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize, Default, Readable, Writable,
 )]
 pub struct TileBox {
     pub x: u8,
@@ -21,16 +12,7 @@ pub struct TileBox {
 }
 
 #[derive(
-    Copy,
-    Clone,
-    Debug,
-    Serialize,
-    Deserialize,
-    Default,
-    PartialEq,
-    Eq,
-    ByteBufferRead,
-    ByteBufferWrite,
+    Copy, Clone, Debug, Serialize, Deserialize, Default, PartialEq, Eq, Readable, Writable,
 )]
 pub struct GameTime {
     pub hour: u32,

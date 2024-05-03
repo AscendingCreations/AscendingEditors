@@ -48,23 +48,16 @@ pub fn interface_input(
                 }
 
                 // Tab Options
-                let click_tab_option =
-                    gui.click_tab_option(systems, screen_pos);
+                let click_tab_option = gui.click_tab_option(systems, screen_pos);
                 if let Some(tab_index) = click_tab_option {
                     gui.select_tab_option(systems, tab_index);
                     // Open
                     match gui.current_tab {
-                        TAB_ATTRIBUTE => open_attribute_settings(
-                            systems,
-                            gui,
-                            gui.current_tab_data + 1,
-                            vec![],
-                        ),
+                        TAB_ATTRIBUTE => {
+                            open_attribute_settings(systems, gui, gui.current_tab_data + 1, vec![])
+                        }
                         TAB_ZONE => {
-                            mapview.update_map_zone(
-                                systems,
-                                gui.current_tab_data as usize,
-                            );
+                            mapview.update_map_zone(systems, gui.current_tab_data as usize);
                             gui.open_zone_settings(systems, mapview);
                         }
                         _ => {}
@@ -73,16 +66,13 @@ pub fn interface_input(
 
                 // Textbox / Buttons
                 match gui.current_tab {
-                    TAB_ATTRIBUTE | TAB_ZONE => {
-                        gui.select_textbox(systems, screen_pos)
-                    }
+                    TAB_ATTRIBUTE | TAB_ZONE => gui.select_textbox(systems, screen_pos),
                     TAB_PROPERTIES => {
                         // Buttons
-                        let click_button =
-                            gui.click_buttons(systems, screen_pos);
+                        let click_button = gui.click_buttons(systems, screen_pos);
                         if let Some(button_index) = click_button {
                             match button_index {
-                                0 => database.save_all_maps(mapview),
+                                0 => database.save_all_maps(mapview, config_data),
                                 1 => {
                                     database.reset_all_map();
                                     database.load_map_data(systems, mapview);
@@ -91,31 +81,21 @@ pub fn interface_input(
                                 }
                                 2 => {
                                     gui.preference.open(systems);
-                                    open_preference_tab(
-                                        &mut gui.preference,
-                                        systems,
-                                        config_data,
-                                    );
+                                    open_preference_tab(&mut gui.preference, systems, config_data);
                                 }
                                 _ => {}
                             }
                         }
 
                         // Selection box
-                        let click_button =
-                            gui.click_selectionbox(systems, screen_pos);
+                        let click_button = gui.click_selectionbox(systems, screen_pos);
                         if let Some(selection_index) = click_button {
                             if matches!(selection_index, 0 | 1) {
-                                if !gui.editor_selectionbox[selection_index]
-                                    .is_list_visible
-                                {
-                                    gui.editor_selectionbox[selection_index]
-                                        .show_list(systems);
-                                    gui.selected_dropbox =
-                                        selection_index as i32;
+                                if !gui.editor_selectionbox[selection_index].is_list_visible {
+                                    gui.editor_selectionbox[selection_index].show_list(systems);
+                                    gui.selected_dropbox = selection_index as i32;
                                 } else {
-                                    gui.editor_selectionbox[selection_index]
-                                        .hide_list(systems);
+                                    gui.editor_selectionbox[selection_index].hide_list(systems);
                                     gui.selected_dropbox = -1;
                                 }
                             } // Weather & Music
@@ -127,14 +107,12 @@ pub fn interface_input(
                                 [gui.selected_dropbox as usize]
                                 .click_list(systems, screen_pos);
                             if let Some(selection_index) = click_button {
-                                gui.editor_selectionbox
-                                    [gui.selected_dropbox as usize]
+                                gui.editor_selectionbox[gui.selected_dropbox as usize]
                                     .switch_list(systems, selection_index);
 
                                 match gui.selected_dropbox {
                                     0 => {
-                                        mapview.fixed_weather = gui
-                                            .editor_selectionbox
+                                        mapview.fixed_weather = gui.editor_selectionbox
                                             [gui.selected_dropbox as usize]
                                             .selected_index
                                             as u8;
@@ -148,23 +126,19 @@ pub fn interface_input(
                                         if index == 0 {
                                             mapview.music = None;
                                         } else {
-                                            let list_name = gui
-                                                .editor_selectionbox
+                                            let list_name = gui.editor_selectionbox
                                                 [gui.selected_dropbox as usize]
                                                 .list[index]
                                                 .clone();
                                             mapview.music = Some(list_name);
                                             database.set_map_change(mapview);
-                                            update_map_name(
-                                                systems, gui, database,
-                                            );
+                                            update_map_name(systems, gui, database);
                                         }
                                     }
                                     _ => {}
                                 }
 
-                                gui.editor_selectionbox
-                                    [gui.selected_dropbox as usize]
+                                gui.editor_selectionbox[gui.selected_dropbox as usize]
                                     .hide_list(systems);
                             }
                         }
@@ -189,8 +163,7 @@ pub fn interface_input(
                 gui.editor_selectionbox[gui.selected_dropbox as usize]
                     .scrollbar
                     .move_scrollbar(systems, screen_pos.y, false);
-                let scrollbar_value = gui.editor_selectionbox
-                    [gui.selected_dropbox as usize]
+                let scrollbar_value = gui.editor_selectionbox[gui.selected_dropbox as usize]
                     .scrollbar
                     .cur_value;
                 gui.editor_selectionbox[gui.selected_dropbox as usize]
@@ -238,8 +211,7 @@ pub fn interface_key_input(
     let mut result = false;
     match gui.current_tab {
         TAB_ATTRIBUTE => {
-            let attribute =
-                MapAttribute::convert_to_plain_enum(gui.current_tab_data + 1);
+            let attribute = MapAttribute::convert_to_plain_enum(gui.current_tab_data + 1);
             match attribute {
                 MapAttribute::Warp(_) => {
                     if gui.selected_textbox >= 0 {
@@ -283,34 +255,26 @@ pub fn interface_key_input(
                     .enter_numeric(systems, event, 5, false);
                 match gui.selected_textbox {
                     0 => {
-                        let value = gui.editor_textbox
-                            [gui.selected_textbox as usize]
+                        let value = gui.editor_textbox[gui.selected_textbox as usize]
                             .data
                             .parse::<i64>()
                             .unwrap_or_default();
-                        mapview.map_zone_setting
-                            [gui.current_tab_data as usize]
-                            .max_npc = value as u64
+                        mapview.map_zone_setting[gui.current_tab_data as usize].max_npc =
+                            value as u64
                     } // Max NPC
                     _ => {
                         if !gui.editor_textbox[gui.selected_textbox as usize]
                             .data
                             .is_empty()
                         {
-                            let value = gui.editor_textbox
-                                [gui.selected_textbox as usize]
+                            let value = gui.editor_textbox[gui.selected_textbox as usize]
                                 .data
                                 .parse::<i64>()
                                 .unwrap_or_default();
-                            mapview.map_zone_setting
-                                [gui.current_tab_data as usize]
-                                .npc_id
-                                [(gui.selected_textbox - 1) as usize] =
-                                Some(value as u64);
+                            mapview.map_zone_setting[gui.current_tab_data as usize].npc_id
+                                [(gui.selected_textbox - 1) as usize] = Some(value as u64);
                         } else {
-                            mapview.map_zone_setting
-                                [gui.current_tab_data as usize]
-                                .npc_id
+                            mapview.map_zone_setting[gui.current_tab_data as usize].npc_id
                                 [(gui.selected_textbox - 1) as usize] = None;
                         }
                     } // Npc ID
@@ -421,11 +385,12 @@ pub fn set_tab(
         // Load tab data
         match gui.current_tab {
             TAB_LAYER => {
-                gui.tab_labels.iter_mut().zip(MapLayers::LAYERS).for_each(
-                    |(tab_labels, layer)| {
+                gui.tab_labels
+                    .iter_mut()
+                    .zip(MapLayers::LAYERS)
+                    .for_each(|(tab_labels, layer)| {
                         tab_labels.init(systems, layer.as_str(), 194.0)
-                    },
-                );
+                    });
 
                 gui.tab_labels[0].set_select(systems, true);
 
@@ -434,10 +399,7 @@ pub fn set_tab(
 
                 systems.gfx.set_visible(gui.labels[LABEL_TILESET], true);
 
-                mapview.change_selection_preview_size(
-                    systems,
-                    gameinput.selected_size,
-                );
+                mapview.change_selection_preview_size(systems, gameinput.selected_size);
             }
             TAB_ATTRIBUTE => {
                 gui.start_view = 0;
@@ -475,19 +437,12 @@ pub fn set_tab(
                 );
                 systems.gfx.center_text(gui.labels[LABEL_OPT_HEADER_TEXT]);
 
-                mapview.change_selection_preview_size(
-                    systems,
-                    Vec2::new(1.0, 1.0),
-                );
+                mapview.change_selection_preview_size(systems, Vec2::new(1.0, 1.0));
             }
             TAB_ZONE => {
                 for index in 0..MAX_TAB_LABEL {
                     if index < 5 {
-                        gui.tab_labels[index].init(
-                            systems,
-                            &format!("Zone {}", index + 1),
-                            194.0,
-                        );
+                        gui.tab_labels[index].init(systems, &format!("Zone {}", index + 1), 194.0);
                     }
                 }
                 gui.tab_labels[0].set_select(systems, true);
@@ -511,23 +466,18 @@ pub fn set_tab(
 
                 mapview.update_map_zone(systems, 0);
 
-                mapview.change_selection_preview_size(
-                    systems,
-                    Vec2::new(1.0, 1.0),
-                );
+                mapview.change_selection_preview_size(systems, Vec2::new(1.0, 1.0));
 
                 let text_start_pos = systems.gfx.get_pos(gui.tab_opt_bg[0]);
                 for i in 0..7 {
-                    let mut ajdust_pos =
-                        Vec2::new(text_start_pos.x, text_start_pos.y);
+                    let mut ajdust_pos = Vec2::new(text_start_pos.x, text_start_pos.y);
                     let msg = match i {
                         1 => {
                             ajdust_pos += Vec2::new(10.0, 338.0);
                             "NPC ID".to_string()
                         }
                         2..=6 => {
-                            ajdust_pos +=
-                                Vec2::new(10.0, 312.0 - ((i - 2) * 23) as f32);
+                            ajdust_pos += Vec2::new(10.0, 312.0 - ((i - 2) * 23) as f32);
                             format!("{}", i - 1)
                         }
                         _ => {
@@ -537,20 +487,11 @@ pub fn set_tab(
                     };
                     let mut text = create_basic_label(
                         systems,
-                        Vec3::new(
-                            ajdust_pos.x,
-                            ajdust_pos.y,
-                            ORDER_ATTRIBUTE_LABEL,
-                        ),
+                        Vec3::new(ajdust_pos.x, ajdust_pos.y, ORDER_ATTRIBUTE_LABEL),
                         Vec2::new(100.0, 20.0),
                         Color::rgba(180, 180, 180, 255),
                     );
-                    text.set_text(
-                        &mut systems.renderer,
-                        &msg,
-                        Attrs::new(),
-                        Shaping::Advanced,
-                    );
+                    text.set_text(&mut systems.renderer, &msg, Attrs::new(), Shaping::Advanced);
                     gui.editor_label.push(systems.gfx.add_text(text, 1));
 
                     if i != 1 {
@@ -572,17 +513,13 @@ pub fn set_tab(
                         gui.editor_textbox.push(text_box);
                     }
                 }
-                gui.editor_textbox[0].input_text(
-                    systems,
-                    mapview.map_zone_setting[0].max_npc.to_string(),
-                ); // Max Npc
+                gui.editor_textbox[0]
+                    .input_text(systems, mapview.map_zone_setting[0].max_npc.to_string()); // Max Npc
                 for i in 0..5 {
                     if mapview.map_zone_setting[0].npc_id[i].is_some() {
                         gui.editor_textbox[i + 1].input_text(
                             systems,
-                            mapview.map_zone_setting[0].npc_id[i]
-                                .unwrap()
-                                .to_string(),
+                            mapview.map_zone_setting[0].npc_id[i].unwrap().to_string(),
                         );
                     }
                 }
@@ -635,11 +572,7 @@ pub fn set_tab(
                 let content_pos = Vec2::new(25.0, 295.0);
                 let mut text = create_basic_label(
                     systems,
-                    Vec3::new(
-                        content_pos.x,
-                        content_pos.y,
-                        ORDER_ATTRIBUTE_LABEL,
-                    ),
+                    Vec3::new(content_pos.x, content_pos.y, ORDER_ATTRIBUTE_LABEL),
                     Vec2::new(100.0, 20.0),
                     Color::rgba(180, 180, 180, 255),
                 );
@@ -663,15 +596,10 @@ pub fn set_tab(
                         ORDER_DROPDOWN_SCROLLBAR,
                     ],
                     168.0,
-                    vec![
-                        "None".to_string(),
-                        "Rain".to_string(),
-                        "Snow".to_string(),
-                    ],
+                    vec!["None".to_string(), "Rain".to_string(), "Snow".to_string()],
                     0,
                 );
-                selectionbox
-                    .switch_list(systems, mapview.fixed_weather as usize);
+                selectionbox.switch_list(systems, mapview.fixed_weather as usize);
                 gui.editor_selectionbox.push(selectionbox);
 
                 let mut audio_list = systems.audio_list.audio.clone();
@@ -679,11 +607,7 @@ pub fn set_tab(
 
                 let mut text = create_basic_label(
                     systems,
-                    Vec3::new(
-                        content_pos.x,
-                        content_pos.y - 54.0,
-                        ORDER_ATTRIBUTE_LABEL,
-                    ),
+                    Vec3::new(content_pos.x, content_pos.y - 54.0, ORDER_ATTRIBUTE_LABEL),
                     Vec2::new(100.0, 20.0),
                     Color::rgba(180, 180, 180, 255),
                 );
@@ -711,9 +635,7 @@ pub fn set_tab(
                     0,
                 );
                 if let Some(data) = &mapview.music {
-                    if let Some(index) =
-                        audio_list.iter().position(|name| *name == *data)
-                    {
+                    if let Some(index) = audio_list.iter().position(|name| *name == *data) {
                         selectionbox.switch_list(systems, index);
                     }
                 }
@@ -721,11 +643,7 @@ pub fn set_tab(
 
                 let mut text = create_basic_label(
                     systems,
-                    Vec3::new(
-                        content_pos.x,
-                        content_pos.y - 150.0,
-                        ORDER_ATTRIBUTE_LABEL,
-                    ),
+                    Vec3::new(content_pos.x, content_pos.y - 150.0, ORDER_ATTRIBUTE_LABEL),
                     Vec2::new(150.0, 20.0),
                     Color::rgba(180, 180, 180, 255),
                 );
@@ -844,20 +762,11 @@ pub fn open_attribute_settings(
                 };
                 let mut text = create_basic_label(
                     systems,
-                    Vec3::new(
-                        ajdust_pos.x,
-                        ajdust_pos.y,
-                        ORDER_ATTRIBUTE_LABEL,
-                    ),
+                    Vec3::new(ajdust_pos.x, ajdust_pos.y, ORDER_ATTRIBUTE_LABEL),
                     Vec2::new(100.0, 20.0),
                     Color::rgba(180, 180, 180, 255),
                 );
-                text.set_text(
-                    &mut systems.renderer,
-                    msg,
-                    Attrs::new(),
-                    Shaping::Advanced,
-                );
+                text.set_text(&mut systems.renderer, msg, Attrs::new(), Shaping::Advanced);
                 gui.editor_label.push(systems.gfx.add_text(text, 1));
             }
 
@@ -865,31 +774,11 @@ pub fn open_attribute_settings(
             for i in 0..5 {
                 let pos = systems.gfx.get_pos(gui.tab_opt_bg[0]);
                 let textbox_pos = match i {
-                    1 => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 316.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
-                    2 => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 292.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
-                    3 => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 232.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
-                    4 => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 208.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
-                    _ => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 340.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
+                    1 => Vec3::new(pos.x + 65.0, pos.y + 316.0, ORDER_ATTRIBUTE_TEXTBOX),
+                    2 => Vec3::new(pos.x + 65.0, pos.y + 292.0, ORDER_ATTRIBUTE_TEXTBOX),
+                    3 => Vec3::new(pos.x + 65.0, pos.y + 232.0, ORDER_ATTRIBUTE_TEXTBOX),
+                    4 => Vec3::new(pos.x + 65.0, pos.y + 208.0, ORDER_ATTRIBUTE_TEXTBOX),
+                    _ => Vec3::new(pos.x + 65.0, pos.y + 340.0, ORDER_ATTRIBUTE_TEXTBOX),
                 };
                 gui.editor_textbox.push(Textbox::new(
                     systems,
@@ -901,16 +790,11 @@ pub fn open_attribute_settings(
             }
             // If data exist, place the data on textbox
             if !data.is_empty() {
-                gui.editor_textbox[0]
-                    .input_text(systems, data[0].get_int().to_string());
-                gui.editor_textbox[1]
-                    .input_text(systems, data[1].get_int().to_string());
-                gui.editor_textbox[2]
-                    .input_text(systems, data[2].get_uint().to_string());
-                gui.editor_textbox[3]
-                    .input_text(systems, data[3].get_uint().to_string());
-                gui.editor_textbox[4]
-                    .input_text(systems, data[4].get_uint().to_string());
+                gui.editor_textbox[0].input_text(systems, data[0].get_int().to_string());
+                gui.editor_textbox[1].input_text(systems, data[1].get_int().to_string());
+                gui.editor_textbox[2].input_text(systems, data[2].get_uint().to_string());
+                gui.editor_textbox[3].input_text(systems, data[3].get_uint().to_string());
+                gui.editor_textbox[4].input_text(systems, data[4].get_uint().to_string());
             } else {
                 gui.editor_textbox[0].input_text(systems, "0".to_string());
                 gui.editor_textbox[1].input_text(systems, "0".to_string());
@@ -928,11 +812,9 @@ pub fn open_attribute_settings(
                 Color::rgba(180, 180, 180, 255),
             );
             gui.editor_label = vec![systems.gfx.add_text(text, 1)];
-            systems.gfx.set_text(
-                &mut systems.renderer,
-                gui.editor_label[0],
-                "Sign Text",
-            );
+            systems
+                .gfx
+                .set_text(&mut systems.renderer, gui.editor_label[0], "Sign Text");
             gui.editor_textbox = vec![Textbox::new(
                 systems,
                 Vec3::new(pos.x + 10.0, pos.y + 115.0, ORDER_ATTRIBUTE_TEXTBOX),
@@ -967,20 +849,11 @@ pub fn open_attribute_settings(
                 };
                 let mut text = create_basic_label(
                     systems,
-                    Vec3::new(
-                        ajdust_pos.x,
-                        ajdust_pos.y,
-                        ORDER_ATTRIBUTE_LABEL,
-                    ),
+                    Vec3::new(ajdust_pos.x, ajdust_pos.y, ORDER_ATTRIBUTE_LABEL),
                     Vec2::new(100.0, 20.0),
                     Color::rgba(180, 180, 180, 255),
                 );
-                text.set_text(
-                    &mut systems.renderer,
-                    msg,
-                    Attrs::new(),
-                    Shaping::Advanced,
-                );
+                text.set_text(&mut systems.renderer, msg, Attrs::new(), Shaping::Advanced);
                 gui.editor_label.push(systems.gfx.add_text(text, 1));
             }
 
@@ -988,21 +861,9 @@ pub fn open_attribute_settings(
             for i in 0..3 {
                 let pos = systems.gfx.get_pos(gui.tab_opt_bg[0]);
                 let textbox_pos = match i {
-                    1 => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 340.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
-                    2 => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 312.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
-                    _ => Vec3::new(
-                        pos.x + 65.0,
-                        pos.y + 368.0,
-                        ORDER_ATTRIBUTE_TEXTBOX,
-                    ),
+                    1 => Vec3::new(pos.x + 65.0, pos.y + 340.0, ORDER_ATTRIBUTE_TEXTBOX),
+                    2 => Vec3::new(pos.x + 65.0, pos.y + 312.0, ORDER_ATTRIBUTE_TEXTBOX),
+                    _ => Vec3::new(pos.x + 65.0, pos.y + 368.0, ORDER_ATTRIBUTE_TEXTBOX),
                 };
                 gui.editor_textbox.push(Textbox::new(
                     systems,
@@ -1014,12 +875,9 @@ pub fn open_attribute_settings(
             }
             // If data exist, place the data on textbox
             if !data.is_empty() {
-                gui.editor_textbox[0]
-                    .input_text(systems, data[0].get_uint().to_string());
-                gui.editor_textbox[1]
-                    .input_text(systems, data[1].get_uint().to_string());
-                gui.editor_textbox[2]
-                    .input_text(systems, data[2].get_uint().to_string());
+                gui.editor_textbox[0].input_text(systems, data[0].get_uint().to_string());
+                gui.editor_textbox[1].input_text(systems, data[1].get_uint().to_string());
+                gui.editor_textbox[2].input_text(systems, data[2].get_uint().to_string());
             } else {
                 gui.editor_textbox[0].input_text(systems, "0".to_string());
                 gui.editor_textbox[1].input_text(systems, "0".to_string());
@@ -1046,8 +904,7 @@ pub fn open_attribute_settings(
 
             gui.editor_textbox = Vec::with_capacity(1);
             let pos = systems.gfx.get_pos(gui.tab_opt_bg[0]);
-            let textbox_pos =
-                Vec3::new(pos.x + 65.0, pos.y + 368.0, ORDER_ATTRIBUTE_TEXTBOX);
+            let textbox_pos = Vec3::new(pos.x + 65.0, pos.y + 368.0, ORDER_ATTRIBUTE_TEXTBOX);
             gui.editor_textbox.push(Textbox::new(
                 systems,
                 textbox_pos,
@@ -1058,8 +915,7 @@ pub fn open_attribute_settings(
 
             // If data exist, place the data on textbox
             if !data.is_empty() {
-                gui.editor_textbox[0]
-                    .input_text(systems, data[0].get_uint().to_string());
+                gui.editor_textbox[0].input_text(systems, data[0].get_uint().to_string());
             } else {
                 gui.editor_textbox[0].input_text(systems, "0".to_string());
             }
@@ -1068,11 +924,7 @@ pub fn open_attribute_settings(
     }
 }
 
-fn click_dir_block(
-    systems: &mut DrawSetting,
-    gui: &mut Interface,
-    screen_pos: Vec2,
-) {
+fn click_dir_block(systems: &mut DrawSetting, gui: &mut Interface, screen_pos: Vec2) {
     if gui.current_tab != TAB_PROPERTIES {
         return;
     }

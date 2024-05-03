@@ -24,3 +24,4 @@ iced_aw.workspace = true
 iced.workspace = true
 itertools.workspace = true
 bytey.workspace = true
+speedy.workspace = true

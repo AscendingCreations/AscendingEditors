@@ -31,6 +31,7 @@ indexmap = "2.1.0"
 slab = "0.4.9"
 bit_op = "0.1.1"
 bytey = { version = "0.3.0", git = "https://github.com/Stefanowhb/bytey.git" }
+speedy.workspace = true
 
 [dependencies.camera]
 git = "https://github.com/AscendingCreations/AscendingLibraries"

@@ -1,10 +1,10 @@
 use araiseal_types::*;
-use bytey::{ByteBuffer, ByteBufferRead, ByteBufferWrite};
 use serde::{Deserialize, Serialize};
-use std::io::BufReader;
+use speedy::{Readable, Writable};
+use std::io::Read;
 use std::{fs::OpenOptions, io::Write};
 
-#[derive(Clone, Debug, Deserialize, Serialize, Educe, ByteBufferRead, ByteBufferWrite)]
+#[derive(Clone, Debug, Deserialize, Serialize, Educe, Readable, Writable)]
 #[educe(Default)]
 pub struct ItemData {
     pub name: String,
@@ -28,7 +28,7 @@ pub struct ItemData {
 impl ItemData {
     pub fn create_files() -> Result<(), String> {
         for i in 0..MAX_ITEMS {
-            let name = format!("./data/items/{}.json", i);
+            let name = format!("./data/items/json/{}.json", i);
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(file) => {
@@ -42,20 +42,15 @@ impl ItemData {
                 Err(e) => return Err(format!("Failed to open {}, Err {:?}", name, e)),
             }
 
-            let name = format!("./data/items/bin/{}.bin", i);
+            let name = format!("./data/items/{}.bin", i);
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(mut file) => {
                     let data = ItemData::default();
 
-                    let mut buf = match ByteBuffer::new() {
-                        Ok(data) => data,
-                        Err(_) => return Ok(()),
-                    };
+                    let bytes = data.write_to_vec().unwrap();
 
-                    buf.write(data).unwrap();
-
-                    if let Err(e) = file.write(buf.as_slice()) {
+                    if let Err(e) = file.write(bytes.as_slice()) {
                         return Err(format!("File Error {:?}", e));
                     }
                 }
@@ -68,7 +63,7 @@ impl ItemData {
     }
 
     pub fn save_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/items/{}.json", id);
+        let name = format!("./data/items/json/{}.json", id);
 
         match OpenOptions::new().truncate(true).write(true).open(&name) {
             Ok(file) => {
@@ -84,14 +79,9 @@ impl ItemData {
     }
 
     pub fn save_bin_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/items/bin/{}.bin", id);
+        let name = format!("./data/items/{}.bin", id);
 
-        let mut buf = match ByteBuffer::new() {
-            Ok(data) => data,
-            Err(_) => return Ok(()),
-        };
-
-        buf.write(self).unwrap();
+        let bytes = self.write_to_vec().unwrap();
 
         match OpenOptions::new()
             .truncate(true)
@@ -100,7 +90,7 @@ impl ItemData {
             .open(&name)
         {
             Ok(mut file) => {
-                if let Err(e) = file.write(buf.as_slice()) {
+                if let Err(e) = file.write(bytes.as_slice()) {
                     Err(format!("File Error {:?}", e))
                 } else {
                     Ok(())
@@ -110,7 +100,7 @@ impl ItemData {
         }
     }
 
-    pub fn load_files() -> Result<Vec<(ItemData, bool)>, String> {
+    pub fn load_files(save_json: bool) -> Result<Vec<(ItemData, bool)>, String> {
         let mut items = Vec::<(ItemData, bool)>::new();
 
         for i in 0..MAX_ITEMS {
@@ -120,7 +110,9 @@ impl ItemData {
             };
 
             if result.1 {
-                result.0.save_file(i)?;
+                if save_json {
+                    result.0.save_file(i)?;
+                }
                 result.0.save_bin_file(i)?;
                 result.1 = false;
             }
@@ -131,18 +123,14 @@ impl ItemData {
     }
 
     pub fn load_file(id: usize) -> Result<(ItemData, bool), String> {
-        let name = format!("./data/items/{}.json", id);
+        let name = format!("./data/items/{}.bin", id);
 
         match OpenOptions::new().read(true).open(&name) {
-            Ok(file) => {
-                let reader = BufReader::new(file);
-
-                match serde_json::from_reader(reader) {
-                    Ok(v) => Ok((v, false)),
-                    Err(e) => {
-                        println!("Error {:?}", e);
-                        Ok((ItemData::default(), true))
-                    }
+            Ok(mut file) => {
+                let mut bytes = Vec::new();
+                match file.read_to_end(&mut bytes) {
+                    Ok(_) => Ok((ItemData::read_from_buffer(&bytes).unwrap(), false)),
+                    Err(_) => Ok((ItemData::default(), true)),
                 }
             }
             Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),
