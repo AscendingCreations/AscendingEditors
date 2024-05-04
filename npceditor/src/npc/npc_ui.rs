@@ -118,6 +118,10 @@ impl UiRenderer for NpcUI {
                     self.settings.isanimated = data.get_data();
                     self.data[self.currentid].0.isanimated = data.get_data();
                 }
+                14 => {
+                    self.settings.has_enemies = data.get_data();
+                    self.data[self.currentid].0.has_enemies = data.get_data();
+                }
                 _ => return None,
             },
             Message::GenericU8Input((id, data)) => match id {
@@ -472,6 +476,7 @@ impl NpcUI {
         self.settings.has_friendonly = self.data[index].0.has_friendonly;
         self.settings.has_groundonly = self.data[index].0.has_groundonly;
         self.settings.has_allys = self.data[index].0.has_allys;
+        self.settings.has_enemies = self.data[index].0.has_enemies;
         self.settings.can_attack = self.data[index].0.can_attack;
         self.settings.runsaway = self.data[index].0.runsaway;
         self.settings.canpassthru = self.data[index].0.canpassthru;

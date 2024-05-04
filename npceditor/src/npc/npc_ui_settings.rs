@@ -21,6 +21,7 @@ pub struct NpcUISettings {
     pub has_friendonly: bool,
     pub has_groundonly: bool,
     pub has_allys: bool,
+    pub has_enemies: bool,
     pub can_attack: bool,
     pub runsaway: bool,
     pub canpassthru: bool,
@@ -91,6 +92,9 @@ impl NpcUISettings {
                     }),
                     checkbox("Is Animated", self.isanimated).on_toggle(move |i| {
                         Message::GenericBoolInput((13, CheckBoxMessage::Change(i)))
+                    }),
+                    checkbox("Has Enemies", self.has_enemies).on_toggle(move |i| {
+                        Message::GenericBoolInput((14, CheckBoxMessage::Change(i)))
                     }),
                 ]
                 .spacing(5),
