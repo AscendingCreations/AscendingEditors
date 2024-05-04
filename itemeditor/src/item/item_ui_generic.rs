@@ -35,6 +35,9 @@ pub struct ItemUiGeneric {
     pub stack_limit_input: NumInput<u16, Message>,
     #[educe(Default(expression = "NumInput::new(0)"))]
     pub base_price_input: NumInput<u64, Message>,
+    #[educe(Default(expression = "NumInput::new(-1)"))]
+    pub animation_input: NumInput<i32, Message>,
+    pub sound_name: String,
     pub color: Color,
     pub show_color: bool,
 }
@@ -81,7 +84,7 @@ impl ItemUiGeneric {
                 }
             ]
             .align_items(Alignment::Center)
-            .spacing(6)
+            .spacing(6),
         ]
         .spacing(5),]
         .spacing(6);
@@ -108,14 +111,29 @@ impl ItemUiGeneric {
                 self.base_price_input
                     .view(0, 0, 999999999, 1, Message::BasePriceInput)
             ]
+            .spacing(5),
+            column![
+                "Animation",
+                self.animation_input
+                    .view(0, -1, 99999, 1, Message::GenericI32Input)
+            ]
             .spacing(5)
+        ]
+        .spacing(6);
+
+        let row3 = row![
+            text("Sound Name:"),
+            text_input("Sound Name", &self.sound_name)
+                .on_input(Message::SoundInput)
+                .width(Length::Fixed(256.0))
+                .padding(3),
         ]
         .spacing(6);
 
         let row4 = row![
             checkbox("Breakable", self.breakable),
             checkbox("Repairable", self.repairable),
-            checkbox("Stackable", self.stackable)
+            checkbox("Stackable", self.stackable),
         ]
         .spacing(6);
 
@@ -152,6 +170,7 @@ impl ItemUiGeneric {
             row0,
             row1,
             row2,
+            row3,
             row4,
             row5
         ]

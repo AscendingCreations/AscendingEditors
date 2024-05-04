@@ -72,6 +72,25 @@ impl UiRenderer for ItemUI {
                     return None;
                 }
             }
+            Message::SoundInput(value) => {
+                self.generic.sound_name = value;
+                if !self.generic.sound_name.is_empty() {
+                    self.data[self.currentid].0.sound_index = Some(self.generic.sound_name.clone());
+                } else {
+                    self.data[self.currentid].0.sound_index = None;
+                }
+            }
+            Message::GenericI32Input((id, data)) => {
+                let value = data.get_data();
+                if id == 0 {
+                    self.generic.animation_input.value = data.get_data();
+                    if value >= 0 {
+                        self.data[self.currentid].0.animation = Some(value as u32);
+                    } else {
+                        self.data[self.currentid].0.animation = None;
+                    }
+                }
+            }
             Message::GenericInput((id, data)) => {
                 let value = data.get_data();
 
@@ -206,6 +225,18 @@ impl ItemUI {
         self.generic.repairable = self.data[index].0.repairable;
         self.generic.stackable = self.data[index].0.stackable;
         self.generic.breakable = self.data[index].0.breakable;
+
+        if let Some(name) = self.data[index].0.sound_index.clone() {
+            self.generic.sound_name = name;
+        } else {
+            self.generic.sound_name = String::new();
+        }
+
+        if let Some(data) = self.data[index].0.animation {
+            self.generic.animation_input.value = data as i32;
+        } else {
+            self.generic.animation_input.value = -1;
+        }
 
         self.generic.color = Color::new(
             f32::from(self.data[index].0.rgba.r) / 255.0,
