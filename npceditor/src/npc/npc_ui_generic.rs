@@ -40,10 +40,12 @@ pub struct NpcUIGenerics {
     #[educe(Default(expression = "NumInput::new(1)"))]
     pub pdamage_input: NumInput<u32, Message>,
     #[educe(Default(expression = "NumInput::new(1)"))]
+    #[allow(dead_code)]
     pub mdamage_input: NumInput<u32, Message>,
     #[educe(Default(expression = "NumInput::new(1)"))]
     pub pdef_input: NumInput<u32, Message>,
     #[educe(Default(expression = "NumInput::new(1)"))]
+    #[allow(dead_code)]
     pub mdef_input: NumInput<u32, Message>,
     #[educe(Default(expression = "NumInput::new(1)"))]
     pub sizex_input: NumInput<u8, Message>,

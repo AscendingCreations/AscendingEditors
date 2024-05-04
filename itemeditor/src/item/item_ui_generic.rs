@@ -1,7 +1,6 @@
 use crate::item::*;
 use araiseal_types::*;
 use araiseal_ui::*;
-use core::convert::Into;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
     widget::{

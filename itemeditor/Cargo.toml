@@ -3,6 +3,7 @@ name = "item_editor"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
+authors = ["Andrew Wheeler <genusistimelord@outlook.com>", "Sherwin Salonga", "S.J.R. van Schaik"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
