@@ -1,4 +1,5 @@
 mod messages;
+mod npc_enemies;
 mod npc_ui;
 mod npc_ui_generic;
 mod npc_ui_menu;
@@ -6,6 +7,7 @@ mod npc_ui_settings;
 mod npcdata;
 
 pub use messages::*;
+pub use npc_enemies::*;
 pub use npc_ui::*;
 pub use npc_ui_generic::*;
 pub use npc_ui_menu::*;

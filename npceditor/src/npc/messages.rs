@@ -1,7 +1,7 @@
 use araiseal_types::*;
 use araiseal_ui::*;
-use iced_aw::time_picker::Time;
 use iced::font;
+use iced_aw::time_picker::Time;
 
 #[derive(Debug, Clone)]
 pub enum Message {
@@ -23,4 +23,8 @@ pub enum Message {
     NameInput(String),
     FontLoaded(Result<(), font::Error>),
     ItemDropSlotSelect(usize),
+    EnemyListSelect(ListData),
+    AddEnemy,
+    RemoveEnemy,
+    UpdateEnemy,
 }

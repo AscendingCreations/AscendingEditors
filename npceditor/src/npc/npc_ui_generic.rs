@@ -63,8 +63,12 @@ pub struct NpcUIGenerics {
     pub exp_input: NumInput<i64, Message>,
     pub behaviours: Vec<AIBehavior>,
     pub behaviour_selected: Option<AIBehavior>,
-    pub item_drops: Items,
+    pub item_drops: [Items; 5],
     pub itemdrop_selected: Option<usize>,
+    #[educe(Default(expression = "NumInput::new(0)"))]
+    pub slotshares_input: NumInput<u32, Message>,
+    #[educe(Default(expression = "NumInput::new(0)"))]
+    pub freeshares_input: NumInput<u32, Message>,
 }
 
 #[derive(Educe)]
@@ -72,8 +76,6 @@ pub struct NpcUIGenerics {
 pub struct Items {
     #[educe(Default(expression = "NumInput::new(0)"))]
     pub item_id: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
-    pub chance: NumInput<u32, Message>,
     #[educe(Default(expression = "NumInput::new(0)"))]
     pub amount: NumInput<u32, Message>,
 }
@@ -214,26 +216,122 @@ impl NpcUIGenerics {
             .spacing(10)
             .align_items(Alignment::Center),
             row![
-                text("Drop Item Slot:"),
-                PickList::new(
-                    vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                    self.itemdrop_selected,
-                    Message::ItemDropSlotSelect,
-                ),
-                text("Item ID:"),
-                self.item_drops
-                    .item_id
-                    .view(9, 1, u32::MAX, 1, Message::GenericU32Input),
-                text("Item Amount:"),
-                self.item_drops
-                    .chance
-                    .view(10, 1, u32::MAX, 1, Message::GenericU32Input),
-                text("Item Chance:"),
-                self.item_drops
-                    .amount
-                    .view(11, 1, u32::MAX, 1, Message::GenericU32Input),
+                column![
+                    text("Drop Item Slot:"),
+                    PickList::new(
+                        vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        self.itemdrop_selected,
+                        Message::ItemDropSlotSelect,
+                    ),
+                    text("Free Shares:"),
+                    self.freeshares_input
+                        .view(20, 1, u32::MAX, 1, Message::GenericU32Input),
+                ]
+                .spacing(10),
+                column![
+                    row![
+                        text("Shares:"),
+                        self.slotshares_input
+                            .view(19, 1, u32::MAX, 1, Message::GenericU32Input),
+                    ]
+                    .spacing(10),
+                    row![
+                        column![
+                            text("Item ID 1:"),
+                            self.item_drops[0].item_id.view(
+                                9,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                            text("Amount:"),
+                            self.item_drops[0].amount.view(
+                                14,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                        ],
+                        column![
+                            text("Item ID 2:"),
+                            self.item_drops[1].item_id.view(
+                                10,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                            text("Amount:"),
+                            self.item_drops[1].amount.view(
+                                15,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                        ],
+                        column![
+                            text("Item ID 3:"),
+                            self.item_drops[2].item_id.view(
+                                11,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                            text("Amount:"),
+                            self.item_drops[2].amount.view(
+                                16,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                        ],
+                        column![
+                            text("Item ID 4:"),
+                            self.item_drops[3].item_id.view(
+                                12,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                            text("Amount:"),
+                            self.item_drops[3].amount.view(
+                                17,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                        ],
+                        column![
+                            text("Item ID 5:"),
+                            self.item_drops[4].item_id.view(
+                                13,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                            text("Amount:"),
+                            self.item_drops[4].amount.view(
+                                18,
+                                1,
+                                u32::MAX,
+                                1,
+                                Message::GenericU32Input
+                            ),
+                        ],
+                    ]
+                    .spacing(5),
+                ]
+                .spacing(5),
             ]
-            .spacing(6)
+            .spacing(25)
         ]
         .spacing(10)
         .align_items(Alignment::Center)

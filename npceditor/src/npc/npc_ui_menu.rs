@@ -2,7 +2,7 @@ use crate::npc::*;
 use araiseal_types::*;
 use araiseal_ui::*;
 use iced::{
-    widget::{PickList, row},
+    widget::{row, PickList},
     Element, Length,
 };
 

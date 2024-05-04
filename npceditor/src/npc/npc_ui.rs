@@ -15,8 +15,10 @@ pub struct NpcUI {
     menu: NpcUIMenu,
     generic: NpcUIGenerics,
     settings: NpcUISettings,
-    currentid: usize,
-    currentitemdropslot: usize,
+    pub enemies: NpcEnemies,
+    pub currentid: usize,
+    pub currentitemdropslot: usize,
+    pub currentenemyslot: usize,
     config: ConfigData,
 }
 
@@ -197,17 +199,71 @@ impl UiRenderer for NpcUI {
                     self.generic.maxdamage_input.value = data.get_data();
                     self.data[self.currentid].0.maxdamage = data.get_data();
                 }
+                // Drop ID
                 9 => {
-                    self.generic.item_drops.item_id.value = data.get_data();
-                    self.data[self.currentid].0.drops[self.currentitemdropslot].0 = data.get_data();
+                    self.generic.item_drops[0].item_id.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[0].item =
+                        data.get_data();
                 }
                 10 => {
-                    self.generic.item_drops.chance.value = data.get_data();
-                    self.data[self.currentid].0.drops[self.currentitemdropslot].1 = data.get_data();
+                    self.generic.item_drops[1].item_id.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[1].item =
+                        data.get_data();
                 }
                 11 => {
-                    self.generic.item_drops.amount.value = data.get_data();
-                    self.data[self.currentid].0.drops[self.currentitemdropslot].2 = data.get_data();
+                    self.generic.item_drops[2].item_id.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[2].item =
+                        data.get_data();
+                }
+                12 => {
+                    self.generic.item_drops[3].item_id.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[3].item =
+                        data.get_data();
+                }
+                13 => {
+                    self.generic.item_drops[4].item_id.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[4].item =
+                        data.get_data();
+                }
+                // Drop Amount
+                14 => {
+                    self.generic.item_drops[0].amount.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[0].amount =
+                        data.get_data();
+                }
+                15 => {
+                    self.generic.item_drops[1].amount.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[1].amount =
+                        data.get_data();
+                }
+                16 => {
+                    self.generic.item_drops[2].amount.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[2].amount =
+                        data.get_data();
+                }
+                17 => {
+                    self.generic.item_drops[3].amount.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[3].amount =
+                        data.get_data();
+                }
+                18 => {
+                    self.generic.item_drops[4].amount.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[4].amount =
+                        data.get_data();
+                }
+                // Drop Data
+                19 => {
+                    self.generic.slotshares_input.value = data.get_data();
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].shares =
+                        data.get_data();
+                }
+                20 => {
+                    self.generic.freeshares_input.value = data.get_data();
+                    self.data[self.currentid].0.free_shares = data.get_data();
+                }
+                // Enemy
+                21 => {
+                    self.enemies.npc_index_input.value = data.get_data();
                 }
                 _ => return None,
             },
@@ -283,13 +339,38 @@ impl UiRenderer for NpcUI {
             Message::ItemDropSlotSelect(data) => {
                 self.generic.itemdrop_selected = Some(data);
                 self.currentitemdropslot = data;
-                self.generic.item_drops.item_id.value =
-                    self.data[self.currentid].0.drops[self.currentitemdropslot].0;
-                self.generic.item_drops.chance.value =
-                    self.data[self.currentid].0.drops[self.currentitemdropslot].1;
-                self.generic.item_drops.amount.value =
-                    self.data[self.currentid].0.drops[self.currentitemdropslot].2;
+
+                self.generic.slotshares_input.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].shares;
+                self.generic.item_drops[0].item_id.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[0].item;
+                self.generic.item_drops[0].amount.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[0].amount;
+                self.generic.item_drops[1].item_id.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[1].item;
+                self.generic.item_drops[1].amount.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[1].amount;
+                self.generic.item_drops[2].item_id.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[2].item;
+                self.generic.item_drops[2].amount.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[2].amount;
+                self.generic.item_drops[3].item_id.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[3].item;
+                self.generic.item_drops[3].amount.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[3].amount;
+                self.generic.item_drops[4].item_id.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[4].item;
+                self.generic.item_drops[4].amount.value =
+                    self.data[self.currentid].0.drops[self.currentitemdropslot].items[4].amount;
             }
+            Message::EnemyListSelect(data) => {
+                self.currentenemyslot = data.id;
+                self.enemies.enemydrop_select = Some(data);
+                select_list(self);
+            }
+            Message::AddEnemy => add_enemy_data(self, self.enemies.npc_index_input.value),
+            Message::UpdateEnemy => update_enemy_data(self, self.enemies.npc_index_input.value),
+            Message::RemoveEnemy => remove_enemy_data(self),
             _ => {
                 return None;
             }
@@ -328,6 +409,11 @@ impl NpcUI {
 
         ui.menu.list_selected = Some(ui.menu.list[0].clone());
         ui.set_object_to_layout(0);
+
+        {
+            new_enemies_data(&mut ui, 0);
+        }
+
         ui
     }
 
@@ -397,10 +483,33 @@ impl NpcUI {
 
         self.generic.itemdrop_selected = Some(0);
         self.currentitemdropslot = 0;
-        self.generic.item_drops.item_id.value =
-            self.data[index].0.drops[self.currentitemdropslot].0;
-        self.generic.item_drops.chance.value = self.data[index].0.drops[self.currentitemdropslot].1;
-        self.generic.item_drops.amount.value = self.data[index].0.drops[self.currentitemdropslot].2;
+
+        self.generic.freeshares_input.value = self.data[index].0.free_shares;
+        self.generic.slotshares_input.value =
+            self.data[index].0.drops[self.currentitemdropslot].shares;
+
+        self.generic.item_drops[0].item_id.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[0].item;
+        self.generic.item_drops[0].amount.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[0].amount;
+        self.generic.item_drops[1].item_id.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[1].item;
+        self.generic.item_drops[1].amount.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[1].amount;
+        self.generic.item_drops[2].item_id.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[2].item;
+        self.generic.item_drops[2].amount.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[2].amount;
+        self.generic.item_drops[3].item_id.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[3].item;
+        self.generic.item_drops[3].amount.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[3].amount;
+        self.generic.item_drops[4].item_id.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[4].item;
+        self.generic.item_drops[4].amount.value =
+            self.data[index].0.drops[self.currentitemdropslot].items[4].amount;
+
+        new_enemies_data(self, index);
     }
 
     pub fn layout(&self) -> Element<Message> {
@@ -417,6 +526,11 @@ impl NpcUI {
                         Container::new(self.settings.layout(&self.data[self.currentid].0))
                             .padding(5)
                             .width(Length::Fill)
+                            .center_y(),
+                        Container::new(self.enemies.layout())
+                            .padding(5)
+                            .width(Length::Fill)
+                            .center_x()
                             .center_y(),
                     ]
                     .spacing(5)
