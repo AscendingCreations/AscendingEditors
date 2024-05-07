@@ -3,7 +3,11 @@ name = "item_editor"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-authors = ["Andrew Wheeler <genusistimelord@outlook.com>", "Sherwin Salonga", "S.J.R. van Schaik"]
+authors = [
+    "Andrew Wheeler <genusistimelord@outlook.com>",
+    "Sherwin Salonga",
+    "S.J.R. van Schaik",
+]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -22,6 +26,6 @@ araiseal_logger.workspace = true
 araiseal_styles.workspace = true
 araiseal_ui.workspace = true
 araiseal_types.workspace = true
-iced_aw.workspace = true
-iced.workspace = true
 speedy.workspace = true
+iced.workspace = true
+iced_aw.workspace = true

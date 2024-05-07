@@ -8,9 +8,7 @@ members = [
     "itemeditor",
     "npceditor",
     "shopeditor",
-    "mapeditor",
 ]
-
 
 [workspace.dependencies]
 rand = "0.8.5"
@@ -27,7 +25,7 @@ backtrace = "0.3.66"
 log = "0.4.17"
 itertools = "0.10.3"
 bytey = { version = "0.3.0", git = "https://github.com/Stefanowhb/bytey.git" }
-speedy = "=0.8.7"
+speedy = "0.8.7"
 
 [workspace.dependencies.araiseal_logger]
 path = "./logging"
@@ -41,10 +39,10 @@ path = "./types"
 [workspace.dependencies.araiseal_styles]
 path = "./styles"
 
-[workspace.dependencies.iced_aw]
+[dependencies.iced_aw]
 git = "https://github.com/iced-rs/iced_aw.git"
 version = "0.8.0"
 
-[workspace.dependencies.iced]
+[dependencies.iced]
 version = "0.12.0"
 features = ["canvas", "tokio", "image", "debug", "wgpu", "advanced"]

@@ -10,3 +10,4 @@ If you need help with this library or have suggestions please go to our [Discord
 [`Ascending Server`](https://github.com/AscendingCreations/AscendingServer)
 [`Ascending Client`](https://github.com/AscendingCreations/AscendingClient)
 [`Ascending Editors`](https://github.com/AscendingCreations/AscendingEditors)
+[`Ascending Map Editor`](https://github.com/AscendingCreations/AscendingMapEditor)
