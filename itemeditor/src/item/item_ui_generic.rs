@@ -58,7 +58,7 @@ impl ItemUiGeneric {
 
         let sprite_value = self.sprite_input.value;
 
-        let image_path = format!("./resources/items/{}.png", sprite_value);
+        let image_path = format!("./resources/items/i{}.png", sprite_value);
 
         let row1 = row![column![
             "Item Sprite",
