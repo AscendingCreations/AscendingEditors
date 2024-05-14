@@ -1,9 +1,11 @@
+use std::path::Path;
+
 use crate::npc::*;
 use ascending_types::*;
 use ascending_ui::*;
 use iced::{
     alignment::{Alignment, Horizontal},
-    widget::{column, row, text, text_input, PickList, Rule},
+    widget::{column, container, row, text, text_input, Container, Image, PickList, Rule},
     Element, Length,
 };
 
@@ -84,6 +86,7 @@ pub struct Items {
 
 impl NpcUIGenerics {
     pub fn layout(&self) -> Element<Message> {
+        let image_path = format!("./resources/npc/p{}.png", self.sprite_input.value);
         column![
             row![
                 Rule::horizontal(0),
@@ -110,6 +113,31 @@ impl NpcUIGenerics {
                 .width(Length::Fill),
             ]
             .spacing(15),
+            row![column![
+                "NPC Sprite",
+                row![if Path::new(&image_path).exists() {
+                    container(
+                        Image::new(&image_path)
+                            .width(Length::Fixed(32.0))
+                            .height(Length::Fixed(32.0))
+                            .content_fit(iced::ContentFit::None),
+                    )
+                    .center_x()
+                    .center_y()
+                    .width(Length::Fixed(32.0))
+                    .height(Length::Fixed(32.0))
+                } else {
+                    Container::new("")
+                        .center_x()
+                        .center_y()
+                        .width(Length::Fixed(32.0))
+                        .height(Length::Fixed(32.0))
+                }]
+                .align_items(Alignment::Center)
+                .spacing(6),
+            ]
+            .spacing(5),]
+            .spacing(6),
             text("SPRITE ICON HERE"),
             row![
                 column![
