@@ -91,8 +91,9 @@ pub fn update_enemy_data(npc_ui: &mut NpcUI, npc_index: u32) {
             .push(npc_index as u64);
         npc_ui.currentenemyslot = 0;
     } else {
-        npc_ui.enemies.enemy_list[npc_ui.currentenemyslot].name =
-            npc_ui.data[npc_index as usize].0.name.clone();
+        npc_ui.enemies.enemy_list[npc_ui.currentenemyslot]
+            .name
+            .clone_from(&npc_ui.data[npc_index as usize].0.name);
         npc_ui.data[npc_ui.currentid].0.enemies[npc_ui.currentenemyslot] = npc_index as u64;
     }
 

@@ -65,8 +65,13 @@ impl UiRenderer for ItemUI {
             Message::NameInput(value) => {
                 if value.len() < 64 {
                     self.generic.txt_value = value;
-                    self.data[self.currentid].0.name = self.generic.txt_value.clone();
-                    self.menu.list[self.currentid].name = self.generic.txt_value.clone();
+                    self.data[self.currentid]
+                        .0
+                        .name
+                        .clone_from(&self.generic.txt_value);
+                    self.menu.list[self.currentid]
+                        .name
+                        .clone_from(&self.generic.txt_value);
                     self.menu.list_selected = Some(self.menu.list[self.currentid].clone());
                 } else {
                     return None;
@@ -215,7 +220,7 @@ impl ItemUI {
         }
 
         self.generic.type_selected = Some(self.data[index].0.itemtype);
-        self.generic.txt_value = self.data[index].0.name.clone();
+        self.generic.txt_value.clone_from(&self.data[index].0.name);
         self.generic.level_input.value = self.data[index].0.levelreq;
         self.generic.sound_input.value = self.data[index].0.soundid;
         self.generic.stack_limit_input.value = self.data[index].0.stacklimit;

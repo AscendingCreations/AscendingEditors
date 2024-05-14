@@ -57,8 +57,13 @@ impl UiRenderer for ShopUI {
             Message::NameInput(value) => {
                 if value.len() < 64 {
                     self.generic.txt_value = value;
-                    self.data[self.currentid].0.name = self.generic.txt_value.clone();
-                    self.menu.list[self.currentid].name = self.generic.txt_value.clone();
+                    self.data[self.currentid]
+                        .0
+                        .name
+                        .clone_from(&self.generic.txt_value);
+                    self.menu.list[self.currentid]
+                        .name
+                        .clone_from(&self.generic.txt_value);
                     self.menu.list_selected = Some(self.menu.list[self.currentid].clone());
                 } else {
                     return None;

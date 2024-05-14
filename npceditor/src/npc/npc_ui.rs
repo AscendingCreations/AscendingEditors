@@ -333,8 +333,13 @@ impl UiRenderer for NpcUI {
             Message::NameInput(value) => {
                 if value.len() < 64 {
                     self.generic.txt_value = value;
-                    self.data[self.currentid].0.name = self.generic.txt_value.clone();
-                    self.menu.list[self.currentid].name = self.generic.txt_value.clone();
+                    self.data[self.currentid]
+                        .0
+                        .name
+                        .clone_from(&self.generic.txt_value);
+                    self.menu.list[self.currentid]
+                        .name
+                        .clone_from(&self.generic.txt_value);
                     self.menu.list_selected = Some(self.menu.list[self.currentid].clone());
                 } else {
                     return None;
@@ -439,7 +444,7 @@ impl NpcUI {
     }
 
     fn set_object_to_layout(&mut self, index: usize) {
-        self.generic.txt_value = self.data[index].0.name.clone();
+        self.generic.txt_value.clone_from(&self.data[index].0.name);
         self.generic.sprite_input.value = self.data[index].0.sprite;
         self.generic.behaviour_selected = Some(self.data[index].0.behaviour);
         self.generic.sizex_input.value = self.data[index].0.size.x;
