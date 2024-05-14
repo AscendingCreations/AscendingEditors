@@ -1,6 +1,6 @@
 use crate::shop::*;
-use araiseal_types::{MAX_ITEMS, MAX_SHOP_ITEM};
-use araiseal_ui::*;
+use ascending_types::{MAX_ITEMS, MAX_SHOP_ITEM};
+use ascending_ui::*;
 use iced::{
     alignment::Alignment,
     widget::{column, row, text_input, PickList, Rule},

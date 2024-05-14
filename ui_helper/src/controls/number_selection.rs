@@ -61,7 +61,7 @@ where
             NumberInput::new(self.value, max, NumInputMessage::Change)
                 .step(step)
                 .min(min)
-                .style(NumberInputStyles::custom(araiseal_styles::CustomNumInput))
+                .style(NumberInputStyles::custom(ascending_styles::CustomNumInput))
                 .width(Length::Shrink),
         )
         .map(move |i| on_change((id, i)))

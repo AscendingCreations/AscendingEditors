@@ -1,6 +1,6 @@
 use crate::item::*;
-use araiseal_types::*;
-use araiseal_ui::*;
+use ascending_types::*;
+use ascending_ui::*;
 use arr_macro::arr;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},

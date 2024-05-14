@@ -7,7 +7,7 @@ members = [
     "logging",
     "itemeditor",
     "npceditor",
-    "shopeditor",
+    "shopeditor"
 ]
 
 [workspace.dependencies]
@@ -27,22 +27,22 @@ itertools = "0.10.3"
 bytey = { version = "0.3.0", git = "https://github.com/Stefanowhb/bytey.git" }
 speedy = "0.8.7"
 
-[workspace.dependencies.araiseal_logger]
+[workspace.dependencies.ascending_logger]
 path = "./logging"
 
-[workspace.dependencies.araiseal_ui]
+[workspace.dependencies.ascending_ui]
 path = "./ui_helper"
 
-[workspace.dependencies.araiseal_types]
+[workspace.dependencies.ascending_types]
 path = "./types"
 
-[workspace.dependencies.araiseal_styles]
+[workspace.dependencies.ascending_styles]
 path = "./styles"
 
-[dependencies.iced_aw]
-git = "https://github.com/iced-rs/iced_aw.git"
-version = "0.8.0"
+[workspace.dependencies.iced_aw]
+#git = "https://github.com/iced-rs/iced_aw.git"
+version = "0.9.3"
 
-[dependencies.iced]
+[workspace.dependencies.iced]
 version = "0.12.0"
 features = ["canvas", "tokio", "image", "debug", "wgpu", "advanced"]

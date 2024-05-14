@@ -1,5 +1,5 @@
 [package]
-name = "araiseal_ui"
+name = "ascending_ui"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
@@ -13,6 +13,6 @@ authors = [
 [dependencies]
 rand.workspace = true
 num-traits.workspace = true
-araiseal_styles.workspace = true
+ascending_styles.workspace = true
 iced.workspace = true
 iced_aw.workspace = true

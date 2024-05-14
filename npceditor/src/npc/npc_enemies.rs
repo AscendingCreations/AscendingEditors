@@ -1,5 +1,5 @@
 use crate::npc::*;
-use araiseal_ui::*;
+use ascending_ui::*;
 use iced::{
     alignment::Horizontal,
     widget::{column, row, text, PickList, Rule},

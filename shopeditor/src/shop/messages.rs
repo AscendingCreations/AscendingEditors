@@ -1,4 +1,4 @@
-use araiseal_ui::*;
+use ascending_ui::*;
 use iced::font;
 
 #[derive(Debug, Clone, PartialEq)]

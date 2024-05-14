@@ -1,4 +1,4 @@
-use araiseal_types::*;
+use ascending_types::*;
 use serde::{Deserialize, Serialize};
 use speedy::{Readable, Writable};
 use std::io::Read;

@@ -1,6 +1,6 @@
 use crate::npc::*;
-use araiseal_types::*;
-use araiseal_ui::*;
+use ascending_types::*;
+use ascending_ui::*;
 use iced::{
     alignment::{Alignment, Horizontal},
     widget::{checkbox, column, row, text, Rule},

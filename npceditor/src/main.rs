@@ -9,8 +9,8 @@ mod npc;
 
 use config::*;
 
-use araiseal_logger::*;
-use araiseal_ui::*;
+use ascending_logger::*;
+use ascending_ui::*;
 use iced::{
     executor, font,
     widget::{Column, Container},

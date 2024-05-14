@@ -1,6 +1,6 @@
 use crate::shop::*;
-use araiseal_types::*;
-use araiseal_ui::*;
+use ascending_types::*;
+use ascending_ui::*;
 use iced::{
     widget::{row, PickList},
     Element, Length,
