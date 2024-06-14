@@ -13,74 +13,74 @@ use iced::{
 #[educe(Default)]
 pub struct NpcUIGenerics {
     pub txt_value: String,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub sprite_input: NumInput<i32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub level_input: NumInput<i32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub respawn_wait_input: NumInput<i64, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub movement_wait_input: NumInput<i64, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub attack_wait_input: NumInput<i64, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub intervaled_wait_input: NumInput<i64, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub spawn_wait_input: NumInput<i64, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub maxhp_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub maxsp_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub maxmp_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub sight_input: NumInput<i32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub follow_sight_input: NumInput<i32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub walkdistance_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub pdamage_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     #[allow(dead_code)]
     pub mdamage_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub pdef_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     #[allow(dead_code)]
     pub mdef_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub sizex_input: NumInput<u8, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub sizey_input: NumInput<u8, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub sizeh_input: NumInput<u8, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub sizew_input: NumInput<u8, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub maxdamage_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(1)"))]
+    #[educe(Default(expression = NumInput::new(1)))]
     pub mindamage_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub range_input: NumInput<i32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub exp_input: NumInput<i64, Message>,
     pub behaviours: Vec<AIBehavior>,
     pub behaviour_selected: Option<AIBehavior>,
     pub item_drops: [Items; 5],
     pub itemdrop_selected: Option<usize>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub slotshares_input: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub freeshares_input: NumInput<u32, Message>,
 }
 
 #[derive(Educe)]
 #[educe(Default)]
 pub struct Items {
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub item_id: NumInput<u32, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub amount: NumInput<u32, Message>,
 }
 

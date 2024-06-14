@@ -11,7 +11,7 @@ use iced::{
 pub struct NpcEnemies {
     pub enemy_list: Vec<ListData>,
     pub enemydrop_select: Option<ListData>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub npc_index_input: NumInput<u32, Message>,
 }
 

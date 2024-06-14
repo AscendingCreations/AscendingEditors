@@ -47,12 +47,12 @@ pub struct NpcData {
     #[educe(Default = 1)]
     pub pdefense: u32,
     pub canpassthru: bool,
-    #[educe(Default(expression = "TileBox {
+    #[educe(Default(expression = TileBox {
         x: 1,
         y: 1,
         width: 1,
         height: 1,
-    }"))]
+    }))]
     pub size: TileBox,
     pub behaviour: AIBehavior,
     #[educe(Default = 1)]

@@ -10,7 +10,7 @@ use iced::{
 #[derive(Educe)]
 #[educe(Default)]
 pub struct NpcUI {
-    #[educe(Default(expression = "Vec::with_capacity(MAX_NPCS)"))]
+    #[educe(Default(expression = Vec::with_capacity(MAX_NPCS)))]
     pub data: Vec<(NpcData, bool)>,
     menu: NpcUIMenu,
     generic: NpcUIGenerics,

@@ -26,13 +26,13 @@ pub struct NpcUISettings {
     pub runsaway: bool,
     pub canpassthru: bool,
     pub isanimated: bool,
-    #[educe(Default(expression = "[Time::now_hms(false); 2]"))]
+    #[educe(Default(expression = [Time::now_hms(false); 2]))]
     pub times: [Time; 2],
     pub show_time: [bool; 2],
     pub spawntime_data: (GameTime, GameTime),
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub target_switch_chance: NumInput<i64, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub run_damage: NumInput<u32, Message>,
 }
 

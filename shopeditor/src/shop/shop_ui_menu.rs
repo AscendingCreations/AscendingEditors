@@ -9,7 +9,7 @@ use iced::{
 #[derive(Educe)]
 #[educe(Default)]
 pub struct ShopUiMenu {
-    #[educe(Default(expression = "Vec::with_capacity(MAX_SHOPS)"))]
+    #[educe(Default(expression = Vec::with_capacity(MAX_SHOPS)))]
     pub list: Vec<ListData>,
     pub list_selected: Option<ListData>,
 }

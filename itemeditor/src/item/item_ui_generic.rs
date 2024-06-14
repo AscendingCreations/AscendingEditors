@@ -15,26 +15,26 @@ use std::path::Path;
 #[derive(Educe)]
 #[educe(Default)]
 pub struct ItemUiGeneric {
-    #[educe(Default(expression = "Vec::with_capacity(23)"))]
+    #[educe(Default(expression = Vec::with_capacity(23)))]
     pub type_list: Vec<ItemTypes>,
     pub type_selected: Option<ItemTypes>,
     pub txt_value: String,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub level_input: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub sound_input: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub sprite_input: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub type2: NumInput<u16, Message>,
     pub breakable: bool,
     pub stackable: bool,
     pub repairable: bool,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub stack_limit_input: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub base_price_input: NumInput<u64, Message>,
-    #[educe(Default(expression = "NumInput::new(-1)"))]
+    #[educe(Default(expression = NumInput::new(-1)))]
     pub animation_input: NumInput<i32, Message>,
     pub sound_name: String,
     pub color: Color,

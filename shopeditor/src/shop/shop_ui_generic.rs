@@ -14,16 +14,16 @@ pub struct ShopUiGeneric {
     pub txt_value: String,
     //#[educe(Default(expression = "NumInput::new(0)"))]
     //pub sprite_input: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub max_shop_item: NumInput<u16, Message>,
-    #[educe(Default(expression = "Vec::with_capacity(MAX_SHOP_ITEM)"))]
+    #[educe(Default(expression = Vec::with_capacity(MAX_SHOP_ITEM)))]
     pub slot_list: Vec<u16>,
     pub slot_selected: Option<u16>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub item_index: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub item_amount: NumInput<u16, Message>,
-    #[educe(Default(expression = "NumInput::new(0)"))]
+    #[educe(Default(expression = NumInput::new(0)))]
     pub item_price: NumInput<u64, Message>,
 }
 

@@ -1,7 +1,7 @@
 use crate::item::*;
+use arr_macro::arr;
 use ascending_types::*;
 use ascending_ui::*;
-use arr_macro::arr;
 use iced::{
     alignment::{Alignment, Horizontal, Vertical},
     widget::{column, text, Row, Rule},
@@ -11,7 +11,7 @@ use iced::{
 #[derive(Educe)]
 #[educe(Default)]
 pub struct ItemUiData {
-    #[educe(Default(expression = "arr![NumInput::new(0); 20]"))]
+    #[educe(Default(expression = arr![NumInput::new(0); 20]))]
     pub input: [NumInput<i16, Message>; 20],
 }
 

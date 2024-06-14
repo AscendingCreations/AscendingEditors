@@ -9,7 +9,7 @@ use iced::{
 #[derive(Educe)]
 #[educe(Default)]
 pub struct NpcUIMenu {
-    #[educe(Default(expression = "Vec::with_capacity(MAX_NPCS)"))]
+    #[educe(Default(expression = Vec::with_capacity(MAX_NPCS)))]
     pub list: Vec<ListData>,
     pub list_selected: Option<ListData>,
 }

@@ -11,7 +11,7 @@ use iced::{
 #[derive(Educe)]
 #[educe(Default)]
 pub struct ItemUI {
-    #[educe(Default(expression = "Vec::with_capacity(MAX_ITEMS)"))]
+    #[educe(Default(expression = Vec::with_capacity(MAX_ITEMS)))]
     pub data: Vec<(ItemData, bool)>,
     menu: ItemUiMenu,
     generic: ItemUiGeneric, //Generic Item Data.
