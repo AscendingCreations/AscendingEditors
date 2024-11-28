@@ -1,6 +1,5 @@
 use ascending_types::*;
 use ascending_ui::*;
-use iced::font;
 use iced_aw::time_picker::Time;
 
 #[derive(Debug, Clone)]
@@ -21,7 +20,6 @@ pub enum Message {
     CancelTime,
     BehaviourTypeSelect(AIBehavior),
     NameInput(String),
-    FontLoaded(Result<(), font::Error>),
     ItemDropSlotSelect(usize),
     EnemyListSelect(ListData),
     AddEnemy,

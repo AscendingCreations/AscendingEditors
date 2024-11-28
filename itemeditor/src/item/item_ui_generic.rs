@@ -2,9 +2,10 @@ use crate::item::*;
 use ascending_types::*;
 use ascending_ui::*;
 use iced::{
-    alignment::{Alignment, Horizontal, Vertical},
+    alignment::Alignment,
     widget::{
-        checkbox, column, container, row, text, text_input, Container, Image, PickList, Row, Rule,
+        button, checkbox, column, container, row, text, text_input, Container, Image, PickList,
+        Row, Rule,
     },
     Color, Element, Length,
 };
@@ -48,13 +49,13 @@ impl ItemUiGeneric {
                 .on_input(Message::NameInput)
                 .width(Length::Fixed(256.0))
                 .padding(3),
-            row![text("Item Type").horizontal_alignment(Horizontal::Center)].spacing(6),
+            row![text("Item Type")].spacing(6),
             PickList::new(&self.type_list[..], self.type_selected, Message::TypeSelect,),
-            row![text("Item Type 2").horizontal_alignment(Horizontal::Center)].spacing(6),
-            self.type2.view(5, 0, 100, 1, Message::GenericInput),
+            row![text("Item Type 2")].spacing(6),
+            self.type2.view(5, 0, 100, 1, Message::GenericInput, None),
         ]
         .spacing(12)
-        .align_items(Alignment::Center);
+        .align_y(Alignment::Center);
 
         let sprite_value = self.sprite_input.value;
 
@@ -63,26 +64,23 @@ impl ItemUiGeneric {
         let row1 = row![column![
             "Item Sprite",
             row![
-                self.sprite_input.view(4, 0, 1000, 1, Message::GenericInput),
+                self.sprite_input
+                    .view(4, 0, 1000, 1, Message::GenericInput, None),
                 if Path::new(&image_path).exists() {
                     container(
                         Image::new(&image_path)
                             .width(Length::Fixed(32.0))
                             .height(Length::Fixed(32.0)),
                     )
-                    .center_x()
-                    .center_y()
                     .width(Length::Fixed(32.0))
                     .height(Length::Fixed(32.0))
                 } else {
                     Container::new("")
-                        .center_x()
-                        .center_y()
                         .width(Length::Fixed(32.0))
                         .height(Length::Fixed(32.0))
                 }
             ]
-            .align_items(Alignment::Center)
+            .align_y(Alignment::Center)
             .spacing(6),
         ]
         .spacing(5),]
@@ -91,30 +89,32 @@ impl ItemUiGeneric {
         let row2 = row![
             column![
                 "Level Req",
-                self.level_input.view(1, 0, 200, 1, Message::GenericInput)
+                self.level_input
+                    .view(1, 0, 200, 1, Message::GenericInput, None)
             ]
             .spacing(5),
             column![
                 "Sound ID",
-                self.sound_input.view(2, 0, 100, 1, Message::GenericInput)
+                self.sound_input
+                    .view(2, 0, 100, 1, Message::GenericInput, None)
             ]
             .spacing(5),
             column![
                 "Stack Limit",
                 self.stack_limit_input
-                    .view(3, 1, 1000, 1, Message::GenericInput)
+                    .view(3, 1, 1000, 1, Message::GenericInput, None)
             ]
             .spacing(5),
             column![
                 "Base Store Price",
                 self.base_price_input
-                    .view(0, 0, 999999999, 1, Message::BasePriceInput)
+                    .view(0, 0, 999999999, 1, Message::BasePriceInput, None)
             ]
             .spacing(5),
             column![
                 "Animation",
                 self.animation_input
-                    .view(0, -1, 99999, 1, Message::GenericI32Input)
+                    .view(0, -1, 99999, 1, Message::GenericI32Input, None)
             ]
             .spacing(5)
         ]
@@ -130,9 +130,12 @@ impl ItemUiGeneric {
         .spacing(6);
 
         let row4 = row![
-            checkbox("Breakable", self.breakable),
-            checkbox("Repairable", self.repairable),
-            checkbox("Stackable", self.stackable),
+            checkbox("Breakable", self.breakable)
+                .on_toggle(move |i| { Message::GenericBoolInput((0, CheckBoxMessage::Change(i))) }),
+            checkbox("Repairable", self.repairable)
+                .on_toggle(move |i| { Message::GenericBoolInput((1, CheckBoxMessage::Change(i))) }),
+            checkbox("Stackable", self.stackable)
+                .on_toggle(move |i| { Message::GenericBoolInput((2, CheckBoxMessage::Change(i))) }),
         ]
         .spacing(6);
 
@@ -158,13 +161,10 @@ impl ItemUiGeneric {
                 .width(Length::Fixed(32.0))
         ]
         .spacing(10)
-        .align_items(Alignment::Center);
+        .align_y(Alignment::Center);
 
         column![
-            text("Generic")
-                .width(Length::Fill)
-                .vertical_alignment(Vertical::Bottom)
-                .horizontal_alignment(Horizontal::Center),
+            text("Generic"),
             Rule::horizontal(0),
             row0,
             row1,
@@ -174,7 +174,7 @@ impl ItemUiGeneric {
             row5
         ]
         .spacing(6)
-        .align_items(Alignment::Center)
+        .align_x(Alignment::Center)
         .into()
     }
 }

@@ -1,8 +1,7 @@
 use crate::npc::*;
 use ascending_ui::*;
 use iced::{
-    alignment::Horizontal,
-    widget::{column, row, text, PickList, Rule},
+    widget::{button, column, row, text, PickList, Rule},
     Element, Length,
 };
 
@@ -20,7 +19,7 @@ impl NpcEnemies {
         column![
             row![
                 Rule::horizontal(0),
-                text("NPC Enemies:").horizontal_alignment(Horizontal::Center),
+                text("NPC Enemies:"),
                 Rule::horizontal(0),
             ],
             row![
@@ -32,7 +31,7 @@ impl NpcEnemies {
                 ),
                 text("Npc Index:"),
                 self.npc_index_input
-                    .view(21, 0, u32::MAX, 1, Message::GenericU32Input),
+                    .view(21, 0, u32::MAX, 1, Message::GenericU32Input, None),
                 button("Update").on_press(Message::UpdateEnemy),
                 button("Add").on_press(Message::AddEnemy),
                 button("Remove").on_press(Message::RemoveEnemy),

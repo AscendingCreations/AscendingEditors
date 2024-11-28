@@ -1,14 +1,15 @@
 use iced::{Element, Length};
-use iced_aw::{NumberInput, NumberInputStyles};
-use num_traits::{Num, NumAssignOps};
+use iced_aw::number_input::Style;
+use iced_aw::NumberInput;
+use num_traits::{bounds::Bounded, Num, NumAssignOps};
 use std::fmt::Display;
 use std::marker::PhantomData;
 use std::str::FromStr;
 
 #[derive(Debug, Default)]
 pub struct NumInput<V, M> {
-    phantomdata: PhantomData<M>,
     pub value: V,
+    phantomdata: PhantomData<M>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -18,7 +19,7 @@ pub enum NumInputMessage<V> {
 
 impl<V> NumInputMessage<V>
 where
-    V: Num + NumAssignOps + PartialOrd + Display + FromStr + Copy,
+    V: Num + NumAssignOps + PartialOrd + Display + FromStr + Copy + Bounded,
 {
     pub fn get_data(&self) -> V {
         let NumInputMessage::Change(data) = self;
@@ -38,7 +39,7 @@ where
 
 impl<V, M> NumInput<V, M>
 where
-    V: Num + NumAssignOps + PartialOrd + Display + FromStr + Copy,
+    V: Num + NumAssignOps + PartialOrd + Display + FromStr + Copy + Bounded,
     M: Clone,
 {
     pub fn new(value: V) -> NumInput<V, M>
@@ -46,24 +47,33 @@ where
         V: 'static,
     {
         NumInput {
-            phantomdata: PhantomData,
             value,
+            phantomdata: PhantomData,
         }
     }
 
-    pub fn view<F>(&self, id: usize, min: V, max: V, step: V, on_change: F) -> Element<M>
+    pub fn view<F>(
+        &self,
+        id: usize,
+        min: V,
+        max: V,
+        step: V,
+        on_change: F,
+        style: Option<Style>,
+    ) -> Element<M>
     where
         F: 'static + Fn((usize, NumInputMessage<V>)) -> M + Copy,
         V: 'static,
-        M: 'static,
+        M: 'static + Clone,
     {
-        Element::new(
-            NumberInput::new(self.value, max, NumInputMessage::Change)
-                .step(step)
-                .min(min)
-                .style(NumberInputStyles::custom(ascending_styles::CustomNumInput))
-                .width(Length::Shrink),
-        )
-        .map(move |i| on_change((id, i)))
+        let mut input = NumberInput::new(self.value, min..max, NumInputMessage::Change)
+            .step(step)
+            .width(Length::Shrink);
+
+        if let Some(style) = style {
+            input = input.style(move |_theme, _status| style);
+        }
+
+        Element::new(input).map(move |i| on_change((id, i)))
     }
 }

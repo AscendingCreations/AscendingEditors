@@ -2,8 +2,8 @@ use crate::npc::*;
 use ascending_types::*;
 use ascending_ui::*;
 use iced::{
-    alignment::{Alignment, Horizontal},
-    widget::{checkbox, column, row, text, Rule},
+    alignment::Alignment,
+    widget::{button, checkbox, column, row, text, Rule},
     Element,
 };
 use iced_aw::{time_picker::Time, TimePicker};
@@ -41,11 +41,11 @@ impl NpcUISettings {
         column![
             row![
                 Rule::horizontal(0),
-                text("NPC Settings:").horizontal_alignment(Horizontal::Center),
+                text("NPC Settings:"),
                 Rule::horizontal(0),
             ]
             .spacing(10)
-            .align_items(Alignment::Center),
+            .align_y(Alignment::Center),
             row![
                 column![
                     checkbox("Target Auto switch", self.target_auto_switch).on_toggle(move |i| {
@@ -105,14 +105,15 @@ impl NpcUISettings {
                             1,
                             100_000_000,
                             1,
-                            Message::GenericI64Input
+                            Message::GenericI64Input,
+                            None
                         ),
                         text("Target Switch Chance out of 100,000,000: "),
                     ]
                     .spacing(6),
                     row![
                         self.run_damage
-                            .view(0, 1, u32::MAX, 1, Message::GenericU32Input),
+                            .view(0, 1, u32::MAX, 1, Message::GenericU32Input, None),
                         text("Run Min HP Needed: "),
                     ]
                     .spacing(6),
@@ -128,7 +129,7 @@ impl NpcUISettings {
                         text(format!("Start Time: {:?}", self.spawntime_data.0)),
                     ]
                     .spacing(6)
-                    .align_items(Alignment::Center),
+                    .align_y(Alignment::Center),
                     row![
                         TimePicker::new(
                             self.show_time[1],
@@ -141,14 +142,14 @@ impl NpcUISettings {
                         text(format!("End Time: {:?}", self.spawntime_data.1)),
                     ]
                     .spacing(6)
-                    .align_items(Alignment::Center),
+                    .align_y(Alignment::Center),
                 ]
                 .spacing(6),
             ]
             .spacing(6),
         ]
         .spacing(12)
-        .align_items(Alignment::Start)
+        .align_x(Alignment::Start)
         .into()
     }
 }

@@ -3,7 +3,7 @@ use ascending_types::*;
 use ascending_ui::*;
 
 use iced::{
-    widget::{column, row, Column, Container, Scrollable},
+    widget::{column, scrollable, Container},
     Element, Length,
 };
 
@@ -22,11 +22,11 @@ pub struct ShopUI {
 
 impl UiRenderer for ShopUI {
     type Message = Message;
-    fn update(&mut self, msg: Message) -> Option<Box<dyn UiRenderer<Message = Message>>> {
+    fn update(&mut self, msg: Message) {
         match msg {
             Message::SaveAllButtonPress => {
                 self.save_all();
-                return None;
+                return;
             }
             Message::SaveButtonPress => {
                 if self.config.save_json {
@@ -39,20 +39,20 @@ impl UiRenderer for ShopUI {
                     .0
                     .save_bin_file(self.currentid)
                     .unwrap();
-                return None;
+                return;
             }
             Message::RevertButtonPress => {
                 let shop = ShopData::load_file(self.currentid).unwrap();
                 self.data[self.currentid].0 = shop.0;
                 self.data[self.currentid].1 = false;
                 self.set_object_to_layout(self.currentid);
-                return None;
+                return;
             }
             Message::ListSelect(data) => {
                 self.currentid = data.id;
                 self.menu.list_selected = Some(data);
                 self.set_object_to_layout(self.currentid);
-                return None;
+                return;
             }
             Message::NameInput(value) => {
                 if value.len() < 64 {
@@ -66,7 +66,7 @@ impl UiRenderer for ShopUI {
                         .clone_from(&self.generic.txt_value);
                     self.menu.list_selected = Some(self.menu.list[self.currentid].clone());
                 } else {
-                    return None;
+                    return;
                 }
             }
             Message::SlotSelect(slot) => {
@@ -90,7 +90,7 @@ impl UiRenderer for ShopUI {
                         self.generic.item_amount.value = value;
                         self.data[self.currentid].0.item[self.current_shopid].amount = value;
                     }
-                    _ => return None,
+                    _ => return,
                 }
             }
             Message::GenericInput64((id, data)) => {
@@ -101,24 +101,16 @@ impl UiRenderer for ShopUI {
                         self.generic.item_price.value = value;
                         self.data[self.currentid].0.item[self.current_shopid].price = value;
                     }
-                    _ => return None,
+                    _ => return,
                 }
-            }
-            _ => {
-                return None;
             }
         }
 
         self.data[self.currentid].1 = true;
-        None
     }
 
     fn view(&self) -> Element<Message> {
         self.layout()
-    }
-
-    fn title(&self) -> &str {
-        "Shop Editor"
     }
 }
 
@@ -176,20 +168,16 @@ impl ShopUI {
         self.generic.item_price.value = self.data[index].0.item[shopslot].price;
     }
 
-    pub fn layout(&self) -> Element<Message> {
+    fn layout(&self) -> Element<Message> {
         Container::new(
             column![
                 self.menu.layout(),
-                Scrollable::new(row![
-                    column![Container::new(self.generic.layout())
+                scrollable(
+                    Container::new(self.generic.layout())
                         .padding(5)
                         .width(Length::Fill)
-                        .center_x()
-                        .center_y(),]
-                    .spacing(5)
-                    .width(Length::FillPortion(30)),
-                    Column::new().width(Length::FillPortion(1))
-                ])
+                        .center_x(Length::Fill)
+                )
             ]
             .spacing(20),
         )

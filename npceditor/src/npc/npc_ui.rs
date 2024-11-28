@@ -2,7 +2,7 @@ use crate::{load_config, npc::*, ConfigData};
 use ascending_types::*;
 use ascending_ui::*;
 use iced::{
-    widget::{column, row, Column, Container, Scrollable},
+    widget::{column, scrollable, Container},
     Element, Length,
 };
 
@@ -25,11 +25,11 @@ pub struct NpcUI {
 impl UiRenderer for NpcUI {
     type Message = Message;
 
-    fn update(&mut self, msg: Message) -> Option<Box<dyn UiRenderer<Message = Message>>> {
+    fn update(&mut self, msg: Message) {
         match msg {
             Message::SaveAllButtonPress => {
                 self.save_all();
-                return None;
+                return;
             }
             Message::SaveButtonPress => {
                 if self.config.save_json {
@@ -42,20 +42,20 @@ impl UiRenderer for NpcUI {
                     .0
                     .save_bin_file(self.currentid)
                     .unwrap();
-                return None;
+                return;
             }
             Message::RevertButtonPress => {
                 let item = NpcData::load_file(self.currentid).unwrap();
                 self.data[self.currentid].0 = item.0;
                 self.data[self.currentid].1 = false;
                 self.set_object_to_layout(self.currentid);
-                return None;
+                return;
             }
             Message::ListSelect(data) => {
                 self.currentid = data.id;
                 self.menu.list_selected = Some(data);
                 self.set_object_to_layout(self.currentid);
-                return None;
+                return;
             }
             Message::BehaviourTypeSelect(data) => {
                 self.generic.behaviour_selected = Some(data);
@@ -122,7 +122,7 @@ impl UiRenderer for NpcUI {
                     self.settings.has_enemies = data.get_data();
                     self.data[self.currentid].0.has_enemies = data.get_data();
                 }
-                _ => return None,
+                _ => return,
             },
             Message::GenericU8Input((id, data)) => match id {
                 0 => {
@@ -141,7 +141,7 @@ impl UiRenderer for NpcUI {
                     self.generic.sizew_input.value = data.get_data();
                     self.data[self.currentid].0.size.width = data.get_data();
                 }
-                _ => return None,
+                _ => return,
             },
             Message::GenericI32Input((id, data)) => match id {
                 0 => {
@@ -164,7 +164,7 @@ impl UiRenderer for NpcUI {
                     self.generic.range_input.value = data.get_data();
                     self.data[self.currentid].0.range = data.get_data();
                 }
-                _ => return None,
+                _ => return,
             },
             Message::GenericU32Input((id, data)) => match id {
                 0 => {
@@ -269,7 +269,7 @@ impl UiRenderer for NpcUI {
                 21 => {
                     self.enemies.npc_index_input.value = data.get_data();
                 }
-                _ => return None,
+                _ => return,
             },
             Message::GenericI64Input((id, data)) => match id {
                 0 => {
@@ -300,11 +300,11 @@ impl UiRenderer for NpcUI {
                     self.generic.exp_input.value = data.get_data();
                     self.data[self.currentid].0.exp = data.get_data();
                 }
-                _ => return None,
+                _ => return,
             },
             Message::ChooseTime1 => {
                 self.settings.show_time[0] = true;
-                return None;
+                return;
             }
             Message::SubmitTime1(time) => {
                 use chrono::Timelike;
@@ -316,7 +316,7 @@ impl UiRenderer for NpcUI {
             }
             Message::ChooseTime2 => {
                 self.settings.show_time[1] = true;
-                return None;
+                return;
             }
             Message::SubmitTime2(time) => {
                 use chrono::Timelike;
@@ -342,7 +342,7 @@ impl UiRenderer for NpcUI {
                         .clone_from(&self.generic.txt_value);
                     self.menu.list_selected = Some(self.menu.list[self.currentid].clone());
                 } else {
-                    return None;
+                    return;
                 }
             }
             Message::ItemDropSlotSelect(data) => {
@@ -380,21 +380,13 @@ impl UiRenderer for NpcUI {
             Message::AddEnemy => add_enemy_data(self, self.enemies.npc_index_input.value),
             Message::UpdateEnemy => update_enemy_data(self, self.enemies.npc_index_input.value),
             Message::RemoveEnemy => remove_enemy_data(self),
-            _ => {
-                return None;
-            }
         }
 
         self.data[self.currentid].1 = true;
-        None
     }
 
     fn view(&self) -> Element<Message> {
         self.layout()
-    }
-
-    fn title(&self) -> &str {
-        "Npc Editor"
     }
 }
 
@@ -522,30 +514,23 @@ impl NpcUI {
         new_enemies_data(self, index);
     }
 
-    pub fn layout(&self) -> Element<Message> {
+    fn layout(&self) -> Element<Message> {
         Container::new(
             column![
                 self.menu.layout(),
-                Scrollable::new(row![
-                    column![
-                        Container::new(self.generic.layout())
-                            .padding(5)
-                            .width(Length::Fill)
-                            .center_x()
-                            .center_y(),
-                        Container::new(self.settings.layout(&self.data[self.currentid].0))
-                            .padding(5)
-                            .width(Length::Fill)
-                            .center_y(),
-                        Container::new(self.enemies.layout())
-                            .padding(5)
-                            .width(Length::Fill)
-                            .center_x()
-                            .center_y(),
-                    ]
-                    .spacing(5)
-                    .width(Length::FillPortion(30)),
-                    Column::new().width(Length::FillPortion(1))
+                scrollable(column![
+                    Container::new(self.generic.layout())
+                        .padding(5)
+                        .width(Length::Fill)
+                        .center_x(Length::Fill),
+                    Container::new(self.settings.layout(&self.data[self.currentid].0))
+                        .padding(5)
+                        .width(Length::Fill)
+                        .center_x(Length::Fill),
+                    Container::new(self.enemies.layout())
+                        .padding(5)
+                        .width(Length::Fill)
+                        .center_x(Length::Fill),
                 ])
             ]
             .spacing(20),

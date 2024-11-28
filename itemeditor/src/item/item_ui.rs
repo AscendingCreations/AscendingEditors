@@ -3,7 +3,7 @@ use ascending_types::*;
 use ascending_ui::*;
 
 use iced::{
-    widget::{column, row, Column, Container, Scrollable},
+    widget::{column, scrollable, Container},
     Color, Element, Length,
 };
 
@@ -22,11 +22,11 @@ pub struct ItemUI {
 
 impl UiRenderer for ItemUI {
     type Message = Message;
-    fn update(&mut self, msg: Message) -> Option<Box<dyn UiRenderer<Message = Message>>> {
+    fn update(&mut self, msg: Message) {
         match msg {
             Message::SaveAllButtonPress => {
                 self.save_all();
-                return None;
+                return;
             }
             Message::SaveButtonPress => {
                 if self.config.save_json {
@@ -39,20 +39,20 @@ impl UiRenderer for ItemUI {
                     .0
                     .save_bin_file(self.currentid)
                     .unwrap();
-                return None;
+                return;
             }
             Message::RevertButtonPress => {
                 let item = ItemData::load_file(self.currentid).unwrap();
                 self.data[self.currentid].0 = item.0;
                 self.data[self.currentid].1 = false;
                 self.set_object_to_layout(self.currentid);
-                return None;
+                return;
             }
             Message::ListSelect(data) => {
                 self.currentid = data.id;
                 self.menu.list_selected = Some(data);
                 self.set_object_to_layout(self.currentid);
-                return None;
+                return;
             }
             Message::DataInput((i, data)) => {
                 self.data_ui.input[i].value = data.get_data();
@@ -74,7 +74,7 @@ impl UiRenderer for ItemUI {
                         .clone_from(&self.generic.txt_value);
                     self.menu.list_selected = Some(self.menu.list[self.currentid].clone());
                 } else {
-                    return None;
+                    return;
                 }
             }
             Message::SoundInput(value) => {
@@ -120,28 +120,34 @@ impl UiRenderer for ItemUI {
                         self.generic.type2.value = value;
                         self.data[self.currentid].0.itemtype2 = value as u8;
                     }
-                    _ => return None,
+                    _ => return,
                 }
             }
             Message::BasePriceInput((_, data)) => {
                 self.generic.base_price_input.value = data.get_data();
                 self.data[self.currentid].0.baseprice = self.generic.base_price_input.value;
             }
-            Message::Repairable(value) => {
-                self.generic.repairable = value;
-                self.data[self.currentid].0.repairable = value;
-            }
-            Message::Stackable(value) => {
-                self.generic.stackable = value;
-                self.data[self.currentid].0.stackable = value;
-            }
-            Message::Breakable(value) => {
-                self.generic.breakable = value;
-                self.data[self.currentid].0.breakable = value;
+            Message::GenericBoolInput((id, data)) => {
+                let value = data.get_data();
+                match id {
+                    0 => {
+                        self.generic.breakable = value;
+                        self.data[self.currentid].0.breakable = value;
+                    }
+                    1 => {
+                        self.generic.repairable = value;
+                        self.data[self.currentid].0.repairable = value;
+                    }
+                    2 => {
+                        self.generic.stackable = value;
+                        self.data[self.currentid].0.stackable = value;
+                    }
+                    _ => {}
+                }
             }
             Message::ChooseColor => {
                 self.generic.show_color = true;
-                return None;
+                return;
             }
             Message::SubmitColor(color) => {
                 self.generic.color = color;
@@ -153,23 +159,15 @@ impl UiRenderer for ItemUI {
             }
             Message::CancelColor => {
                 self.generic.show_color = false;
-                return None;
-            }
-            _ => {
-                return None;
+                return;
             }
         }
 
         self.data[self.currentid].1 = true;
-        None
     }
 
     fn view(&self) -> Element<Message> {
         self.layout()
-    }
-
-    fn title(&self) -> &str {
-        "Item Editor"
     }
 }
 
@@ -251,31 +249,24 @@ impl ItemUI {
         );
     }
 
-    pub fn layout(&self) -> Element<Message> {
+    fn layout(&self) -> Element<Message> {
         let item_type = self.generic.type_selected.unwrap_or(ItemTypes::None);
 
         Container::new(
             column![
                 self.menu.layout(),
-                Scrollable::new(row![
-                    column![
-                        Container::new(
-                            self.generic
-                                .layout(self.generic.type_selected.unwrap_or(ItemTypes::None),)
-                        )
+                scrollable(column![
+                    Container::new(
+                        self.generic
+                            .layout(self.generic.type_selected.unwrap_or(ItemTypes::None),)
+                    )
+                    .padding(5)
+                    .width(Length::Fill)
+                    .center_x(Length::Fill),
+                    Container::new(self.data_ui.layout(item_type))
                         .padding(5)
                         .width(Length::Fill)
-                        .center_x()
-                        .center_y(),
-                        Container::new(self.data_ui.layout(item_type))
-                            .padding(5)
-                            .width(Length::Fill)
-                            .center_x()
-                            .center_y(),
-                    ]
-                    .spacing(5)
-                    .width(Length::FillPortion(30)),
-                    Column::new().width(Length::FillPortion(1))
+                        .center_x(Length::Fill)
                 ])
             ]
             .spacing(20),

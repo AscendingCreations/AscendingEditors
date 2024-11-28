@@ -1,6 +1,6 @@
 use ascending_types::*;
 use ascending_ui::*;
-use iced::{font, Color};
+use iced::Color;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Message {
@@ -13,13 +13,10 @@ pub enum Message {
     GenericInput((usize, NumInputMessage<u16>)),
     GenericI32Input((usize, NumInputMessage<i32>)),
     BasePriceInput((usize, NumInputMessage<u64>)),
-    Repairable(bool),
-    Stackable(bool),
-    Breakable(bool),
+    GenericBoolInput((usize, CheckBoxMessage)),
     NameInput(String),
     SoundInput(String),
     ChooseColor,
     SubmitColor(Color),
     CancelColor,
-    FontLoaded(Result<(), font::Error>),
 }

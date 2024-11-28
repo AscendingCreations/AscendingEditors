@@ -4,7 +4,7 @@ use crate::npc::*;
 use ascending_types::*;
 use ascending_ui::*;
 use iced::{
-    alignment::{Alignment, Horizontal},
+    alignment::Alignment,
     widget::{column, container, row, text, text_input, Container, Image, PickList, Rule},
     Element, Length,
 };
@@ -90,11 +90,11 @@ impl NpcUIGenerics {
         column![
             row![
                 Rule::horizontal(0),
-                text("General Information:").horizontal_alignment(Horizontal::Center),
+                text("General Information:"),
                 Rule::horizontal(0),
             ]
             .spacing(10)
-            .align_items(Alignment::Center),
+            .align_y(Alignment::Center),
             row![
                 text("Name:"),
                 text_input("Name", &self.txt_value)
@@ -103,7 +103,7 @@ impl NpcUIGenerics {
                     .padding(3),
                 text("Sprite:"),
                 self.sprite_input
-                    .view(0, 0, 1000, 1, Message::GenericI32Input),
+                    .view(0, 0, 1000, 1, Message::GenericI32Input, None),
                 text("Behaviour:"),
                 PickList::new(
                     &self.behaviours[..],
@@ -122,18 +122,14 @@ impl NpcUIGenerics {
                             .height(Length::Fixed(32.0))
                             .content_fit(iced::ContentFit::None),
                     )
-                    .center_x()
-                    .center_y()
                     .width(Length::Fixed(32.0))
                     .height(Length::Fixed(32.0))
                 } else {
                     Container::new("")
-                        .center_x()
-                        .center_y()
                         .width(Length::Fixed(32.0))
                         .height(Length::Fixed(32.0))
                 }]
-                .align_items(Alignment::Center)
+                .align_y(Alignment::Center)
                 .spacing(6),
             ]
             .spacing(5),]
@@ -143,108 +139,120 @@ impl NpcUIGenerics {
                 column![
                     text("Level:"),
                     self.level_input
-                        .view(1, 1, 200, 1, Message::GenericI32Input),
+                        .view(1, 1, 200, 1, Message::GenericI32Input, None),
                     text("Max HP:"),
                     self.maxhp_input
-                        .view(1, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(1, 1, u32::MAX, 1, Message::GenericU32Input, None),
                     text("Max Sp:"),
                     self.maxsp_input
-                        .view(2, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(2, 1, u32::MAX, 1, Message::GenericU32Input, None),
                     text("Max Mp:"),
                     self.maxmp_input
-                        .view(3, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(3, 1, u32::MAX, 1, Message::GenericU32Input, None),
                 ]
                 .spacing(6)
-                .align_items(Alignment::Center),
+                .align_x(Alignment::Center),
                 column![
                     text("Pysical Damage:"),
                     self.pdamage_input
-                        .view(4, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(4, 1, u32::MAX, 1, Message::GenericU32Input, None),
                     text("Pysical Defense:"),
                     self.pdef_input
-                        .view(5, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(5, 1, u32::MAX, 1, Message::GenericU32Input, None),
                     text("Sight Range:"),
                     self.sight_input
-                        .view(2, 1, i32::MAX, 1, Message::GenericI32Input),
+                        .view(2, 1, i32::MAX, 1, Message::GenericI32Input, None),
                     text("Follow Sight Range:"),
                     self.follow_sight_input
-                        .view(3, 0, i32::MAX, 1, Message::GenericI32Input),
+                        .view(3, 0, i32::MAX, 1, Message::GenericI32Input, None),
                 ]
                 .spacing(6)
-                .align_items(Alignment::Center),
+                .align_x(Alignment::Center),
                 column![
                     text("Movement Wait (ms):"),
-                    self.movement_wait_input
-                        .view(1, 1, i64::MAX, 1, Message::GenericI64Input),
+                    self.movement_wait_input.view(
+                        1,
+                        1,
+                        i64::MAX,
+                        1,
+                        Message::GenericI64Input,
+                        None
+                    ),
                     text("Attack Wait (ms):"),
                     self.attack_wait_input
-                        .view(2, 1, i64::MAX, 1, Message::GenericI64Input),
+                        .view(2, 1, i64::MAX, 1, Message::GenericI64Input, None),
                     text("Intervaled Wait (ms):"),
-                    self.intervaled_wait_input
-                        .view(3, 1, i64::MAX, 1, Message::GenericI64Input),
+                    self.intervaled_wait_input.view(
+                        3,
+                        1,
+                        i64::MAX,
+                        1,
+                        Message::GenericI64Input,
+                        None
+                    ),
                     text("Walk Dist. from spawn:"),
                     self.walkdistance_input
-                        .view(6, 0, u32::MAX, 1, Message::GenericU32Input),
+                        .view(6, 0, u32::MAX, 1, Message::GenericU32Input, None),
                 ]
                 .spacing(6)
-                .align_items(Alignment::Center),
+                .align_x(Alignment::Center),
                 column![
                     text("Min Damage (Avoids Defense):"),
                     self.mindamage_input
-                        .view(7, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(7, 1, u32::MAX, 1, Message::GenericU32Input, None),
                     text("Max Damage (regardless of power):"),
                     self.maxdamage_input
-                        .view(8, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(8, 1, u32::MAX, 1, Message::GenericU32Input, None),
                     text("Respawn Wait (ms):"),
                     self.respawn_wait_input
-                        .view(4, 1, i64::MAX, 1, Message::GenericI64Input),
+                        .view(4, 1, i64::MAX, 1, Message::GenericI64Input, None),
                     text("Spawn Wait (ms):"),
                     self.spawn_wait_input
-                        .view(5, 1, i64::MAX, 1, Message::GenericI64Input),
+                        .view(5, 1, i64::MAX, 1, Message::GenericI64Input, None),
                 ]
                 .spacing(6)
-                .align_items(Alignment::Center),
+                .align_x(Alignment::Center),
                 column![
                     text("Range:"),
                     self.range_input
-                        .view(4, 0, i32::MAX, 1, Message::GenericI32Input),
+                        .view(4, 0, i32::MAX, 1, Message::GenericI32Input, None),
                     text("Exp:"),
                     self.exp_input
-                        .view(6, 0, i64::MAX, 1, Message::GenericI64Input),
+                        .view(6, 0, i64::MAX, 1, Message::GenericI64Input, None),
                 ]
                 .spacing(6)
-                .align_items(Alignment::Center),
+                .align_x(Alignment::Center),
             ]
             .spacing(15),
             row![
                 Rule::horizontal(0),
-                text("Block Size:").horizontal_alignment(Horizontal::Center),
+                text("Block Size:"),
                 Rule::horizontal(0),
             ]
             .spacing(10)
-            .align_items(Alignment::Center),
+            .align_y(Alignment::Center),
             row![
                 text("X:"),
                 self.sizex_input
-                    .view(0, 1, u8::MAX, 1, Message::GenericU8Input),
+                    .view(0, 1, u8::MAX, 1, Message::GenericU8Input, None),
                 text("Y:"),
                 self.sizey_input
-                    .view(1, 1, u8::MAX, 1, Message::GenericU8Input),
+                    .view(1, 1, u8::MAX, 1, Message::GenericU8Input, None),
                 text("H:"),
                 self.sizeh_input
-                    .view(2, 1, u8::MAX, 1, Message::GenericU8Input),
+                    .view(2, 1, u8::MAX, 1, Message::GenericU8Input, None),
                 text("W:"),
                 self.sizew_input
-                    .view(3, 1, u8::MAX, 1, Message::GenericU8Input),
+                    .view(3, 1, u8::MAX, 1, Message::GenericU8Input, None),
             ]
             .spacing(15),
             row![
                 Rule::horizontal(0),
-                text("Item Drops:").horizontal_alignment(Horizontal::Center),
+                text("Item Drops:"),
                 Rule::horizontal(0),
             ]
             .spacing(10)
-            .align_items(Alignment::Center),
+            .align_y(Alignment::Center),
             row![
                 column![
                     text("Drop Item Slot:"),
@@ -255,14 +263,20 @@ impl NpcUIGenerics {
                     ),
                     text("Free Shares:"),
                     self.freeshares_input
-                        .view(20, 1, u32::MAX, 1, Message::GenericU32Input),
+                        .view(20, 1, u32::MAX, 1, Message::GenericU32Input, None),
                 ]
                 .spacing(10),
                 column![
                     row![
                         text("Shares:"),
-                        self.slotshares_input
-                            .view(19, 1, u32::MAX, 1, Message::GenericU32Input),
+                        self.slotshares_input.view(
+                            19,
+                            1,
+                            u32::MAX,
+                            1,
+                            Message::GenericU32Input,
+                            None
+                        ),
                     ]
                     .spacing(10),
                     row![
@@ -273,7 +287,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                             text("Amount:"),
                             self.item_drops[0].amount.view(
@@ -281,7 +296,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                         ],
                         column![
@@ -291,7 +307,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                             text("Amount:"),
                             self.item_drops[1].amount.view(
@@ -299,7 +316,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                         ],
                         column![
@@ -309,7 +327,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                             text("Amount:"),
                             self.item_drops[2].amount.view(
@@ -317,7 +336,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                         ],
                         column![
@@ -327,7 +347,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                             text("Amount:"),
                             self.item_drops[3].amount.view(
@@ -335,7 +356,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                         ],
                         column![
@@ -345,7 +367,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                             text("Amount:"),
                             self.item_drops[4].amount.view(
@@ -353,7 +376,8 @@ impl NpcUIGenerics {
                                 1,
                                 u32::MAX,
                                 1,
-                                Message::GenericU32Input
+                                Message::GenericU32Input,
+                                None
                             ),
                         ],
                     ]
@@ -364,7 +388,7 @@ impl NpcUIGenerics {
             .spacing(25)
         ]
         .spacing(10)
-        .align_items(Alignment::Center)
+        .align_x(Alignment::Center)
         .into()
     }
 }

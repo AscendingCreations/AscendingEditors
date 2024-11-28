@@ -23,7 +23,6 @@ arr_macro.workspace = true
 num_enum.workspace = true
 backtrace.workspace = true
 ascending_logger.workspace = true
-ascending_styles.workspace = true
 ascending_ui.workspace = true
 ascending_types.workspace = true
 speedy.workspace = true

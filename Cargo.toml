@@ -2,12 +2,11 @@
 resolver = "2"
 members = [
     "types",
-    "styles",
     "ui_helper",
     "logging",
     "itemeditor",
     "npceditor",
-    "shopeditor"
+    "shopeditor",
 ]
 
 [workspace.dependencies]
@@ -24,7 +23,7 @@ arr_macro = "0.2.1"
 backtrace = "0.3.73"
 log = "0.4.21"
 itertools = "0.13.0"
-bytey = { version = "0.3.0", git = "https://github.com/Stefanowhb/bytey.git" }
+bytey = "0.4.0"
 speedy = "0.8.7"
 
 [workspace.dependencies.ascending_logger]
@@ -36,13 +35,10 @@ path = "./ui_helper"
 [workspace.dependencies.ascending_types]
 path = "./types"
 
-[workspace.dependencies.ascending_styles]
-path = "./styles"
-
 [workspace.dependencies.iced_aw]
 #git = "https://github.com/iced-rs/iced_aw.git"
-version = "0.9.3"
+version = "0.11.0"
 
 [workspace.dependencies.iced]
-version = "0.12.0"
+version = "0.13.1"
 features = ["canvas", "tokio", "image", "debug", "wgpu", "advanced"]

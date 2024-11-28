@@ -12,14 +12,14 @@ use config::*;
 use ascending_logger::*;
 use ascending_ui::*;
 use iced::{
-    executor, font,
     widget::{Column, Container},
-    Application, Command, Element, Length, Settings, Theme,
+    Element, Length,
 };
+use iced_aw::iced_fonts;
 use npc::*;
 use std::fs;
 
-pub fn main() -> Result<(), String> {
+pub fn main() -> Result<iced::Result, String> {
     let logger = Box::new(MyLogger::new("npc_editor_log.txt"));
     logger.set_boxed_logger().unwrap();
 
@@ -40,39 +40,26 @@ pub fn main() -> Result<(), String> {
 
     info!("Checked or Created Files");
 
-    if let Err(err) = Pages::run(Settings::default()) {
-        error!("{}", err);
-    }
-
-    Ok(())
+    Ok(iced::application("Npc Editor", Pages::update, Pages::view)
+        .font(iced_fonts::REQUIRED_FONT_BYTES)
+        .run())
 }
 
 pub struct Pages {
     page: Box<dyn UiRenderer<Message = Message>>,
 }
 
-impl Application for Pages {
-    type Message = Message;
-    type Flags = ();
-    type Executor = executor::Default;
-    type Theme = Theme;
-
-    fn new(_flags: ()) -> (Self, Command<Message>) {
-        (
-            Self {
-                page: Box::new(NpcUI::new()),
-            },
-            font::load(iced_aw::core::icons::BOOTSTRAP_FONT_BYTES).map(Message::FontLoaded),
-        )
+impl Default for Pages {
+    fn default() -> Self {
+        Self {
+            page: Box::new(NpcUI::new()),
+        }
     }
+}
 
-    fn title(&self) -> String {
-        self.page.title().to_string()
-    }
-
-    fn update(&mut self, event: Message) -> Command<Message> {
-        self.page.update(event);
-        Command::none()
+impl Pages {
+    fn update(&mut self, message: Message) {
+        self.page.update(message);
     }
 
     fn view(&self) -> Element<Message> {
@@ -87,9 +74,5 @@ impl Application for Pages {
             .into();
 
         Container::new(content).height(Length::Fill).into()
-    }
-
-    fn theme(&self) -> Self::Theme {
-        Theme::Dark
     }
 }

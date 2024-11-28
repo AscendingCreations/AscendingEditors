@@ -3,7 +3,7 @@ use arr_macro::arr;
 use ascending_types::*;
 use ascending_ui::*;
 use iced::{
-    alignment::{Alignment, Horizontal, Vertical},
+    alignment::Alignment,
     widget::{column, text, Row, Rule},
     Element, Length,
 };
@@ -18,30 +18,24 @@ pub struct ItemUiData {
 impl ItemUiData {
     pub fn layout(&self, item_type: ItemTypes) -> Element<Message> {
         let mut i: i32 = 0;
-        let mut col = column![
-            text("Data Inputs")
-                .width(Length::Fill)
-                .vertical_alignment(Vertical::Bottom)
-                .horizontal_alignment(Horizontal::Center),
-            Rule::horizontal(0)
-        ]
-        .spacing(6)
-        .align_items(Alignment::Center)
-        .width(Length::Shrink);
+        let mut col = column![text("Data Inputs"), Rule::horizontal(0)]
+            .spacing(6)
+            .align_x(Alignment::Center)
+            .width(Length::Shrink);
 
-        let mut row = Row::new().spacing(12).align_items(Alignment::Start);
+        let mut row = Row::new().spacing(12).align_y(Alignment::Start);
 
         for (id, control) in self.input.iter().enumerate() {
             if i == 6 {
                 i = 0;
                 col = col.push(row);
-                row = Row::new().spacing(12).align_items(Alignment::Start);
+                row = Row::new().spacing(12).align_y(Alignment::Start);
             }
 
             row = row.push(
                 column![
                     data_labels(id, item_type),
-                    control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput)
+                    control.view(id, i16::MIN, i16::MAX, 1, Message::DataInput, None)
                 ]
                 .spacing(5),
             );

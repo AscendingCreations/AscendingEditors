@@ -165,10 +165,7 @@ impl NpcData {
         let mut data = Vec::<(NpcData, bool)>::new();
 
         for i in 0..MAX_NPCS {
-            let mut result = match Self::load_file(i) {
-                Ok(v) => v,
-                Err(e) => return Err(e),
-            };
+            let mut result = Self::load_file(i)?;
 
             if result.1 {
                 if save_json {
