@@ -16,7 +16,7 @@ pub struct ItemUiData {
 }
 
 impl ItemUiData {
-    pub fn layout(&self, item_type: ItemTypes) -> Element<Message> {
+    pub fn layout(&'_ self, item_type: ItemTypes) -> Element<'_, Message> {
         let mut i: i32 = 0;
         let mut col = column![text("Data Inputs"), Rule::horizontal(0)]
             .spacing(6)

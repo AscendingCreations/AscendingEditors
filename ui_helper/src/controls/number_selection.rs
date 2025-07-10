@@ -53,14 +53,14 @@ where
     }
 
     pub fn view<F>(
-        &self,
+        &'_ self,
         id: usize,
         min: V,
         max: V,
         step: V,
         on_change: F,
         style: Option<Style>,
-    ) -> Element<M>
+    ) -> Element<'_, M>
     where
         F: 'static + Fn((usize, NumInputMessage<V>)) -> M + Copy,
         V: 'static,

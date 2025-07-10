@@ -15,7 +15,7 @@ pub struct NpcEnemies {
 }
 
 impl NpcEnemies {
-    pub fn layout(&self) -> Element<Message> {
+    pub fn layout(&'_ self) -> Element<'_, Message> {
         column![
             row![
                 Rule::horizontal(0),

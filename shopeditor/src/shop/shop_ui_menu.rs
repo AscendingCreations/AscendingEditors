@@ -15,7 +15,7 @@ pub struct ShopUiMenu {
 }
 
 impl ShopUiMenu {
-    pub fn layout(&self) -> Element<Message> {
+    pub fn layout(&'_ self) -> Element<'_, Message> {
         row![
             PickList::new(
                 &self.list[..],

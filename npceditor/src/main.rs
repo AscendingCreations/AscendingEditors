@@ -28,11 +28,11 @@ pub fn main() -> Result<iced::Result, String> {
 
     std::panic::set_hook(Box::new(|panic_info| {
         let bt = backtrace::Backtrace::new();
-        error!("PANIC: {}, BACKTRACE: {:?}", panic_info, bt);
+        error!("PANIC: {panic_info}, BACKTRACE: {bt:?}");
     }));
 
     if let Err(e) = fs::create_dir_all("./data/npcs/json/") {
-        return Err(format!("Err: {:?}", e));
+        return Err(format!("Err: {e:?}"));
     }
 
     info!("Checked or Created Directorys");
@@ -62,7 +62,7 @@ impl Pages {
         self.page.update(message);
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&'_ self) -> Element<'_, Message> {
         let page = self.page.view();
 
         let content: Element<_> = Column::new()

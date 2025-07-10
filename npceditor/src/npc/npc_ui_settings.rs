@@ -37,7 +37,7 @@ pub struct NpcUISettings {
 }
 
 impl NpcUISettings {
-    pub fn layout(&self, _npc: &NpcData) -> Element<Message> {
+    pub fn layout(&'_ self, _npc: &NpcData) -> Element<'_, Message> {
         column![
             row![
                 Rule::horizontal(0),

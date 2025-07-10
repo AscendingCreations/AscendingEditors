@@ -385,7 +385,7 @@ impl UiRenderer for NpcUI {
         self.data[self.currentid].1 = true;
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&'_ self) -> Element<'_, Message> {
         self.layout()
     }
 }
@@ -426,11 +426,11 @@ impl NpcUI {
 
             if self.config.save_json {
                 if let Err(e) = v.0.save_file(i) {
-                    println!("Could not save NPC {}, err {}", i, e);
+                    println!("Could not save NPC {i}, err {e}");
                 }
             }
             if let Err(e) = v.0.save_bin_file(i) {
-                println!("Could not save bin NPC {}, err {}", i, e);
+                println!("Could not save bin NPC {i}, err {e}");
             }
         }
     }
@@ -514,7 +514,7 @@ impl NpcUI {
         new_enemies_data(self, index);
     }
 
-    fn layout(&self) -> Element<Message> {
+    fn layout(&'_ self) -> Element<'_, Message> {
         Container::new(
             column![
                 self.menu.layout(),

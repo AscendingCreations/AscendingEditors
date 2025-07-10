@@ -85,7 +85,7 @@ pub struct Items {
 }
 
 impl NpcUIGenerics {
-    pub fn layout(&self) -> Element<Message> {
+    pub fn layout(&'_ self) -> Element<'_, Message> {
         let image_path = format!("./resources/npc/p{}.png", self.sprite_input.value);
         column![
             row![

@@ -28,21 +28,21 @@ pub struct ItemData {
 impl ItemData {
     pub fn create_files() -> Result<(), String> {
         for i in 0..MAX_ITEMS {
-            let name = format!("./data/items/json/{}.json", i);
+            let name = format!("./data/items/json/{i}.json");
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(file) => {
                     let data = ItemData::default();
 
                     if let Err(e) = serde_json::to_writer_pretty(&file, &data) {
-                        return Err(format!("Serdes File Error {:?}", e));
+                        return Err(format!("Serdes File Error {e:?}"));
                     }
                 }
                 Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
-                Err(e) => return Err(format!("Failed to open {}, Err {:?}", name, e)),
+                Err(e) => return Err(format!("Failed to open {name}, Err {e:?}")),
             }
 
-            let name = format!("./data/items/{}.bin", i);
+            let name = format!("./data/items/{i}.bin");
 
             match OpenOptions::new().write(true).create_new(true).open(&name) {
                 Ok(mut file) => {
@@ -51,11 +51,11 @@ impl ItemData {
                     let bytes = data.write_to_vec().unwrap();
 
                     if let Err(e) = file.write(bytes.as_slice()) {
-                        return Err(format!("File Error {:?}", e));
+                        return Err(format!("File Error {e:?}"));
                     }
                 }
                 Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
-                Err(e) => return Err(format!("Failed to open {}, Err {:?}", name, e)),
+                Err(e) => return Err(format!("Failed to open {name}, Err {e:?}")),
             }
         }
 
@@ -63,23 +63,23 @@ impl ItemData {
     }
 
     pub fn save_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/items/json/{}.json", id);
+        let name = format!("./data/items/json/{id}.json");
 
         match OpenOptions::new().truncate(true).write(true).open(&name) {
             Ok(file) => {
                 if let Err(e) = serde_json::to_writer_pretty(&file, self) {
-                    Err(format!("Serdes File Error {:?}", e))
+                    Err(format!("Serdes File Error {e:?}"))
                 } else {
                     Ok(())
                 }
             }
             Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => Ok(()),
-            Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),
+            Err(e) => Err(format!("Failed to open {name}, Err {e:?}")),
         }
     }
 
     pub fn save_bin_file(&self, id: usize) -> Result<(), String> {
-        let name = format!("./data/items/{}.bin", id);
+        let name = format!("./data/items/{id}.bin");
 
         let bytes = self.write_to_vec().unwrap();
 
@@ -91,12 +91,12 @@ impl ItemData {
         {
             Ok(mut file) => {
                 if let Err(e) = file.write(bytes.as_slice()) {
-                    Err(format!("File Error {:?}", e))
+                    Err(format!("File Error {e:?}"))
                 } else {
                     Ok(())
                 }
             }
-            Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),
+            Err(e) => Err(format!("Failed to open {name}, Err {e:?}")),
         }
     }
 
@@ -120,7 +120,7 @@ impl ItemData {
     }
 
     pub fn load_file(id: usize) -> Result<(ItemData, bool), String> {
-        let name = format!("./data/items/{}.bin", id);
+        let name = format!("./data/items/{id}.bin");
 
         match OpenOptions::new().read(true).open(&name) {
             Ok(mut file) => {
@@ -130,7 +130,7 @@ impl ItemData {
                     Err(_) => Ok((ItemData::default(), true)),
                 }
             }
-            Err(e) => Err(format!("Failed to open {}, Err {:?}", name, e)),
+            Err(e) => Err(format!("Failed to open {name}, Err {e:?}")),
         }
     }
 }

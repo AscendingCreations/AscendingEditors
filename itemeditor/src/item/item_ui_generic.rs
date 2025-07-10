@@ -43,7 +43,7 @@ pub struct ItemUiGeneric {
 }
 
 impl ItemUiGeneric {
-    pub fn layout(&self, _item_type: ItemTypes) -> Element<Message> {
+    pub fn layout(&'_ self, _item_type: ItemTypes) -> Element<'_, Message> {
         let row0 = row![
             text_input("Name", &self.txt_value)
                 .on_input(Message::NameInput)
@@ -59,7 +59,7 @@ impl ItemUiGeneric {
 
         let sprite_value = self.sprite_input.value;
 
-        let image_path = format!("./resources/items/i{}.png", sprite_value);
+        let image_path = format!("./resources/items/i{sprite_value}.png");
 
         let row1 = row![column![
             "Item Sprite",

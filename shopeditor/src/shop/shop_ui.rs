@@ -109,7 +109,7 @@ impl UiRenderer for ShopUI {
         self.data[self.currentid].1 = true;
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&'_ self) -> Element<'_, Message> {
         self.layout()
     }
 }
@@ -145,11 +145,11 @@ impl ShopUI {
 
             if self.config.save_json {
                 if let Err(e) = v.0.save_file(i) {
-                    println!("Could not save Shop {}, err {}", i, e);
+                    println!("Could not save Shop {i}, err {e}");
                 }
             }
             if let Err(e) = v.0.save_bin_file(i) {
-                println!("Could not save bin Shop {}, err {}", i, e);
+                println!("Could not save bin Shop {i}, err {e}");
             }
         }
     }
@@ -168,7 +168,7 @@ impl ShopUI {
         self.generic.item_price.value = self.data[index].0.item[shopslot].price;
     }
 
-    fn layout(&self) -> Element<Message> {
+    fn layout(&'_ self) -> Element<'_, Message> {
         Container::new(
             column![
                 self.menu.layout(),

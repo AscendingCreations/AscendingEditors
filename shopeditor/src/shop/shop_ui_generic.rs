@@ -28,7 +28,7 @@ pub struct ShopUiGeneric {
 }
 
 impl ShopUiGeneric {
-    pub fn layout(&self) -> Element<Message> {
+    pub fn layout(&'_ self) -> Element<'_, Message> {
         let row0 = row![
             "Name:",
             text_input("Name", &self.txt_value)
