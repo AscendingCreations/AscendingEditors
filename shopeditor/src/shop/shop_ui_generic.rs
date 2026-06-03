@@ -3,7 +3,7 @@ use ascending_types::{MAX_ITEMS, MAX_SHOP_ITEM};
 use ascending_ui::*;
 use iced::{
     alignment::Alignment,
-    widget::{column, row, text_input, PickList, Rule},
+    widget::{column, row, rule, text_input, PickList},
     Element, Length,
 };
 
@@ -57,7 +57,7 @@ impl ShopUiGeneric {
         ]
         .spacing(5);
 
-        column![row0, Rule::horizontal(0), row1]
+        column![row0, rule::horizontal(1), row1]
             .spacing(6)
             .align_x(Alignment::Center)
             .into()

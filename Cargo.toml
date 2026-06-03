@@ -1,30 +1,30 @@
 [workspace]
-resolver = "2"
 members = [
-    "types",
-    "ui_helper",
-    "logging",
-    "itemeditor",
-    "npceditor",
-    "shopeditor",
+  "types",
+  "ui_helper",
+  "logging",
+  "itemeditor",
+  "npceditor",
+  "shopeditor",
 ]
+resolver = "2"
 
 [workspace.dependencies]
-rand = "0.8.5"
-num-traits = "0.2.19"
-serde = { version = "1.0.203", features = ["derive"] }
-educe = "0.6.0"
-chrono = { version = "0.4.38", features = ["serde"] }
-strum_macros = "0.26.4"
-num_enum = "0.7.2"
-serde_json = "1.0.117"
-serde-big-array = "0.5.1"
 arr_macro = "0.2.1"
 backtrace = "0.3.73"
-log = "0.4.21"
-itertools = "0.13.0"
 bytey = "0.4.0"
+chrono = {version = "0.4.38", features = ["serde"]}
+educe = "0.6.0"
+itertools = "0.14.0"
+log = "0.4.21"
+num-traits = "0.2.19"
+num_enum = "0.7.2"
+rand = "0.10.1"
+serde = {version = "1.0.203", features = ["derive"]}
+serde-big-array = "0.5.1"
+serde_json = "1.0.117"
 speedy = "0.8.7"
+strum_macros = "0.28.0"
 
 [workspace.dependencies.ascending_logger]
 path = "./logging"
@@ -37,8 +37,8 @@ path = "./types"
 
 [workspace.dependencies.iced_aw]
 #git = "https://github.com/iced-rs/iced_aw.git"
-version = "0.11.0"
+version = "0.14.1"
 
 [workspace.dependencies.iced]
-version = "0.13.1"
 features = ["canvas", "tokio", "image", "debug", "wgpu", "advanced"]
+version = "0.14.0"

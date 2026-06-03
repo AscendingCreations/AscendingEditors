@@ -4,8 +4,8 @@ use ascending_ui::*;
 use iced::{
     alignment::Alignment,
     widget::{
-        button, checkbox, column, container, row, text, text_input, Container, Image, PickList,
-        Row, Rule,
+        button, checkbox, column, container, row, rule, text, text_input, Container, Image,
+        PickList, Row,
     },
     Color, Element, Length,
 };
@@ -130,11 +130,14 @@ impl ItemUiGeneric {
         .spacing(6);
 
         let row4 = row![
-            checkbox("Breakable", self.breakable)
+            checkbox(self.breakable)
+                .label("Breakable")
                 .on_toggle(move |i| { Message::GenericBoolInput((0, CheckBoxMessage::Change(i))) }),
-            checkbox("Repairable", self.repairable)
+            checkbox(self.repairable)
+                .label("Repairable")
                 .on_toggle(move |i| { Message::GenericBoolInput((1, CheckBoxMessage::Change(i))) }),
-            checkbox("Stackable", self.stackable)
+            checkbox(self.stackable)
+                .label("Stackable")
                 .on_toggle(move |i| { Message::GenericBoolInput((2, CheckBoxMessage::Change(i))) }),
         ]
         .spacing(6);
@@ -165,7 +168,7 @@ impl ItemUiGeneric {
 
         column![
             text("Generic"),
-            Rule::horizontal(0),
+            rule::horizontal(1),
             row0,
             row1,
             row2,

@@ -66,9 +66,9 @@ where
         V: 'static,
         M: 'static + Clone,
     {
-        let mut input = NumberInput::new(self.value, min..max, NumInputMessage::Change)
+        let mut input = NumberInput::new(&self.value, min..max, NumInputMessage::Change)
             .step(step)
-            .width(Length::Shrink);
+            .width(Length::Fixed(80.0));
 
         if let Some(style) = style {
             input = input.style(move |_theme, _status| style);

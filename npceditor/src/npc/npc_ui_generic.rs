@@ -5,7 +5,7 @@ use ascending_types::*;
 use ascending_ui::*;
 use iced::{
     alignment::Alignment,
-    widget::{column, container, row, text, text_input, Container, Image, PickList, Rule},
+    widget::{column, container, row, rule, text, text_input, Container, Image, PickList},
     Element, Length,
 };
 
@@ -89,9 +89,9 @@ impl NpcUIGenerics {
         let image_path = format!("./resources/npc/p{}.png", self.sprite_input.value);
         column![
             row![
-                Rule::horizontal(0),
+                rule::horizontal(1),
                 text("General Information:"),
-                Rule::horizontal(0),
+                rule::horizontal(1),
             ]
             .spacing(10)
             .align_y(Alignment::Center),
@@ -225,9 +225,9 @@ impl NpcUIGenerics {
             ]
             .spacing(15),
             row![
-                Rule::horizontal(0),
+                rule::horizontal(1),
                 text("Block Size:"),
-                Rule::horizontal(0),
+                rule::horizontal(1),
             ]
             .spacing(10)
             .align_y(Alignment::Center),
@@ -247,9 +247,9 @@ impl NpcUIGenerics {
             ]
             .spacing(15),
             row![
-                Rule::horizontal(0),
+                rule::horizontal(1),
                 text("Item Drops:"),
-                Rule::horizontal(0),
+                rule::horizontal(1),
             ]
             .spacing(10)
             .align_y(Alignment::Center),

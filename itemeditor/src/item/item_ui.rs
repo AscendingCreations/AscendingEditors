@@ -241,7 +241,7 @@ impl ItemUI {
             self.generic.animation_input.value = -1;
         }
 
-        self.generic.color = Color::new(
+        self.generic.color = Color::from_rgba(
             f32::from(self.data[index].0.rgba.r) / 255.0,
             f32::from(self.data[index].0.rgba.g) / 255.0,
             f32::from(self.data[index].0.rgba.b) / 255.0,

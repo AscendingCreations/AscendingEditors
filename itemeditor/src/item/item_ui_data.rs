@@ -4,7 +4,7 @@ use ascending_types::*;
 use ascending_ui::*;
 use iced::{
     alignment::Alignment,
-    widget::{column, text, Row, Rule},
+    widget::{column, rule, text, Row},
     Element, Length,
 };
 
@@ -18,7 +18,7 @@ pub struct ItemUiData {
 impl ItemUiData {
     pub fn layout(&'_ self, item_type: ItemTypes) -> Element<'_, Message> {
         let mut i: i32 = 0;
-        let mut col = column![text("Data Inputs"), Rule::horizontal(0)]
+        let mut col = column![text("Data Inputs"), rule::horizontal(1)]
             .spacing(6)
             .align_x(Alignment::Center)
             .width(Length::Shrink);

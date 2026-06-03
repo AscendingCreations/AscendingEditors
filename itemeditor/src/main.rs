@@ -15,7 +15,6 @@ use iced::{
     widget::{Column, Container},
     Element, Length,
 };
-use iced_aw::iced_fonts;
 use item::*;
 use std::fs;
 
@@ -41,9 +40,12 @@ pub fn main() -> Result<iced::Result, String> {
 
     info!("Checked or Created Files");
 
-    Ok(iced::application("Item Editor", Pages::update, Pages::view)
-        .font(iced_fonts::REQUIRED_FONT_BYTES)
-        .run())
+    Ok(
+        iced::application(Pages::default, Pages::update, Pages::view)
+            .title("Item Editor")
+            .font(iced_aw::ICED_AW_FONT_BYTES)
+            .run(),
+    )
 }
 
 pub struct Pages {

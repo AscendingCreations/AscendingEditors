@@ -1,7 +1,7 @@
 use crate::npc::*;
 use ascending_ui::*;
 use iced::{
-    widget::{button, column, row, text, PickList, Rule},
+    widget::{button, column, row, rule, text, PickList},
     Element, Length,
 };
 
@@ -18,9 +18,9 @@ impl NpcEnemies {
     pub fn layout(&'_ self) -> Element<'_, Message> {
         column![
             row![
-                Rule::horizontal(0),
+                rule::horizontal(1),
                 text("NPC Enemies:"),
-                Rule::horizontal(0),
+                rule::horizontal(1),
             ],
             row![
                 text("Enemy List:"),
