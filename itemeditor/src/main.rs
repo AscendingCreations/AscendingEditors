@@ -1,24 +1,26 @@
-#![windows_subsystem = "windows"]
-
-#[macro_use]
-extern crate educe;
-extern crate serde_big_array;
-
-mod config;
-mod item;
-
-use config::*;
+use std::{cell::RefCell, fs};
 
 use ascending_logger::*;
-use ascending_ui::*;
-use iced::{
-    widget::{Column, Container},
-    Element, Length,
+use database::ItemData;
+use gpui_kit::{
+    AppContext, Global, SharedString, TitlebarOptions, WindowBounds, WindowOptions, assets::Assets,
+    base::Root, px, size,
 };
-use item::*;
-use std::fs;
+use tokio::{
+    runtime::Runtime,
+    sync::mpsc::{self, Receiver},
+};
 
-pub fn main() -> Result<iced::Result, String> {
+mod commands;
+mod editor;
+
+use commands::*;
+use editor::*;
+
+pub struct MessageReceiverGlobal(pub Receiver<Option<(usize, ItemData)>>);
+impl Global for MessageReceiverGlobal {}
+
+fn main() {
     let logger = Box::new(MyLogger::new("item_editor_log.txt"));
     logger.set_boxed_logger().unwrap();
 
@@ -31,51 +33,60 @@ pub fn main() -> Result<iced::Result, String> {
         error!("PANIC: {panic_info}, BACKTRACE: {bt:?}");
     }));
 
-    if let Err(e) = fs::create_dir_all("./data/items/json/") {
-        return Err(format!("Err: {e:?}"));
-    }
-
+    fs::create_dir_all("./data/items/").unwrap();
+    fs::create_dir_all("./json/items/").unwrap();
+    fs::create_dir_all("./temp/items/").unwrap();
     info!("Checked or Created Directorys");
-    ItemData::create_files()?;
 
+    ItemData::create_files().unwrap();
     info!("Checked or Created Files");
 
-    Ok(
-        iced::application(Pages::default, Pages::update, Pages::view)
-            .title("Item Editor")
-            .font(iced_aw::ICED_AW_FONT_BYTES)
-            .run(),
-    )
-}
+    info!("Setting up Command handler");
 
-pub struct Pages {
-    page: Box<dyn UiRenderer<Message = item::Message>>,
-}
+    let rt: Runtime = tokio::runtime::Builder::new_multi_thread()
+        .thread_name("threads")
+        .enable_all()
+        .build()
+        .unwrap();
 
-impl Default for Pages {
-    fn default() -> Self {
-        Self {
-            page: Box::new(ItemUI::new()),
-        }
-    }
-}
+    let (tx, rx) = mpsc::channel(1000);
+    let (tx_update, rx_update) = mpsc::channel(5);
 
-impl Pages {
-    fn update(&mut self, message: Message) {
-        self.page.update(message);
-    }
+    let handle = rt.handle();
 
-    fn view(&'_ self) -> Element<'_, Message> {
-        let page = self.page.view();
+    let message_handle = tokio::task::Builder::new()
+        .name("FileManager")
+        .spawn_on(file_command_actor(rx, tx_update), handle)
+        .unwrap();
 
-        let content: Element<_> = Column::new()
-            .width(Length::Fill)
-            .height(Length::Fill)
-            .spacing(20)
-            .padding(20)
-            .push(page)
-            .into();
+    let command_handler = CommandHandler {
+        _rt: RefCell::new(rt),
+        tx,
+        _message_handle: RefCell::new(message_handle),
+    };
 
-        Container::new(content).height(Length::Fill).into()
-    }
+    info!("Running application");
+    let app = gpui_kit::application().with_assets(Assets);
+
+    app.run(move |cx| {
+        // This must be called before using any GPUI Component features.
+        gpui_kit::init(cx);
+
+        let window_options = WindowOptions {
+            window_bounds: Some(WindowBounds::centered(size(px(800.), px(700.)), cx)),
+            titlebar: Some(TitlebarOptions {
+                title: Some(SharedString::new("Item Editor")),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+
+        cx.open_window(window_options, |window, cx| {
+            let view = cx.new(|cx| Editor::new(window, cx, command_handler, rx_update));
+
+            // This first level on the window, should be a Root.
+            cx.new(|cx| Root::new(view, window, cx))
+        })
+        .expect("Failed to open window");
+    });
 }

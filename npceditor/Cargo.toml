@@ -1,31 +1,18 @@
 [package]
-name = "npceditor"
-version = "0.1.0"
-edition = "2021"
-license = "MIT OR Apache-2.0"
 authors = [
-    "Andrew Wheeler <genusistimelord@outlook.com>",
-    "Sherwin Salonga",
-    "S.J.R. van Schaik",
+  "Andrew Wheeler <genusistimelord@outlook.com>",
+  "Sherwin Salonga",
+  "S.J.R. van Schaik",
 ]
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2024"
+license = "MIT OR Apache-2.0"
+name = "npceditor"
+version = "0.2.0"
 
 [dependencies]
-rand.workspace = true
-serde.workspace = true
-serde_json.workspace = true
-serde-big-array.workspace = true
-educe.workspace = true
-chrono.workspace = true
-strum_macros.workspace = true
-arr_macro.workspace = true
-num_enum.workspace = true
-backtrace.workspace = true
+anyhow.workspace = true
 ascending_logger.workspace = true
-ascending_ui.workspace = true
-ascending_types.workspace = true
-itertools.workspace = true
-bytey.workspace = true
-speedy.workspace = true
-iced.workspace = true
-iced_aw.workspace = true
+backtrace.workspace = true
+database.workspace = true
+gpui-kit.workspace = true
+tokio.workspace = true

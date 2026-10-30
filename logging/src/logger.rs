@@ -1,4 +1,7 @@
-use log::{set_logger, set_max_level, LevelFilter, Log, Metadata, Record, SetLoggerError};
+use log::{
+    LevelFilter, Log, Metadata, Record, SetLoggerError, set_logger,
+    set_max_level,
+};
 use std::{borrow::Cow, fs::File, io::Write};
 
 pub struct MyLogger {
@@ -10,7 +13,7 @@ pub struct MyLogger {
 impl MyLogger {
     pub fn new(filename: impl Into<Cow<'static, str>>) -> Box<Self> {
         Box::new(Self {
-            print: false,
+            print: true,
             filename: filename.into(),
         })
     }
@@ -36,7 +39,7 @@ impl Log for MyLogger {
         let msg = format!("{} - {}\n", record.level(), record.args());
 
         if self.print {
-            println!("{}", &msg);
+            println!("{}", msg);
         }
 
         let mut file = match File::options()

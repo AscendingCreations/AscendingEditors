@@ -5,58 +5,101 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug unit tests in library 'database'",
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'item_editor'",
             "cargo": {
                 "args": [
-                    "build",
-                    "--bin=item_editor",
-                    "--package=item_editor"
-                ],
-                "filter": {
-                    "name": "item_editor",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
+                    "test",
+                    "--package=database"
+                ]
+            }
         },
         {
+            "name": "Debug unit tests in library 'ascending_logger'",
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'npceditor'",
             "cargo": {
                 "args": [
-                    "build",
+                    "test",
+                    "--package=ascending_logger"
+                ]
+            }
+        },
+        {
+            "name": "Debug executable 'itemeditor'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "run",
+                    "--bin=itemeditor",
+                    "--package=itemeditor"
+                ]
+            },
+            "args": []
+        },
+        {
+            "name": "Debug unit tests in executable 'itemeditor'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--bin=itemeditor",
+                    "--package=itemeditor"
+                ]
+            }
+        },
+        {
+            "name": "Debug executable 'npceditor'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "run",
                     "--bin=npceditor",
                     "--package=npceditor"
-                ],
-                "filter": {
-                    "name": "npceditor",
-                    "kind": "bin"
-                }
+                ]
             },
-            "args": [],
-            "cwd": "${workspaceFolder}"
+            "args": []
         },
         {
+            "name": "Debug unit tests in executable 'npceditor'",
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'shop_editor'",
             "cargo": {
                 "args": [
-                    "build",
-                    "--bin=shop_editor",
-                    "--package=shop_editor"
-                ],
-                "filter": {
-                    "name": "shop_editor",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
+                    "test",
+                    "--bin=npceditor",
+                    "--package=npceditor"
+                ]
+            }
         },
+        {
+            "name": "Debug executable 'shopeditor'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "run",
+                    "--bin=shopeditor",
+                    "--package=shopeditor"
+                ]
+            },
+            "args": []
+        },
+        {
+            "name": "Debug unit tests in executable 'shopeditor'",
+            "type": "lldb",
+            "request": "launch",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--bin=shopeditor",
+                    "--package=shopeditor"
+                ]
+            }
+        }
     ]
 }

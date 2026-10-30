@@ -1,5 +1,5 @@
 <h1 align="center">
- AscendingEditors
+ Ascending Editors
 </h1>
 Open Source collection of Game resource editors written in rust for Ascending Source.
 

@@ -1,0 +1,17 @@
+[package]
+authors = [
+  "Andrew Wheeler <genusistimelord@outlook.com>",
+  "Sherwin Salonga",
+  "S.J.R. van Schaik",
+]
+edition = "2024"
+license = "MIT OR Apache-2.0"
+name = "database"
+version = "0.1.0"
+
+[dependencies]
+educe.workspace = true
+gpui-kit.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+speedy.workspace = true
